@@ -36,6 +36,7 @@ export const PublicClubPage = () => {
   const [selectedStateFilter, setSelectedStateFilter] = useState('');
   const [selectedEventForPreSignUp, setSelectedEventForPreSignUp] = useState(null);
   const [activeTab, setActiveTab] = useState('HOME');
+  const [selectedMerchCategory, setSelectedMerchCategory] = useState('All');
 
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -500,60 +501,241 @@ export const PublicClubPage = () => {
         </div>
       </section>
 
-      {/* 7. MERCHANDISE SECTION */}
+      {/* 7. LOCAL CLUB MERCHANDISE STORE SECTION */}
       <section id="merchandise" className="bg-surface-lowest p-6 sm:p-8 rounded-3xl border border-surface-border shadow-ambient space-y-6">
-        <div className="border-b border-surface-border pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-forest-950 flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-tan-600" />
-              <span>Official Club Merchandise Store</span>
+        {/* Store Title & Ongoing Fundraising System Banner */}
+        <div className="border-b border-surface-border pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+                Official Local Club Store
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                Ongoing Automated Fundraising System
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-forest-950">
+              {club.name.replace(' Association', '')} Store
             </h2>
-            <p className="text-xs text-charcoal-muted mt-0.5">
-              Gear purchases automatically credit retail profit margins to {club.name}'s Treasury.
+            <p className="text-xs text-charcoal-muted max-w-2xl font-medium">
+              The {club.name} Store provides an ongoing fundraising system to maintain trial grounds, clubhouse facilities, and youth prize pots without constantly asking members for direct donations. 100% of the retail profit margin on every purchase is automatically credited to the {club.name} treasury.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-900 border border-emerald-300 self-start sm:self-auto">
-            100% Profits Credited to {club.name}
-          </span>
+
+          <div className="p-3.5 rounded-2xl bg-emerald-950/10 border border-emerald-600/30 text-center shrink-0">
+            <span className="text-[10px] uppercase font-bold text-charcoal-muted block">Club Treasury Earned to Date</span>
+            <span className="text-xl font-black text-emerald-800">$2,840.00</span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {displayProducts.map((p) => {
-            const wholesale = p.wholesaleCost || Number((p.price * 0.7).toFixed(2));
-            const clubProfit = Number((p.price - wholesale).toFixed(2));
+        {/* 7 Exact Product Type Filters */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {[
+            'All',
+            'Club shirts',
+            'Club hats',
+            'Event shirts',
+            'Hunting supplies',
+            'Dog products',
+            'Sponsor products',
+            'UHC marketplace products'
+          ].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedMerchCategory(cat)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition-all cursor-pointer ${
+                selectedMerchCategory === cat
+                  ? 'bg-forest-950 text-white shadow-md'
+                  : 'bg-surface-low text-charcoal hover:bg-surface-border'
+              }`}
+            >
+              {cat === 'All' ? 'All Products (7 Types)' : cat}
+            </button>
+          ))}
+        </div>
 
-            return (
-              <div key={p.id} className="bg-surface-low rounded-2xl border border-surface-border overflow-hidden flex flex-col justify-between">
-                <div className="relative h-44 bg-surface-lowest">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-950/90 text-tan-300">
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[
+            // 1. Club shirts
+            {
+              id: `club-merch-1-${club.id}`,
+              name: `${club.name} Official Chapter Logo T-Shirt`,
+              category: 'Club shirts',
+              price: 26.00,
+              wholesaleCost: 12.00,
+              profit: 14.00,
+              image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop&q=80',
+              description: `Heavyweight 100% cotton crewneck with official ${club.name} emblem. 100% profit goes to club treasury.`
+            },
+            // 2. Club hats
+            {
+              id: `club-merch-2-${club.id}`,
+              name: `${club.name} Embroidered Mesh-Back Cap`,
+              category: 'Club hats',
+              price: 28.00,
+              wholesaleCost: 14.00,
+              profit: 14.00,
+              image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80',
+              description: `Structured breathable mesh-back hunting cap with custom embroidered ${club.name} patch.`
+            },
+            // 3. Event shirts
+            {
+              id: `club-merch-3-${club.id}`,
+              name: `${club.state} Autumn Championship Hunt Commemorative Shirt`,
+              category: 'Event shirts',
+              price: 32.00,
+              wholesaleCost: 16.00,
+              profit: 16.00,
+              image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&auto=format&fit=crop&q=80',
+              description: `Official state championship commemorative long-sleeve tee with sanctioned hunt roster on back.`
+            },
+            // 4. Hunting supplies
+            {
+              id: `club-merch-4-${club.id}`,
+              name: `Southern Timber 4000-Lumen High-Beam LED Spotlight`,
+              category: 'Hunting supplies',
+              price: 89.00,
+              wholesaleCost: 45.00,
+              profit: 44.00,
+              image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&auto=format&fit=crop&q=80',
+              description: `Rechargeable hands-free headlamp spotlight tuned for spotting treeing coonhounds in tall river bottoms.`
+            },
+            {
+              id: `club-merch-4b-${club.id}`,
+              name: `Acoustic Brass Treeing Bell & Quick-Release Snap`,
+              category: 'Hunting supplies',
+              price: 24.00,
+              wholesaleCost: 10.00,
+              profit: 14.00,
+              image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+              description: `Heavy resonant acoustic brass bell tuned for locating dogs in dense thickets.`
+            },
+            // 5. Dog products
+            {
+              id: `club-merch-5-${club.id}`,
+              name: `Apex BioThane Waterproof Treeing Hound Lead`,
+              category: 'Dog products',
+              price: 45.00,
+              wholesaleCost: 22.00,
+              profit: 23.00,
+              image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&auto=format&fit=crop&q=80',
+              description: `10-foot weatherproof BioThane treeing lead with corrosion-resistant brass snap hardware.`
+            },
+            {
+              id: `club-merch-5b-${club.id}`,
+              name: `Padded Strike Tracking Harness for Coonhounds`,
+              category: 'Dog products',
+              price: 59.00,
+              wholesaleCost: 32.00,
+              profit: 27.00,
+              image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&auto=format&fit=crop&q=80',
+              description: `Ergonomic padded tracking harness to protect canine chest during tough timber trials.`
+            },
+            // 6. Sponsor products
+            {
+              id: `club-merch-6-${club.id}`,
+              name: `Garmin Alpha GPS Handheld & TT 15X Tracking Bundle`,
+              category: 'Sponsor products',
+              price: 799.00,
+              wholesaleCost: 590.00,
+              profit: 209.00,
+              image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&auto=format&fit=crop&q=80',
+              description: `Official UHC Gold Sponsor Garmin tracking system with 9-mile range and live hunt statistics.`
+            },
+            {
+              id: `club-merch-6b-${club.id}`,
+              name: `Purina Pro Plan Sport Performance 30/20 Formula (37.5 lb)`,
+              category: 'Sponsor products',
+              price: 74.00,
+              wholesaleCost: 48.00,
+              profit: 26.00,
+              image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&auto=format&fit=crop&q=80',
+              description: `Official sponsor canine nutrition formulated to fuel hunting endurance and rapid muscle recovery.`
+            },
+            // 7. UHC marketplace products
+            {
+              id: `club-merch-7-${club.id}`,
+              name: `UHC National Championship Heavyweight Hoodie`,
+              category: 'UHC marketplace products',
+              price: 68.00,
+              wholesaleCost: 35.00,
+              profit: 33.00,
+              image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400&auto=format&fit=crop&q=80',
+              description: `Official UHC national championship pullover hoodie. Portion of sale funds local club treasury.`
+            },
+            {
+              id: `club-merch-7b-${club.id}`,
+              name: `Official UHC Woven Iron-On Emblem Patch Pack (5-Pack)`,
+              category: 'UHC marketplace products',
+              price: 20.00,
+              wholesaleCost: 10.00,
+              profit: 10.00,
+              image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+              description: `Set of 5 embroidered official Ultimate Hound Club national registry patches.`
+            }
+          ]
+            .filter((p) => selectedMerchCategory === 'All' || p.category === selectedMerchCategory)
+            .map((p) => (
+              <div
+                key={p.id}
+                className="group bg-surface-low rounded-2xl border border-surface-border overflow-hidden flex flex-col justify-between hover:shadow-xl transition-all duration-300"
+              >
+                <div className="relative h-48 bg-surface-lowest overflow-hidden">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-950/90 text-tan-300 backdrop-blur-xs">
                     {p.category}
                   </span>
                 </div>
 
                 <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-black text-sm text-forest-950 line-clamp-1">{p.name}</h4>
-                    <p className="text-xs text-charcoal-muted line-clamp-2 mt-1">{p.description}</p>
+                    <h4 className="font-black text-sm text-forest-950 group-hover:text-tan-700 transition-colors line-clamp-1">
+                      {p.name}
+                    </h4>
+                    <p className="text-xs text-charcoal-muted line-clamp-2 mt-1 leading-relaxed font-medium">
+                      {p.description}
+                    </p>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between border-t border-surface-border">
-                    <span className="text-base font-black text-forest-950">${p.price}</span>
-                    <button
-                      onClick={() => {
-                        addToCart(p);
-                        showToast(`Added ${p.name} to cart. $${clubProfit} profit recorded for ${club.name}!`, 'success');
-                      }}
-                      className="px-3 py-1.5 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-lg shadow transition-all flex items-center gap-1"
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      Add
-                    </button>
+                  {/* Club Profit Margin & Retail Price */}
+                  <div className="p-2.5 rounded-xl bg-surface-lowest border border-surface-border space-y-1">
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-[10px] text-charcoal-muted uppercase font-bold">Price</span>
+                      <span className="text-base font-black text-forest-950">${p.price.toFixed(2)}</span>
+                    </div>
+
+                    <div className="text-[10px] font-extrabold text-emerald-800 border-t border-surface-border pt-1 flex items-center justify-between">
+                      <span>Fundraising Profit:</span>
+                      <span>+${p.profit.toFixed(2)} to {club.name}</span>
+                    </div>
                   </div>
+
+                  <button
+                    onClick={() => {
+                      addToCart(p, 1, {
+                        originType: 'LOCAL_CLUB',
+                        orderSource: `${club.name} Store`,
+                        clubName: club.name,
+                        profit: p.profit
+                      });
+                      showToast(
+                        `Added ${p.name} to cart. +$${p.profit.toFixed(2)} fundraising profit recorded for ${club.name}!`,
+                        'success'
+                      );
+                    }}
+                    className="w-full py-2.5 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <span>Add to Cart & Fund Club</span>
+                  </button>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </section>
 
