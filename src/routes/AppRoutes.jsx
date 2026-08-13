@@ -69,6 +69,7 @@ import { SuperAdminPermissions } from '../pages/superAdmin/SuperAdminPermissions
 import { NationalHeadquartersSettings } from '../pages/superAdmin/NationalHeadquartersSettings';
 
 // Shared Common Functional Views
+import { MembershipFlowPage } from '../pages/admin/MembershipFlowPage';
 import { NewsFlowPage } from '../pages/admin/NewsFlowPage';
 import { InformationFlowPage } from '../pages/admin/InformationFlowPage';
 import { RevenueTrackingPage } from '../pages/admin/RevenueTrackingPage';
@@ -123,6 +124,7 @@ export const AppRoutes = () => {
         <Route path="/accounting" element={<RevenueTrackingPage />} />
         <Route path="/information-flow" element={<InformationFlowPage />} />
         <Route path="/news-flow" element={<NewsFlowPage />} />
+        <Route path="/membership-flow" element={<MembershipFlowPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 

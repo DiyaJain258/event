@@ -674,6 +674,16 @@ export const AppProvider = ({ children }) => {
     const expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
     const newId = `CLUB-${Math.floor(10000 + Math.random() * 90000)}`;
 
+    const stateName = formData.state || 'Texas';
+    const stateAssociationName = `${stateName} State Association`;
+
+    // Multi-Organization Single Account Affiliations (Requirement 4 & 5)
+    const organizations = [
+      { id: 'org-uhc', level: 'NATIONAL', name: 'Ultimate Hound Championships (UHC)', role: 'Member', status: 'Active', joined: joinDate },
+      { id: 'org-state', level: 'STATE', name: stateAssociationName, role: 'State Member', status: 'Active', joined: joinDate },
+      { id: 'org-club', level: 'LOCAL_CLUB', name: clubName, role: 'Club Member', status: 'Active', joined: joinDate }
+    ];
+
     // Automatically Record 7 Fields: Member name, Contact info, Join date, Expiration date, Payment, Membership type, Club affiliation
     const newMember = {
       id: `mem-${Date.now()}`,
@@ -687,7 +697,9 @@ export const AppProvider = ({ children }) => {
       paymentRecorded: true, // 5. Payment
       type: formData.membershipType || 'Individual Local Membership', // 6. Membership type
       club: clubName, // 7. Club affiliation
-      state: formData.state || 'Texas',
+      state: stateName,
+      stateAssociation: stateAssociationName,
+      organizations: organizations, // 4 & 5. Preserving multi-organization membership on single account
       membershipId: newId,
       status: 'Active'
     };
@@ -697,11 +709,13 @@ export const AppProvider = ({ children }) => {
       name: formData.name,
       email: cleanEmail,
       role: 'MEMBER',
-      scope: `${newMember.club} (${newMember.state})`,
+      scope: `${newMember.club} / ${stateAssociationName} / UHC`,
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
       membershipId: newId,
       club: newMember.club,
-      state: newMember.state
+      state: newMember.state,
+      stateAssociation: stateAssociationName,
+      organizations: organizations
     };
 
     const newTransaction = {
@@ -722,7 +736,10 @@ export const AppProvider = ({ children }) => {
     setTransactions((prev) => [newTransaction, ...prev]);
     setCurrentUser(newUser);
 
-    showToast(`Local Club Membership successfully activated for ${formData.name}! Payment of $${amountPaid.toFixed(2)} recorded.`, 'success');
+    showToast(
+      `Membership Flow complete for ${formData.name}! Recorded Local Club, State Association (${stateAssociationName}), and National UHC under 1 Single Account.`,
+      'success'
+    );
     return newMember;
   };
 
