@@ -1202,10 +1202,101 @@ export const INITIAL_OFFICERS = [
 ];
 
 export const INITIAL_TRANSACTIONS = [
-  { id: 'TXN-99101', description: 'Event Entry Fee - Nite Hunt & Treeing Contest', category: 'Event Revenue', amount: 30.00, type: 'Credit', date: 'Aug 08, 2026', status: 'Completed', reference: 'E1045' },
-  { id: 'TXN-99102', description: 'Store Sale - Official UKC Tracking Collar', category: 'Store Revenue', amount: 189.99, type: 'Credit', date: 'Aug 04, 2026', status: 'Completed', reference: 'ORD-9012' },
-  { id: 'TXN-99103', description: 'State Association Annual Sanction Dues', category: 'State Dues', amount: 150.00, type: 'Debit', date: 'Aug 01, 2026', status: 'Completed', reference: 'ST-TN-2026' },
-  { id: 'TXN-99104', description: 'Membership Dues - Lalit Panchole', category: 'Membership Revenue', amount: 45.00, type: 'Credit', date: 'Sep 18, 2025', status: 'Completed', reference: 'TN-ORHC-2026-99012' }
+  {
+    id: 'TXN-99101',
+    description: 'Store Sale - Garmin Alpha GPS Tracking Bundle',
+    category: 'Merchandise Sale',
+    grossAmount: 799.00,
+    amount: 799.00,
+    vendorCost: 590.00, // 1. Vendor Cost
+    nationalUhcShare: 46.13, // 2. National UHC Share (25% of Net Profit)
+    stateAssociationShare: 64.58, // 3. State Association Share (35% of Net Profit)
+    localClubShare: 73.81, // 4. Local Club Share (40% of Net Profit)
+    paymentProcessing: 23.47, // 5. Payment Processing (2.9% + $0.30)
+    netProfit: 184.53, // 6. Net Profit (Gross - Vendor Cost - Payment Processing)
+    type: 'Credit',
+    date: 'Aug 12, 2026',
+    status: 'Completed',
+    reference: 'ORD-9081',
+    club: 'Houston County Coon Hunters Association',
+    state: 'Texas'
+  },
+  {
+    id: 'TXN-99102',
+    description: 'Local Membership Sign-Up - Marcus Vance',
+    category: 'Membership Dues',
+    grossAmount: 25.00,
+    amount: 25.00,
+    vendorCost: 0.00, // 1. Vendor Cost
+    nationalUhcShare: 5.99, // 2. National UHC Share
+    stateAssociationShare: 8.39, // 3. State Association Share
+    localClubShare: 9.59, // 4. Local Club Share
+    paymentProcessing: 1.03, // 5. Payment Processing
+    netProfit: 23.97, // 6. Net Profit
+    type: 'Credit',
+    date: 'Aug 11, 2026',
+    status: 'Completed',
+    reference: 'MEM-TX-102',
+    club: 'Houston County Coon Hunters Association',
+    state: 'Texas'
+  },
+  {
+    id: 'TXN-99103',
+    description: 'State Membership Sign-Up - Austin Sterling',
+    category: 'State Membership Dues',
+    grossAmount: 35.00,
+    amount: 35.00,
+    vendorCost: 0.00, // 1. Vendor Cost
+    nationalUhcShare: 8.42, // 2. National UHC Share
+    stateAssociationShare: 11.79, // 3. State Association Share
+    localClubShare: 13.48, // 4. Local Club Share
+    paymentProcessing: 1.31, // 5. Payment Processing
+    netProfit: 33.69, // 6. Net Profit
+    type: 'Credit',
+    date: 'Aug 10, 2026',
+    status: 'Completed',
+    reference: 'MEM-TX-101',
+    club: 'Lone Star Hound Club',
+    state: 'Texas'
+  },
+  {
+    id: 'TXN-99104',
+    description: 'Event Entry Fee - Texas State Autumn Nite Hunt',
+    category: 'Event Entry',
+    grossAmount: 40.00,
+    amount: 40.00,
+    vendorCost: 0.00, // 1. Vendor Cost
+    nationalUhcShare: 9.64, // 2. National UHC Share
+    stateAssociationShare: 13.49, // 3. State Association Share
+    localClubShare: 15.41, // 4. Local Club Share
+    paymentProcessing: 1.46, // 5. Payment Processing
+    netProfit: 38.54, // 6. Net Profit
+    type: 'Credit',
+    date: 'Aug 08, 2026',
+    status: 'Completed',
+    reference: 'ENTRY-8821',
+    club: 'Houston County Coon Hunters Association',
+    state: 'Texas'
+  },
+  {
+    id: 'TXN-99105',
+    description: 'Store Sale - Official Chapter Logo T-Shirt',
+    category: 'Merchandise Sale',
+    grossAmount: 26.00,
+    amount: 26.00,
+    vendorCost: 12.00, // 1. Vendor Cost
+    nationalUhcShare: 3.24, // 2. National UHC Share
+    stateAssociationShare: 4.53, // 3. State Association Share
+    localClubShare: 5.18, // 4. Local Club Share
+    paymentProcessing: 1.05, // 5. Payment Processing
+    netProfit: 12.95, // 6. Net Profit
+    type: 'Credit',
+    date: 'Aug 06, 2026',
+    status: 'Completed',
+    reference: 'ORD-9077',
+    club: 'Oak Ridge Hunting Club',
+    state: 'Tennessee'
+  }
 ];
 
 export const INITIAL_COMMISSIONS = [

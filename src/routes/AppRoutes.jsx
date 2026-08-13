@@ -69,6 +69,7 @@ import { SuperAdminPermissions } from '../pages/superAdmin/SuperAdminPermissions
 import { NationalHeadquartersSettings } from '../pages/superAdmin/NationalHeadquartersSettings';
 
 // Shared Common Functional Views
+import { RevenueTrackingPage } from '../pages/admin/RevenueTrackingPage';
 import { NewsManagementPage } from '../pages/common/NewsManagementPage';
 import { AnnouncementsPage } from '../pages/common/AnnouncementsPage';
 import { OfficersPage } from '../pages/common/OfficersPage';
@@ -116,6 +117,8 @@ export const AppRoutes = () => {
         <Route path="/join-club/:clubId" element={<LocalClubMembershipSignUpPage />} />
         <Route path="/clubs/:clubId/join" element={<LocalClubMembershipSignUpPage />} />
         <Route path="/join-houston-county" element={<LocalClubMembershipSignUpPage />} />
+        <Route path="/revenue-tracking" element={<RevenueTrackingPage />} />
+        <Route path="/accounting" element={<RevenueTrackingPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 

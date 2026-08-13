@@ -202,6 +202,57 @@ export const AppProvider = ({ children }) => {
     return true;
   };
 
+  const [revenuePercentages, setRevenuePercentages] = useState(() => {
+    const saved = localStorage.getItem('nh_revenue_percentages');
+    return saved ? JSON.parse(saved) : {
+      nationalPct: 25, // 25% National UHC Share
+      statePct: 35,    // 35% State Association Share
+      clubPct: 40      // 40% Local Club Share
+    };
+  });
+
+  const calculateRevenueSplits = (grossAmount, vendorCost = 0, customPercentages = revenuePercentages) => {
+    const gross = Number(grossAmount || 0);
+    const vCost = Number(vendorCost || 0);
+    // 5. Payment Processing Fee (2.9% + $0.30 standard gateway calculation)
+    const paymentProcessing = Number((gross * 0.029 + 0.30).toFixed(2));
+    
+    // 6. Net Profit = Gross - Vendor Cost - Payment Processing
+    const netProfit = Math.max(0, Number((gross - vCost - paymentProcessing).toFixed(2)));
+    
+    const natShare = Number(((netProfit * (customPercentages.nationalPct || 25)) / 100).toFixed(2));
+    const stateShare = Number(((netProfit * (customPercentages.statePct || 35)) / 100).toFixed(2));
+    const clubShare = Number(((netProfit * (customPercentages.clubPct || 40)) / 100).toFixed(2));
+
+    return {
+      grossAmount: gross,
+      vendorCost: vCost,
+      nationalUhcShare: natShare,
+      stateAssociationShare: stateShare,
+      localClubShare: clubShare,
+      paymentProcessing,
+      netProfit
+    };
+  };
+
+  const recordTransactionWithAutomaticSplits = (txnData) => {
+    const splits = calculateRevenueSplits(txnData.grossAmount || txnData.amount, txnData.vendorCost || 0);
+    const newTxn = {
+      id: txnData.id || `TXN-${Math.floor(10000 + Math.random() * 90000)}`,
+      description: txnData.description || 'Automatic Revenue Split Transaction',
+      category: txnData.category || 'General Transaction',
+      date: txnData.date || new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      status: txnData.status || 'Completed',
+      type: txnData.type || 'Credit',
+      club: txnData.club || 'Houston County Coon Hunters Association',
+      state: txnData.state || 'Texas',
+      reference: txnData.reference || `REF-${Date.now()}`,
+      ...splits
+    };
+    setTransactions((prev) => [newTxn, ...prev]);
+    return newTxn;
+  };
+
   const [commissionSettings, setCommissionSettings] = useState(() => {
     const saved = localStorage.getItem('nh_commission_settings');
     return saved ? JSON.parse(saved) : INITIAL_COMMISSION_SETTINGS;
@@ -1169,6 +1220,10 @@ export const AppProvider = ({ children }) => {
         addOfficer,
         transactions,
         setTransactions,
+        revenuePercentages,
+        setRevenuePercentages,
+        calculateRevenueSplits,
+        recordTransactionWithAutomaticSplits,
         addTransaction,
         commissions,
         setCommissions,
