@@ -31,6 +31,7 @@ export const ClubAdminDashboard = () => {
 
   // Assigned Club
   const myClub = clubs.find((c) => c.id === 'club-tx-houston') || clubs[0] || {};
+  const clubName = myClub.name || 'Houston County Coon Hunters Association';
 
   // -------------------------------------------------------------
   // 1. MEMBERS SECTION CALCULATIONS
@@ -383,40 +384,63 @@ export const ClubAdminDashboard = () => {
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 3. FINANCES SECTION (Membership, Merchandise, Fundraising, Auction, Balance) */}
+      {/* 3. FINANCES SECTION (Memberships, Merchandise, Event Income, Fundraisers, UHC Marketplace Commissions, TOTAL CLUB INCOME) */}
       {/* ------------------------------------------------------------- */}
       {activeTab === 'FINANCES' && (
         <div className="space-y-6">
-          {/* Finances 5 KPI Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {/* Header Note */}
+          <div className="flex items-center justify-between bg-surface-lowest p-4 rounded-2xl border border-surface-border">
+            <div>
+              <h3 className="text-sm font-black text-forest-950">Local Club Financial Overview</h3>
+              <p className="text-xs text-charcoal-muted">Monthly financial breakdown for {clubName}.</p>
+            </div>
+            <span className="px-3 py-1 bg-tan-500 text-forest-950 text-xs font-black rounded-xl">
+              Reporting: August 2026
+            </span>
+          </div>
+
+          {/* Finances 5 KPI Cards + TOTAL CLUB INCOME Card */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {/* 1. Memberships */}
             <div className="bg-surface-lowest p-4 rounded-2xl border border-surface-border shadow-ambient space-y-1">
-              <span className="text-[10px] font-bold text-charcoal-muted uppercase">Membership Income</span>
-              <div className="text-2xl font-black text-forest-950">${membershipIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+              <span className="text-[10px] font-black text-forest-950 uppercase block">1. Memberships</span>
+              <div className="text-xl font-black text-forest-950">$400.00</div>
               <div className="text-[10px] text-tan-800 font-bold">Annual Dues ($25/yr)</div>
             </div>
 
+            {/* 2. Merchandise */}
             <div className="bg-surface-lowest p-4 rounded-2xl border border-surface-border shadow-ambient space-y-1">
-              <span className="text-[10px] font-bold text-charcoal-muted uppercase">Merchandise Income</span>
-              <div className="text-2xl font-black text-forest-950">${merchandiseIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+              <span className="text-[10px] font-black text-forest-950 uppercase block">2. Merchandise</span>
+              <div className="text-xl font-black text-forest-950">$725.00</div>
               <div className="text-[10px] text-charcoal-muted font-bold">Store Gear Sales</div>
             </div>
 
+            {/* 3. Event Income */}
             <div className="bg-surface-lowest p-4 rounded-2xl border border-surface-border shadow-ambient space-y-1">
-              <span className="text-[10px] font-bold text-emerald-800 uppercase">Fundraising Income</span>
-              <div className="text-2xl font-black text-emerald-700">${fundraisingIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-              <div className="text-[10px] text-emerald-800 font-bold">Clubhouse Repairs</div>
+              <span className="text-[10px] font-black text-blue-950 uppercase block">3. Event Income</span>
+              <div className="text-xl font-black text-blue-900">$1,100.00</div>
+              <div className="text-[10px] text-blue-700 font-bold">Night Hunt Entries</div>
             </div>
 
+            {/* 4. Fundraisers */}
             <div className="bg-surface-lowest p-4 rounded-2xl border border-surface-border shadow-ambient space-y-1">
-              <span className="text-[10px] font-bold text-amber-800 uppercase">Auction Income</span>
-              <div className="text-2xl font-black text-amber-700">${auctionIncome.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-              <div className="text-[10px] text-amber-800 font-bold">Benefit Auctions</div>
+              <span className="text-[10px] font-black text-purple-950 uppercase block">4. Fundraisers</span>
+              <div className="text-xl font-black text-purple-900">$350.00</div>
+              <div className="text-[10px] text-purple-700 font-bold">Benefit Drives</div>
             </div>
 
-            <div className="bg-surface-lowest p-4 rounded-2xl border border-forest-800/40 bg-forest-950 text-white shadow-ambient space-y-1">
-              <span className="text-[10px] font-bold text-tan-300 uppercase">Club Balance</span>
-              <div className="text-2xl font-black text-emerald-400">${clubBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-              <div className="text-[10px] text-tan-200 font-bold">Net Treasury</div>
+            {/* 5. UHC Marketplace Commissions */}
+            <div className="bg-surface-lowest p-4 rounded-2xl border border-surface-border shadow-ambient space-y-1">
+              <span className="text-[10px] font-black text-teal-950 uppercase block">5. UHC Commissions</span>
+              <div className="text-xl font-black text-teal-900">$260.00</div>
+              <div className="text-[10px] text-teal-700 font-bold">Marketplace Splits</div>
+            </div>
+
+            {/* 6. TOTAL CLUB INCOME */}
+            <div className="bg-forest-950 text-white p-4 rounded-2xl border-2 border-tan-500 shadow-ambient space-y-1">
+              <span className="text-[10px] font-black text-tan-300 uppercase block">TOTAL CLUB INCOME</span>
+              <div className="text-xl font-black text-emerald-400">$2,835.00</div>
+              <div className="text-[10px] text-tan-200 font-bold">August Total</div>
             </div>
           </div>
 
@@ -424,46 +448,61 @@ export const ClubAdminDashboard = () => {
           <div className="bg-surface-lowest p-6 rounded-3xl border border-surface-border shadow-ambient space-y-4">
             <h3 className="font-extrabold text-base text-forest-950 flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-emerald-700" />
-              <span>Financial Revenue Sources Ledger</span>
+              <span>August Income by Category Breakdown</span>
             </h3>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-surface-low text-charcoal-muted font-black uppercase text-[10px] tracking-wider border-b border-surface-border">
                   <tr>
-                    <th className="p-3">Revenue Category</th>
-                    <th className="p-3">Source & Description</th>
-                    <th className="p-3 text-right">Gross Recorded</th>
-                    <th className="p-3 text-right text-emerald-800">Net Club Balance Contribution</th>
+                    <th className="p-3">Income Category</th>
+                    <th className="p-3">Category Description</th>
+                    <th className="p-3 text-right">August Income</th>
+                    <th className="p-3 text-right text-emerald-800">% of Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-surface-border font-medium">
                   <tr className="hover:bg-surface-low/60 transition-colors">
-                    <td className="p-3 font-bold text-forest-950">Membership Dues</td>
-                    <td className="p-3 text-charcoal">112 Annual Member Dues Payments ($25.00/yr)</td>
-                    <td className="p-3 text-right font-bold">${membershipIncome.toFixed(2)}</td>
-                    <td className="p-3 text-right font-black text-emerald-800">${membershipIncome.toFixed(2)}</td>
+                    <td className="p-3 font-bold text-forest-950">1. Memberships</td>
+                    <td className="p-3 text-charcoal">Local club annual dues and renewals</td>
+                    <td className="p-3 text-right font-bold text-forest-950">$400.00</td>
+                    <td className="p-3 text-right font-mono text-charcoal-muted">14.1%</td>
                   </tr>
 
                   <tr className="hover:bg-surface-low/60 transition-colors">
-                    <td className="p-3 font-bold text-forest-950">Merchandise Profit Share</td>
-                    <td className="p-3 text-charcoal">14 Club Store Apparel Orders (30% Profit Margin)</td>
-                    <td className="p-3 text-right font-bold">${merchandiseIncome.toFixed(2)}</td>
-                    <td className="p-3 text-right font-black text-emerald-800">${(merchandiseIncome * 0.3).toFixed(2)}</td>
+                    <td className="p-3 font-bold text-forest-950">2. Merchandise</td>
+                    <td className="p-3 text-charcoal">Club caps, shirts, and apparel store profits</td>
+                    <td className="p-3 text-right font-bold text-forest-950">$725.00</td>
+                    <td className="p-3 text-right font-mono text-charcoal-muted">25.6%</td>
                   </tr>
 
                   <tr className="hover:bg-surface-low/60 transition-colors">
-                    <td className="p-3 font-bold text-forest-950">Fundraising Campaigns</td>
-                    <td className="p-3 text-charcoal">Piney Woods Clubhouse & Outdoor Judge Stands Fund</td>
-                    <td className="p-3 text-right font-bold">${fundraisingIncome.toFixed(2)}</td>
-                    <td className="p-3 text-right font-black text-emerald-800">${fundraisingIncome.toFixed(2)}</td>
+                    <td className="p-3 font-bold text-forest-950">3. Event Income</td>
+                    <td className="p-3 text-charcoal">Sanctioned trials and bench show hunt entry fees</td>
+                    <td className="p-3 text-right font-bold text-forest-950">$1,100.00</td>
+                    <td className="p-3 text-right font-mono text-charcoal-muted">38.8%</td>
                   </tr>
 
                   <tr className="hover:bg-surface-low/60 transition-colors">
-                    <td className="p-3 font-bold text-forest-950">Benefit Auctions</td>
-                    <td className="p-3 text-charcoal">Engraved Belt & Vintage Hunting Lantern Auctions</td>
-                    <td className="p-3 text-right font-bold">${auctionIncome.toFixed(2)}</td>
-                    <td className="p-3 text-right font-black text-emerald-800">${auctionIncome.toFixed(2)}</td>
+                    <td className="p-3 font-bold text-forest-950">4. Fundraisers</td>
+                    <td className="p-3 text-charcoal">Clubhouse maintenance and auction fundraisers</td>
+                    <td className="p-3 text-right font-bold text-forest-950">$350.00</td>
+                    <td className="p-3 text-right font-mono text-charcoal-muted">12.3%</td>
+                  </tr>
+
+                  <tr className="hover:bg-surface-low/60 transition-colors">
+                    <td className="p-3 font-bold text-forest-950">5. UHC Marketplace Commissions</td>
+                    <td className="p-3 text-charcoal">Automatic revenue split shares from UHC national sales</td>
+                    <td className="p-3 text-right font-bold text-forest-950">$260.00</td>
+                    <td className="p-3 text-right font-mono text-charcoal-muted">9.2%</td>
+                  </tr>
+
+                  {/* TOTAL ROW */}
+                  <tr className="bg-forest-950 text-white font-black">
+                    <td className="p-3 uppercase text-tan-300">TOTAL CLUB INCOME</td>
+                    <td className="p-3 text-tan-200 text-xs font-normal">Reconciled cumulative total for August</td>
+                    <td className="p-3 text-right text-emerald-400 text-sm">$2,835.00</td>
+                    <td className="p-3 text-right text-tan-300 font-mono">100.0%</td>
                   </tr>
                 </tbody>
               </table>
