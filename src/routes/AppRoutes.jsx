@@ -69,6 +69,7 @@ import { SuperAdminPermissions } from '../pages/superAdmin/SuperAdminPermissions
 import { NationalHeadquartersSettings } from '../pages/superAdmin/NationalHeadquartersSettings';
 
 // Shared Common Functional Views
+import { UhcPhilosophyPage } from '../pages/public/UhcPhilosophyPage';
 import { PlatformStructurePage } from '../pages/admin/PlatformStructurePage';
 import { ConnectedNetworkArchitecturePage } from '../pages/admin/ConnectedNetworkArchitecturePage';
 import { RolePermissionsPage } from '../pages/admin/RolePermissionsPage';
@@ -131,6 +132,8 @@ export const AppRoutes = () => {
         <Route path="/role-permissions" element={<RolePermissionsPage />} />
         <Route path="/network-architecture" element={<ConnectedNetworkArchitecturePage />} />
         <Route path="/platform-structure" element={<PlatformStructurePage />} />
+        <Route path="/philosophy" element={<UhcPhilosophyPage />} />
+        <Route path="/core-philosophy" element={<UhcPhilosophyPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 
