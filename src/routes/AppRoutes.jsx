@@ -20,6 +20,7 @@ import { CheckoutPage } from '../pages/public/CheckoutPage';
 import { OrderConfirmationPage } from '../pages/public/OrderConfirmationPage';
 import { PublicSponsorsPage } from '../pages/public/PublicSponsorsPage';
 import { JoinPage } from '../pages/public/JoinPage';
+import { StateMembershipSignUpPage } from '../pages/public/StateMembershipSignUpPage';
 import { LoginPage } from '../pages/public/LoginPage';
 
 // Member Dashboard Pages
@@ -100,6 +101,10 @@ export const AppRoutes = () => {
         <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
         <Route path="/sponsors" element={<PublicSponsorsPage />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/join-state" element={<StateMembershipSignUpPage />} />
+        <Route path="/join-state/:stateId" element={<StateMembershipSignUpPage />} />
+        <Route path="/states/:stateId/join" element={<StateMembershipSignUpPage />} />
+        <Route path="/join-texas" element={<StateMembershipSignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 

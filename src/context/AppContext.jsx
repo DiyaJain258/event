@@ -481,6 +481,75 @@ export const AppProvider = ({ children }) => {
     return newMember;
   };
 
+  // State Membership Sign-Up Flow Action
+  const registerStateMembership = (formData) => {
+    const stateName = formData.state || 'Texas';
+    const stateCode = stateName.substring(0, 2).toUpperCase();
+    const newId = `${stateCode}-HOUND-${Math.floor(10000 + Math.random() * 90000)}`;
+    const cleanEmail = String(formData.email || '').trim().toLowerCase();
+    const amountPaid = Number(formData.amount || 35.00);
+
+    const newMember = {
+      id: `mem-${Date.now()}`,
+      name: formData.name,
+      address: formData.address || '',
+      city: formData.city || '',
+      state: stateName,
+      phone: formData.phone || '',
+      email: cleanEmail,
+      membershipId: newId,
+      club: formData.clubAffiliation || 'Lone Star Hound Club',
+      type: formData.membershipType || 'Individual Membership',
+      dogSportInterests: Array.isArray(formData.dogSportInterests)
+        ? formData.dogSportInterests
+        : [formData.dogSportInterests || 'Coonhound Nite Hunts'],
+      status: 'Active',
+      joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+      }),
+      paymentRecorded: true,
+      amountPaid: amountPaid,
+      paymentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+    };
+
+    const newUser = {
+      id: newMember.id,
+      name: formData.name,
+      email: cleanEmail,
+      role: 'MEMBER',
+      scope: `${newMember.club} (${newMember.state})`,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      membershipId: newId,
+      club: newMember.club,
+      state: newMember.state
+    };
+
+    // Automatically record payment in transactions ledger
+    const newTransaction = {
+      id: `TXN-${Math.floor(10000 + Math.random() * 90000)}`,
+      description: `State Membership Sign-Up - ${formData.name} (${stateName})`,
+      category: 'State Membership Dues',
+      amount: amountPaid,
+      type: 'Credit',
+      status: 'Completed',
+      state: stateName,
+      memberId: newId,
+      reference: `PAY-${Date.now()}`,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+    };
+
+    setMembers((prev) => [newMember, ...prev]);
+    setUsers((prev) => [newUser, ...prev]);
+    setTransactions((prev) => [newTransaction, ...prev]);
+    setCurrentUser(newUser);
+
+    showToast(`State Membership successfully activated for ${formData.name}! Recorded payment of $${amountPaid.toFixed(2)}.`, 'success');
+    return newMember;
+  };
+
   // 2. Event Registration Flow Action
   const enterEvent = (eventId, dogId, participantName) => {
     const targetEvent = events.find((e) => e.id === eventId);
@@ -628,13 +697,37 @@ export const AppProvider = ({ children }) => {
     const newItem = {
       id: `news-${Date.now()}`,
       title: newsData.title,
-      category: newsData.category || 'General News',
+      category: newsData.category || 'State Hunt announcements',
+      level: newsData.level || 'STATE',
+      state: newsData.state || 'Texas',
+      stateId: newsData.stateId || 'texas',
+      stateCode: newsData.stateCode || 'TX',
       author: newsData.author || currentUser.name,
-      summary: newsData.summary || 'Official article published to hunting portal.',
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+      summary: newsData.summary || 'Official article published to state news feed.',
+      isPromotedToNational: Boolean(newsData.isPromotedToNational),
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      image: newsData.image || 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=600&auto=format&fit=crop&q=80'
     };
     setNews((prev) => [newItem, ...prev]);
     showToast(`Published article: "${newItem.title}"`, 'success');
+  };
+
+  const promoteNewsToNational = (newsId) => {
+    setNews((prev) =>
+      prev.map((n) => {
+        if (n.id === newsId) {
+          const updatedStatus = !n.isPromotedToNational;
+          showToast(
+            updatedStatus
+              ? `Promoted "${n.title}" to National UHC News Feed!`
+              : `Removed "${n.title}" promotion from National Feed.`,
+            updatedStatus ? 'success' : 'info'
+          );
+          return { ...n, isPromotedToNational: updatedStatus };
+        }
+        return n;
+      })
+    );
   };
 
   const addAnnouncement = (annData) => {
@@ -942,6 +1035,7 @@ export const AppProvider = ({ children }) => {
         news,
         setNews,
         addNews,
+        promoteNewsToNational,
         announcements,
         setAnnouncements,
         addAnnouncement,
@@ -965,6 +1059,7 @@ export const AppProvider = ({ children }) => {
         switchRole,
         loginUser,
         registerMembership,
+        registerStateMembership,
         enterEvent,
         toggleCheckIn,
         createEvent,

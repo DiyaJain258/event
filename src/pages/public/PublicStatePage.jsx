@@ -40,6 +40,15 @@ export const PublicStatePage = () => {
   const [eventRegionFilter, setEventRegionFilter] = useState('ALL');
   const [eventClubFilter, setEventClubFilter] = useState('ALL');
 
+  // 7 State Club Directory Filters required by Client: City, County, ZIP code, Distance, Dog type, Federation, Event type
+  const [clubCityFilter, setClubCityFilter] = useState('');
+  const [clubCountyFilter, setClubCountyFilter] = useState('');
+  const [clubZipFilter, setClubZipFilter] = useState('');
+  const [clubDistanceFilter, setClubDistanceFilter] = useState('ALL');
+  const [clubDogTypeFilter, setClubDogTypeFilter] = useState('ALL');
+  const [clubFederationFilter, setClubFederationFilter] = useState('ALL');
+  const [clubEventTypeFilter, setClubEventTypeFilter] = useState('ALL');
+
   // Match stateId from URL parameter or direct route path (e.g. /texas or /states/texas)
   const pathSlug = location.pathname.replace(/^\/states\//, '').replace(/^\//, '').toLowerCase();
   const effectiveStateId = stateId || (pathSlug !== 'states' && pathSlug ? pathSlug : null);
@@ -74,6 +83,22 @@ export const PublicStatePage = () => {
     if (eventRegionFilter !== 'ALL' && evt.region !== eventRegionFilter && !evt.city?.toLowerCase().includes(eventRegionFilter.toLowerCase())) return false;
     if (eventClubFilter !== 'ALL' && evt.club !== eventClubFilter) return false;
     if (eventDateFilter && !evt.date?.toLowerCase().includes(eventDateFilter.toLowerCase())) return false;
+    return true;
+  });
+
+  // Filtered State Clubs based on 7 Client Required Search Criteria (City, County, ZIP code, Distance, Dog type, Federation, Event type)
+  const filteredStateClubs = stateClubs.filter((c) => {
+    if (clubCityFilter && !c.city?.toLowerCase().includes(clubCityFilter.toLowerCase())) return false;
+    if (clubCountyFilter && !c.county?.toLowerCase().includes(clubCountyFilter.toLowerCase())) return false;
+    if (clubZipFilter && !c.zip?.includes(clubZipFilter)) return false;
+    if (clubDistanceFilter !== 'ALL') {
+      const maxDist = Number(clubDistanceFilter);
+      const distNum = c.distanceMiles || Number(c.distance?.replace(/[^0-9]/g, '')) || 0;
+      if (distNum > maxDist) return false;
+    }
+    if (clubDogTypeFilter !== 'ALL' && c.dogType !== clubDogTypeFilter) return false;
+    if (clubFederationFilter !== 'ALL' && !c.federation?.toLowerCase().includes(clubFederationFilter.toLowerCase())) return false;
+    if (clubEventTypeFilter !== 'ALL' && c.eventType !== clubEventTypeFilter) return false;
     return true;
   });
 
@@ -275,11 +300,11 @@ export const PublicStatePage = () => {
             </div>
 
             <Link
-              to="/join"
+              to={`/join-state/${stateData.id || 'texas'}`}
               className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Join State Association</span>
+              <span>Join {stateData.name.includes('Texas') ? 'the Texas Hound Association' : stateTitle}</span>
             </Link>
           </div>
         </div>
@@ -369,30 +394,70 @@ export const PublicStatePage = () => {
         </div>
       </section>
 
-      {/* SECTION 3: NEWS */}
+      {/* SECTION 3: STATE NEWS FEED */}
       <section id="news" className="space-y-6">
-        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
-              <Newspaper className="w-5 h-5 text-tan-600" />
-              <span>{stateData.name} State News & Bulletins</span>
-            </h2>
+        <div className="bg-surface-lowest p-6 sm:p-8 rounded-3xl border border-surface-border shadow-ambient space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border pb-4 gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+                  Dedicated State Association News Feed
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold text-charcoal-muted bg-surface-low border border-surface-border">
+                  Hierarchy: Local News → State News → National News
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-forest-950 flex items-center gap-2 mt-1">
+                <Newspaper className="w-5 h-5 text-tan-600" />
+                <span>{stateTitle} Official News Feed</span>
+              </h2>
+              <p className="text-xs text-charcoal-muted mt-0.5">
+                Controlled directly by the {stateData.name} State Association officers and board.
+              </p>
+            </div>
+
+            <Link
+              to="/state-admin/news"
+              className="px-4 py-2 bg-forest-950 hover:bg-forest-900 text-tan-300 font-extrabold text-xs rounded-xl shadow flex items-center gap-1.5 self-start sm:self-auto"
+            >
+              <span>State News Control Panel</span>
+              <ArrowRight className="w-4 h-4 text-tan-500" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {stateNews.length > 0 ? (
-              stateNews.map((n) => (
-                <div key={n.id} className="p-4 bg-surface-low rounded-xl border border-surface-border space-y-2">
-                  <span className="text-[10px] font-black uppercase text-tan-700 bg-tan-100 px-2 py-0.5 rounded">{n.date}</span>
-                  <h4 className="font-extrabold text-sm text-forest-950">{n.title}</h4>
-                  <p className="text-xs text-charcoal-muted leading-relaxed">{n.summary}</p>
+          {/* 8 Supported State News Categories Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {(news.filter((n) => n.state === stateData.name || n.stateId === stateData.id || n.stateCode === stateData.code || n.level === 'STATE').length > 0
+              ? news.filter((n) => n.state === stateData.name || n.stateId === stateData.id || n.stateCode === stateData.code || n.level === 'STATE')
+              : news
+            ).map((n) => (
+              <div key={n.id} className="p-5 bg-surface-low rounded-2xl border border-surface-border space-y-3 flex flex-col justify-between hover:shadow-lg transition-all">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-tan-500 text-forest-950">
+                      {n.category || 'State Hunt announcements'}
+                    </span>
+                    {n.isPromotedToNational && (
+                      <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-100 text-emerald-900 border border-emerald-300">
+                        ★ Promoted to National Feed
+                      </span>
+                    )}
+                  </div>
+
+                  <h4 className="font-extrabold text-sm text-forest-950 leading-snug">{n.title}</h4>
+                  <p className="text-xs text-charcoal-muted line-clamp-3 leading-relaxed">{n.summary}</p>
                 </div>
-              ))
-            ) : (
-              <div className="col-span-2 p-6 text-center text-xs text-charcoal-muted bg-surface-low rounded-xl border">
-                No recent news bulletins posted for {stateTitle}.
+
+                <div className="pt-3 border-t border-surface-border flex items-center justify-between text-[11px] text-charcoal font-medium">
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-tan-800">
+                    <span>{n.level === 'LOCAL' ? 'Local' : 'State'} News</span>
+                    <span>→</span>
+                    <span>{n.isPromotedToNational ? 'National' : 'State Feed'}</span>
+                  </div>
+                  <span className="text-[10px] text-charcoal-muted">{n.date}</span>
+                </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </section>
@@ -602,36 +667,213 @@ export const PublicStatePage = () => {
         </div>
       </section>
 
-      {/* SECTION 5: CLUBS */}
+      {/* SECTION 5: STATE CLUB DIRECTORY */}
       <section id="clubs" className="space-y-6">
-        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-tan-600" />
-              <span>Affiliated Local Clubs ({stateClubs.length})</span>
-            </h2>
-            <Link to="/clubs" className="text-xs font-black text-forest-800 hover:text-tan-700 flex items-center gap-1">
-              <span>All Clubs</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+        <div className="bg-surface-lowest p-6 sm:p-8 rounded-3xl border border-surface-border shadow-ambient space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border pb-4 gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+                  State Local Club Directory
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold text-charcoal-muted bg-surface-low border border-surface-border">
+                  {filteredStateClubs.length} Chartered Clubs Displayed
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-forest-950 flex items-center gap-2 mt-1">
+                <Building2 className="w-5 h-5 text-tan-600" />
+                <span>{stateData.name.includes('Texas') ? 'Texas Local Clubs' : `${stateData.name} Local Clubs`}</span>
+              </h2>
+              <p className="text-xs text-charcoal-muted mt-0.5">
+                Directory of local chartered hunting clubs in {stateData.name}. Search by City, County, ZIP, Distance, Dog Type, Federation, and Event Type.
+              </p>
+            </div>
+
+            {(clubCityFilter || clubCountyFilter || clubZipFilter || clubDistanceFilter !== 'ALL' || clubDogTypeFilter !== 'ALL' || clubFederationFilter !== 'ALL' || clubEventTypeFilter !== 'ALL') && (
+              <button
+                onClick={() => {
+                  setClubCityFilter('');
+                  setClubCountyFilter('');
+                  setClubZipFilter('');
+                  setClubDistanceFilter('ALL');
+                  setClubDogTypeFilter('ALL');
+                  setClubFederationFilter('ALL');
+                  setClubEventTypeFilter('ALL');
+                }}
+                className="px-3.5 py-1.5 bg-surface-low border border-surface-border text-charcoal hover:bg-tan-100 text-xs font-bold rounded-xl transition-colors self-start sm:self-auto"
+              >
+                Reset Club Filters
+              </button>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {stateClubs.map((c) => (
-              <div key={c.id} className="p-4 bg-surface-low rounded-2xl border border-surface-border space-y-3 flex flex-col justify-between">
-                <div className="flex items-center gap-3">
-                  <img src={c.logo} alt={c.name} className="w-12 h-12 rounded-xl object-cover border border-surface-border shrink-0" />
-                  <div>
-                    <h4 className="font-extrabold text-sm text-forest-950">{c.name}</h4>
-                    <div className="text-xs text-charcoal-muted font-medium">{c.city}, {c.stateCode} • {c.membersCount} Members</div>
+          {/* REQUIREMENT 3: 7 SEARCH FILTERS BAR (City, County, ZIP code, Distance, Dog type, Federation, Event type) */}
+          <div className="p-4 bg-surface-low rounded-2xl border border-surface-border space-y-3 text-xs">
+            <div className="text-[11px] font-black uppercase tracking-wider text-forest-950 flex items-center justify-between">
+              <span>Search Local Clubs By 7 Criteria:</span>
+              <span className="text-[10px] text-charcoal-muted font-normal">Real-time Directory Search</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* 1. Search by City */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">1. City</label>
+                <input
+                  type="text"
+                  value={clubCityFilter}
+                  onChange={(e) => setClubCityFilter(e.target.value)}
+                  placeholder="Search City (e.g. Crockett, Tyler)..."
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              {/* 2. Search by County */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">2. County</label>
+                <input
+                  type="text"
+                  value={clubCountyFilter}
+                  onChange={(e) => setClubCountyFilter(e.target.value)}
+                  placeholder="Search County (e.g. Houston, Smith)..."
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              {/* 3. Search by ZIP Code */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">3. ZIP Code</label>
+                <input
+                  type="text"
+                  value={clubZipFilter}
+                  onChange={(e) => setClubZipFilter(e.target.value)}
+                  placeholder="Search ZIP (e.g. 75835, 78701)..."
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              {/* 4. Search by Distance */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">4. Distance</label>
+                <select
+                  value={clubDistanceFilter}
+                  onChange={(e) => setClubDistanceFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Distances</option>
+                  <option value="15">Within 15 Miles</option>
+                  <option value="30">Within 30 Miles</option>
+                  <option value="50">Within 50 Miles</option>
+                  <option value="100">Within 100 Miles</option>
+                </select>
+              </div>
+
+              {/* 5. Search by Dog Type */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">5. Dog Type</label>
+                <select
+                  value={clubDogTypeFilter}
+                  onChange={(e) => setClubDogTypeFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Dog Types</option>
+                  <option value="Treeing Walker Coonhound">Treeing Walker Coonhound</option>
+                  <option value="Black & Tan Coonhound">Black & Tan Coonhound</option>
+                  <option value="Beagle Pack">Beagle Pack</option>
+                  <option value="English Redtick Coonhound">English Redtick Coonhound</option>
+                  <option value="All Sporting Hounds">All Sporting Hounds</option>
+                </select>
+              </div>
+
+              {/* 6. Search by Federation */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">6. Federation</label>
+                <select
+                  value={clubFederationFilter}
+                  onChange={(e) => setClubFederationFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Federations</option>
+                  <option value="UKC (United Kennel Club)">UKC (United Kennel Club)</option>
+                  <option value="PKC (Professional Kennel Club)">PKC (Professional Kennel Club)</option>
+                  <option value="AKC (American Kennel Club)">AKC (American Kennel Club)</option>
+                  <option value="Independent">Independent</option>
+                  <option value="UHC (Ultimate Hound Club)">UHC (Ultimate Hound Club)</option>
+                </select>
+              </div>
+
+              {/* 7. Search by Event Type */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">7. Event Type</label>
+                <select
+                  value={clubEventTypeFilter}
+                  onChange={(e) => setClubEventTypeFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Event Types</option>
+                  <option value="Nite Hunt">Nite Hunt</option>
+                  <option value="Field Trial">Field Trial</option>
+                  <option value="Water Race">Water Race</option>
+                  <option value="Bench Show">Bench Show</option>
+                  <option value="State Championship">State Championship</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* LOCAL CLUBS GRID */}
+          {filteredStateClubs.length === 0 ? (
+            <div className="p-8 text-center bg-surface-low rounded-2xl border border-surface-border text-xs text-charcoal-muted space-y-2">
+              <div className="font-extrabold text-forest-950 text-sm">No Local Clubs Found</div>
+              <p>No local clubs match the selected search criteria. Try adjusting your search filters.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredStateClubs.map((c) => (
+                <div key={c.id} className="p-5 bg-surface-low rounded-2xl border border-surface-border space-y-3 flex flex-col justify-between hover:shadow-lg transition-all">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <img src={c.logo} alt={c.name} className="w-14 h-14 rounded-2xl object-cover border border-surface-border shrink-0 shadow-md" />
+                      <div>
+                        <h4 className="font-black text-base text-forest-950 leading-snug">{c.name}</h4>
+                        <div className="text-xs font-bold text-tan-800">
+                          {c.city}, {c.county || `${c.city} Area`} (ZIP: {c.zip || '78701'})
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-charcoal-muted line-clamp-2 pt-1 font-medium">{c.description}</p>
+
+                    {/* Filter Property Tags */}
+                    <div className="flex flex-wrap gap-1.5 pt-1 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded bg-surface-lowest text-forest-950 border border-surface-border">
+                        📍 {c.distance || '15 miles away'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-forest-900 text-tan-300">
+                        🐕 {c.dogType || 'Treeing Walker'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-tan-500 text-forest-950">
+                        🏆 {c.federation || 'UKC Sanctioned'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-surface-lowest text-charcoal border border-surface-border">
+                        🎪 {c.eventType || 'Nite Hunt'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* REQUIREMENT 4: OPEN THAT CLUB'S OWN UHC PAGE */}
+                  <div className="pt-3 border-t border-surface-border">
+                    <Link
+                      to={`/clubs/${c.id}`}
+                      className="w-full py-2.5 bg-forest-950 hover:bg-forest-900 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all"
+                    >
+                      <span>Open Club's Own UHC Page</span>
+                      <ChevronRight className="w-4 h-4 text-tan-400" />
+                    </Link>
                   </div>
                 </div>
-                <Link to={`/clubs/${c.id}`} className="w-full py-2 bg-forest-900 hover:bg-forest-950 text-white rounded-xl text-xs font-bold text-center transition-colors">
-                  View Dedicated Club Page
-                </Link>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -648,11 +890,11 @@ export const PublicStatePage = () => {
             </p>
           </div>
           <Link
-            to="/join"
+            to={`/join-state/${stateData.id || 'texas'}`}
             className="px-6 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>Join Now ($35.00/yr)</span>
+            <span>Join {stateData.name.includes('Texas') ? 'the Texas Hound Association' : 'State Association'}</span>
           </Link>
         </div>
       </section>
