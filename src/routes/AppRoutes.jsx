@@ -69,6 +69,7 @@ import { SuperAdminPermissions } from '../pages/superAdmin/SuperAdminPermissions
 import { NationalHeadquartersSettings } from '../pages/superAdmin/NationalHeadquartersSettings';
 
 // Shared Common Functional Views
+import { InformationFlowPage } from '../pages/admin/InformationFlowPage';
 import { RevenueTrackingPage } from '../pages/admin/RevenueTrackingPage';
 import { NewsManagementPage } from '../pages/common/NewsManagementPage';
 import { AnnouncementsPage } from '../pages/common/AnnouncementsPage';
@@ -119,6 +120,7 @@ export const AppRoutes = () => {
         <Route path="/join-houston-county" element={<LocalClubMembershipSignUpPage />} />
         <Route path="/revenue-tracking" element={<RevenueTrackingPage />} />
         <Route path="/accounting" element={<RevenueTrackingPage />} />
+        <Route path="/information-flow" element={<InformationFlowPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 
