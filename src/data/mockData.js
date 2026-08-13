@@ -1307,33 +1307,24 @@ export const INITIAL_COMMISSIONS = [
 ];
 
 export const DEFAULT_PERMISSIONS = {
-  SUPER_ADMIN: {
+  NATIONAL_ADMIN: {
+    roleName: 'NATIONAL ADMIN',
+    scopeDescription: 'Controls the entire UHC platform',
+    scopeType: 'ALL_PLATFORM',
     members: { view: true, create: true, edit: true, delete: true },
     events: { view: true, create: true, edit: true, delete: true },
-    claims: { view: true, create: true, edit: true, delete: true },
-    dogs: { view: true, create: true, edit: true, delete: true },
     products: { view: true, create: true, edit: true, delete: true },
     orders: { view: true, create: true, edit: true, delete: true },
     finance: { view: true, create: true, edit: true, delete: true },
     news: { view: true, create: true, edit: true, delete: true },
     reports: { view: true, create: true, edit: true, delete: true }
   },
-  NATIONAL_ADMIN: {
-    members: { view: true, create: true, edit: true, delete: false },
-    events: { view: true, create: true, edit: true, delete: false },
-    claims: { view: true, create: false, edit: true, delete: false },
-    dogs: { view: true, create: true, edit: true, delete: false },
-    products: { view: true, create: true, edit: true, delete: false },
-    orders: { view: true, create: true, edit: true, delete: false },
-    finance: { view: true, create: true, edit: true, delete: false },
-    news: { view: true, create: true, edit: true, delete: false },
-    reports: { view: true, create: true, edit: true, delete: false }
-  },
   STATE_ADMIN: {
+    roleName: 'STATE ADMIN',
+    scopeDescription: 'Controls only their State Association',
+    scopeType: 'ASSIGNED_STATE_ONLY',
     members: { view: true, create: true, edit: true, delete: false },
     events: { view: true, create: true, edit: true, delete: false },
-    claims: { view: false, create: false, edit: false, delete: false },
-    dogs: { view: true, create: true, edit: true, delete: false },
     products: { view: true, create: false, edit: false, delete: false },
     orders: { view: true, create: false, edit: false, delete: false },
     finance: { view: true, create: false, edit: false, delete: false },
@@ -1341,37 +1332,40 @@ export const DEFAULT_PERMISSIONS = {
     reports: { view: true, create: true, edit: true, delete: false }
   },
   CLUB_ADMIN: {
+    roleName: 'CLUB ADMIN',
+    scopeDescription: 'Controls only their Local Club',
+    scopeType: 'ASSIGNED_CLUB_ONLY',
     members: { view: true, create: true, edit: true, delete: false },
     events: { view: true, create: true, edit: true, delete: false },
-    claims: { view: false, create: false, edit: false, delete: false },
-    dogs: { view: true, create: true, edit: true, delete: false },
     products: { view: true, create: true, edit: true, delete: false },
     orders: { view: true, create: true, edit: true, delete: false },
     finance: { view: true, create: false, edit: false, delete: false },
     news: { view: true, create: true, edit: true, delete: false },
     reports: { view: true, create: true, edit: true, delete: false }
   },
-  EVENT_ADMIN: {
-    members: { view: true, create: false, edit: false, delete: false },
-    events: { view: true, create: false, edit: true, delete: false },
-    claims: { view: false, create: false, edit: false, delete: false },
-    dogs: { view: true, create: false, edit: false, delete: false },
-    products: { view: false, create: false, edit: false, delete: false },
-    orders: { view: false, create: false, edit: false, delete: false },
-    finance: { view: false, create: false, edit: false, delete: false },
-    news: { view: false, create: false, edit: false, delete: false },
-    reports: { view: true, create: false, edit: false, delete: false }
-  },
   MEMBER: {
-    members: { view: true, create: false, edit: false, delete: false },
+    roleName: 'MEMBER',
+    scopeDescription: 'Controls only their personal account',
+    scopeType: 'PERSONAL_ACCOUNT_ONLY',
+    members: { view: false, create: false, edit: false, delete: false },
     events: { view: true, create: false, edit: false, delete: false },
-    claims: { view: false, create: false, edit: false, delete: false },
-    dogs: { view: true, create: true, edit: true, delete: true },
     products: { view: true, create: false, edit: false, delete: false },
     orders: { view: true, create: false, edit: false, delete: false },
     finance: { view: false, create: false, edit: false, delete: false },
     news: { view: true, create: false, edit: false, delete: false },
     reports: { view: false, create: false, edit: false, delete: false }
+  },
+  VENDOR: {
+    roleName: 'VENDOR',
+    scopeDescription: 'Controls only their products and orders',
+    scopeType: 'ASSIGNED_VENDOR_PRODUCTS_ONLY',
+    members: { view: false, create: false, edit: false, delete: false },
+    events: { view: false, create: false, edit: false, delete: false },
+    products: { view: true, create: true, edit: true, delete: true },
+    orders: { view: true, create: false, edit: true, delete: false },
+    finance: { view: true, create: false, edit: false, delete: false },
+    news: { view: false, create: false, edit: false, delete: false },
+    reports: { view: true, create: false, edit: false, delete: false }
   }
 };
 
