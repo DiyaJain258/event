@@ -7,8 +7,8 @@ export const PublicNationalPage = () => {
   const { products, addToCart, showToast } = useApp();
 
   const nationalProducts = products.filter(
-    (p) => p.scopeChannel === 'NATIONAL' || p.organizationType === 'NATIONAL'
-  );
+    (p) => p.scopeChannel === 'NATIONAL' || p.organizationType === 'NATIONAL' || p.source === 'UHC' || (p.id && p.id.startsWith('mkt-'))
+  ).slice(0, 5);
 
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-10">

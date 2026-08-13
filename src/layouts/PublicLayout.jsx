@@ -49,10 +49,10 @@ export const PublicLayout = () => {
     { label: 'NEWS', path: '/news' },
     { label: 'MARKETPLACE', path: '/marketplace' },
     { label: 'MEMBERSHIP', path: '/join' },
-    { label: 'PHILOSOPHY', path: '/philosophy' },
-    { label: '3-TIER MATRIX', path: '/platform-structure' },
-    { label: 'ARCHITECTURE', path: '/network-architecture' },
-    { label: 'ROLES & PERMISSIONS', path: '/role-permissions' }
+    { label: 'RESULTS', path: '/results' },
+    { label: 'AUCTIONS', path: '/auctions' },
+    { label: 'EDUCATION / TRAINING', path: '/education' },
+    { label: 'ABOUT UHC', path: '/about' },
   ];
 
   return (
