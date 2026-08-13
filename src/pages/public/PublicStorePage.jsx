@@ -159,76 +159,79 @@ export const PublicStorePage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <button
-            onClick={() => setPurchaseScope('LOCAL_CLUB')}
-            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
-              purchaseScope === 'LOCAL_CLUB'
-                ? 'bg-emerald-950/10 border-emerald-600 ring-2 ring-emerald-600/30'
-                : 'bg-surface-low border-surface-border hover:bg-surface-low/80'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-emerald-900 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-emerald-700" /> Local Club Site
-              </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-600 text-white">
-                Club Receives Margin
-              </span>
-            </div>
-            <p className="text-[11px] text-charcoal-muted">
-              Club receives the full difference between wholesale vendor cost and retail price.
-            </p>
-            <div className="text-[10px] font-bold text-forest-800">
-              Active Entity: {selectedClubScope}
-            </div>
-          </button>
-
-          <button
-            onClick={() => setPurchaseScope('STATE')}
-            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
-              purchaseScope === 'STATE'
-                ? 'bg-amber-950/10 border-amber-600 ring-2 ring-amber-600/30'
-                : 'bg-surface-low border-surface-border hover:bg-surface-low/80'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-amber-900 flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-amber-700" /> State Association
-              </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-600 text-white">
-                State Receives Margin
-              </span>
-            </div>
-            <p className="text-[11px] text-charcoal-muted">
-              State association receives the margin difference between wholesale and retail.
-            </p>
-            <div className="text-[10px] font-bold text-forest-800">
-              Active Entity: {selectedStateScope}
-            </div>
-          </button>
-
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* 1. National Organization Store */}
           <button
             onClick={() => setPurchaseScope('NATIONAL')}
-            className={`p-4 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
               purchaseScope === 'NATIONAL'
                 ? 'bg-forest-900/10 border-forest-800 ring-2 ring-forest-800/30'
                 : 'bg-surface-low border-surface-border hover:bg-surface-low/80'
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-forest-900 flex items-center gap-1.5">
-                <Globe className="w-4 h-4 text-forest-800" /> Main National Site
+              <span className="text-xs font-black text-forest-950 flex items-center gap-1.5">
+                <Globe className="w-4 h-4 text-forest-800" /> National Organization Store
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-forest-900 text-white">
-                100% National Margin
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-forest-900 text-tan-300">
+                National Income
               </span>
             </div>
-            <p className="text-[11px] text-charcoal-muted">
-              National HQ receives 100% of the sales profit margin to fund national championships.
+            <p className="text-xs text-charcoal-muted font-medium">
+              Merchandise purchases directly generate revenue for the UHC National Organization Treasury.
             </p>
-            <div className="text-[10px] font-bold text-forest-800">
-              Active Entity: Ultimate Hound Club (UHC) HQ
+            <div className="text-[10px] font-bold text-forest-900 pt-1 border-t border-surface-border">
+              Treasury Beneficiary: Ultimate Hound Club (UHC) National HQ
+            </div>
+          </button>
+
+          {/* 2. State Association Store */}
+          <button
+            onClick={() => setPurchaseScope('STATE')}
+            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              purchaseScope === 'STATE'
+                ? 'bg-amber-950/10 border-amber-600 ring-2 ring-amber-600/30'
+                : 'bg-surface-low border-surface-border hover:bg-surface-low/80'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-amber-950 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-amber-700" /> State Association Store
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-600 text-white">
+                State Income
+              </span>
+            </div>
+            <p className="text-xs text-charcoal-muted font-medium">
+              Merchandise purchases generate profit margin income directly for the State Association Treasury.
+            </p>
+            <div className="text-[10px] font-bold text-amber-900 pt-1 border-t border-surface-border">
+              Treasury Beneficiary: {selectedStateScope}
+            </div>
+          </button>
+
+          {/* 3. Local Club Store */}
+          <button
+            onClick={() => setPurchaseScope('LOCAL_CLUB')}
+            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+              purchaseScope === 'LOCAL_CLUB'
+                ? 'bg-emerald-950/10 border-emerald-600 ring-2 ring-emerald-600/30'
+                : 'bg-surface-low border-surface-border hover:bg-surface-low/80'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-emerald-950 flex items-center gap-1.5">
+                <Building2 className="w-4 h-4 text-emerald-700" /> Local Club Store
+              </span>
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-600 text-white">
+                Club Income
+              </span>
+            </div>
+            <p className="text-xs text-charcoal-muted font-medium">
+              Merchandise purchases credit 100% of retail profit margins directly to the Local Club Treasury.
+            </p>
+            <div className="text-[10px] font-bold text-emerald-900 pt-1 border-t border-surface-border">
+              Treasury Beneficiary: {selectedClubScope}
             </div>
           </button>
         </div>

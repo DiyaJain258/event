@@ -21,23 +21,11 @@ export const INITIAL_MEMBERS = [
 ];
 
 export const INITIAL_STATES = [
-<<<<<<< HEAD
   { id: 'tx', name: 'Texas Hound Association', code: 'TX', clubsCount: 54, membersCount: 3920, eventsCount: 18, revenue: 245000, status: 'Active', adminName: 'Austin Sterling', logo: 'https://images.unsplash.com/photo-1531219432768-9f540ce91ef3?w=120&auto=format&fit=crop&q=80', description: 'Texas Hound Association — Governing body for Texas field trials, coonhound hunts, and state championship trials.' },
-  { id: 'ar', name: 'Arkansas', code: 'AR', clubsCount: 36, membersCount: 2240, eventsCount: 12, revenue: 152000, status: 'Active', adminName: 'Caleb Vance', logo: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=120&auto=format&fit=crop&q=80', description: 'Arkansas State Hunting Association overseeing Ozark field trials and river water races.' },
-  { id: 'la', name: 'Louisiana', code: 'LA', clubsCount: 32, membersCount: 1950, eventsCount: 10, revenue: 138000, status: 'Active', adminName: 'Beau Thibodeaux', logo: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=120&auto=format&fit=crop&q=80', description: 'Bayou state sporting hound charter & championship night hunt association.' },
-  { id: 'ok', name: 'Oklahoma', code: 'OK', clubsCount: 40, membersCount: 2580, eventsCount: 14, revenue: 174000, status: 'Active', adminName: 'Wyatt Earp', logo: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=120&auto=format&fit=crop&q=80', description: 'Oklahoma state hunting dog association overseeing prairie trials and treeing contests.' },
-  { id: 'mo', name: 'Missouri', code: 'MO', clubsCount: 45, membersCount: 2890, eventsCount: 15, revenue: 192000, status: 'Active', adminName: 'Jesse James', logo: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120&auto=format&fit=crop&q=80', description: 'Show-Me state hunting trial association and championship coonhound pack trials.' },
-  { id: 'tn', name: 'Tennessee', code: 'TN', clubsCount: 42, membersCount: 2845, eventsCount: 13, revenue: 184250, status: 'Active', adminName: 'Sarah Tennessee', logo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80', description: 'Tennessee State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
-  { id: 'ky', name: 'Kentucky', code: 'KY', clubsCount: 38, membersCount: 2190, eventsCount: 11, revenue: 142100, status: 'Active', adminName: 'Thomas Shelby', logo: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120&auto=format&fit=crop&q=80', description: 'Bluegrass state hunting trials and water race championship organization.' },
-  { id: 'va', name: 'Virginia', code: 'VA', clubsCount: 29, membersCount: 1850, eventsCount: 8, revenue: 118400, status: 'Active', adminName: 'Rachel Green', logo: 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=120&auto=format&fit=crop&q=80', description: 'Virginia State Beagle & Coonhound Association.' },
-  { id: 'nc', name: 'North Carolina', code: 'NC', clubsCount: 35, membersCount: 2410, eventsCount: 14, revenue: 165000, status: 'Active', adminName: 'Lucas Scott', logo: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=120&auto=format&fit=crop&q=80', description: 'North Carolina sporting hound association and trial grounds.' },
-  { id: 'oh', name: 'Ohio', code: 'OH', clubsCount: 48, membersCount: 3120, eventsCount: 16, revenue: 205000, status: 'Active', adminName: 'Jack Crawford', logo: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=120&auto=format&fit=crop&q=80', description: 'Midwest championship trials and youth field trial programs.' },
-=======
   { id: 'al', name: 'Alabama', code: 'AL', clubsCount: 15, membersCount: 950, eventsCount: 5, revenue: 65000, status: 'Active', adminName: 'Alabama Admin', logo: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=120&auto=format&fit=crop&q=80', description: 'Alabama State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
   { id: 'ak', name: 'Alaska', code: 'AK', clubsCount: 8, membersCount: 420, eventsCount: 3, revenue: 32000, status: 'Active', adminName: 'Alaska Admin', logo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80', description: 'Alaska State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
   { id: 'az', name: 'Arizona', code: 'AZ', clubsCount: 18, membersCount: 1100, eventsCount: 6, revenue: 78000, status: 'Active', adminName: 'Arizona Admin', logo: 'https://images.unsplash.com/photo-1531219432768-9f540ce91ef3?w=120&auto=format&fit=crop&q=80', description: 'Arizona State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
-  { id: 'ar', name: 'Arkansas', code: 'AR', clubsCount: 22, membersCount: 1450, eventsCount: 7, revenue: 92000, status: 'Active', adminName: 'Arkansas Admin', logo: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=120&auto=format&fit=crop&q=80', description: 'Arkansas State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
->>>>>>> 36872db723a8fbf606c079aeeb0d3175f461d3f3
+  { id: 'ar', name: 'Arkansas', code: 'AR', clubsCount: 36, membersCount: 2240, eventsCount: 12, revenue: 152000, status: 'Active', adminName: 'Caleb Vance', logo: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=120&auto=format&fit=crop&q=80', description: 'Arkansas State Hunting Association overseeing Ozark field trials and river water races.' },
   { id: 'ca', name: 'California', code: 'CA', clubsCount: 31, membersCount: 1980, eventsCount: 9, revenue: 135000, status: 'Active', adminName: 'Elena Rostova', logo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80', description: 'Pacific region field trials and big game tracking associations.' },
   { id: 'co', name: 'Colorado', code: 'CO', clubsCount: 20, membersCount: 1300, eventsCount: 6, revenue: 85000, status: 'Active', adminName: 'Colorado Admin', logo: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120&auto=format&fit=crop&q=80', description: 'Colorado State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
   { id: 'ct', name: 'Connecticut', code: 'CT', clubsCount: 12, membersCount: 750, eventsCount: 4, revenue: 48000, status: 'Active', adminName: 'Connecticut Admin', logo: 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=120&auto=format&fit=crop&q=80', description: 'Connecticut State Charter overseeing sanctioned trials, affiliated clubs, and state championships.' },
@@ -787,24 +775,259 @@ export const INITIAL_MEMBERSHIPS = [
 ];
 
 export const INITIAL_PRODUCTS = [
-  // LOCAL CLUB STORE PRODUCTS
-  { id: 'prod-club-1', name: 'Oak Ridge Hunting Club Official Cap', category: 'Caps', price: 549.99, wholesaleCost: 384.99, margin: 165.00, vendorName: 'Browning Outdoors', inStock: 50, scopeChannel: 'LOCAL_CLUB', scopeEntity: 'Oak Ridge Hunting Club', image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80', description: 'Official Oak Ridge Hunting Club embroidered cap. 15% margin ($82.50) directly funds local club field trials.' },
-  { id: 'prod-club-2', name: 'Oak Ridge Chapter Field Utility Vest', category: 'Apparel', price: 699.99, wholesaleCost: 489.99, margin: 210.00, vendorName: 'Drake Waterfowl', inStock: 35, scopeChannel: 'LOCAL_CLUB', scopeEntity: 'Oak Ridge Hunting Club', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&auto=format&fit=crop&q=80', description: 'Rugged water-resistant field vest with custom Oak Ridge Local Chapter emblem.' },
-  { id: 'prod-3', name: 'Heritage Coonhound Leash & Lead Set', category: 'Accessories', price: 599.99, wholesaleCost: 419.99, margin: 180.00, vendorName: 'Filson Outdoors', inStock: 35, scopeChannel: 'LOCAL_CLUB', scopeEntity: 'Oak Ridge Hunting Club', image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&auto=format&fit=crop&q=80', description: 'Braided leather heavy-duty leads built for rugged timber trials.' },
-  { id: 'prod-club-3', name: 'Oak Ridge Chapter Member Brass Dog Tag', category: 'Stickers & Patches', price: 499.99, wholesaleCost: 349.99, margin: 150.00, vendorName: 'Filson Outdoors', inStock: 60, scopeChannel: 'LOCAL_CLUB', scopeEntity: 'Oak Ridge Hunting Club', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80', description: 'Custom engraved brass ID tags stamped with Oak Ridge Hunting Club registry.' },
+  // 1. UHC (Ultimate Hound Club Official)
+  {
+    id: 'mkt-uhc-1',
+    name: 'UHC National Championship Official Field Cap',
+    category: 'Caps',
+    price: 38.00,
+    wholesaleCost: 18.00,
+    margin: 20.00,
+    vendorName: 'UHC National Organization',
+    source: 'UHC',
+    inStock: 80,
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80',
+    description: 'Structured mesh-back embroidered Ultimate Hound Club official championship logo cap.'
+  },
+  {
+    id: 'mkt-uhc-2',
+    name: 'UHC National Championship Heavyweight Hoodie',
+    category: 'Hoodies',
+    price: 68.00,
+    wholesaleCost: 35.00,
+    margin: 33.00,
+    vendorName: 'UHC National Organization',
+    source: 'UHC',
+    inStock: 45,
+    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400&auto=format&fit=crop&q=80',
+    description: 'Fleece-lined national champion commemorative pullover hoodie with stitched chest emblem.'
+  },
 
-  // STATE ASSOCIATION STORE PRODUCTS
-  { id: 'prod-state-1', name: 'Tennessee State Championship Water Race Lead', category: 'Gear', price: 649.99, wholesaleCost: 454.99, margin: 195.00, vendorName: 'Filson Outdoors', inStock: 40, scopeChannel: 'STATE', scopeEntity: 'Tennessee State Association', image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&auto=format&fit=crop&q=80', description: 'Heavy-duty waterproof floating lead designed for state championship water races.' },
-  { id: 'prod-state-2', name: 'Tennessee State Association Softshell Jacket', category: 'Jackets', price: 799.99, wholesaleCost: 559.99, margin: 240.00, vendorName: 'Browning Outdoors', inStock: 25, scopeChannel: 'STATE', scopeEntity: 'Tennessee State Association', image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80', description: 'Official Tennessee State Association embroidered windproof field jacket.' },
-  { id: 'prod-state-3', name: 'State Championship Leather Tracking Belt', category: 'Accessories', price: 589.99, wholesaleCost: 412.99, margin: 177.00, vendorName: 'Filson Outdoors', inStock: 30, scopeChannel: 'STATE', scopeEntity: 'Tennessee State Association', image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80', description: 'Thick brass-buckle leather belt custom stamped for state trial judges.' },
-  { id: 'prod-state-4', name: 'Tennessee State Sanctioned LED Hunt Vest', category: 'Apparel', price: 729.99, wholesaleCost: 510.99, margin: 219.00, vendorName: 'Drake Waterfowl', inStock: 45, scopeChannel: 'STATE', scopeEntity: 'Tennessee State Association', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&auto=format&fit=crop&q=80', description: 'High-visibility state sanctioned safety vest with dual LED light bars.' },
+  // 2. K9 Keep
+  {
+    id: 'mkt-k9-1',
+    name: 'K9 Keep Real-Time Hound GPS Tracking Collar',
+    category: 'Gear',
+    price: 249.00,
+    wholesaleCost: 165.00,
+    margin: 84.00,
+    vendorName: 'K9 Keep Systems',
+    source: 'K9 Keep',
+    inStock: 30,
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&auto=format&fit=crop&q=80',
+    description: 'K9 Keep advanced long-range GPS dog telemetry collar with live bark and treeing alerts.'
+  },
+  {
+    id: 'mkt-k9-2',
+    name: 'K9 Keep Canine Performance Activity & Heat Monitor',
+    category: 'Gear',
+    price: 119.00,
+    wholesaleCost: 75.00,
+    margin: 44.00,
+    vendorName: 'K9 Keep Systems',
+    source: 'K9 Keep',
+    inStock: 40,
+    image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&auto=format&fit=crop&q=80',
+    description: 'Lightweight biometric sensor monitoring hunting stamina, hydration, and body temperature.'
+  },
 
-  // MAIN NATIONAL HQ STORE PRODUCTS
-  { id: 'prod-1', name: 'Official UKC Tracking Collar', category: 'Gear', price: 849.99, wholesaleCost: 594.99, margin: 255.00, vendorName: 'Garmin Outdoor', inStock: 24, scopeChannel: 'NATIONAL', scopeEntity: 'Ultimate Hound Club (UHC) HQ', image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&auto=format&fit=crop&q=80', description: 'High-precision GPS tracking collar with long-range telemetry. Drop-shipped directly by Garmin.' },
-  { id: 'prod-4', name: 'Ultimate Hound Club Official Cap', category: 'Caps', price: 529.99, wholesaleCost: 370.99, margin: 159.00, vendorName: 'Browning Outdoors', inStock: 80, scopeChannel: 'NATIONAL', scopeEntity: 'Ultimate Hound Club (UHC) HQ', image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80', description: 'Structured mesh-back embroidered Ultimate Hound Club logo cap.' },
-  { id: 'prod-5', name: 'UHC Member Heavyweight Hoodie', category: 'Hoodies', price: 679.99, wholesaleCost: 475.99, margin: 204.00, vendorName: 'Drake Waterfowl', inStock: 40, scopeChannel: 'NATIONAL', scopeEntity: 'Ultimate Hound Club (UHC) HQ', image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400&auto=format&fit=crop&q=80', description: 'Warm fleece-lined field hoodie with embroidered chest UHC emblem.' },
-  { id: 'prod-6', name: 'Field & Forest Water-Resistant Jacket', category: 'Jackets', price: 819.99, wholesaleCost: 573.99, margin: 246.00, vendorName: 'Browning Outdoors', inStock: 20, scopeChannel: 'NATIONAL', scopeEntity: 'Ultimate Hound Club (UHC) HQ', image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80', description: 'Breathable windproof hunting jacket with multi-pocket storage.' },
-  { id: 'prod-7', name: 'UHC Woven Emblem Patch Pack', category: 'Stickers & Patches', price: 499.99, wholesaleCost: 349.99, margin: 150.00, vendorName: 'Filson Outdoors', inStock: 100, scopeChannel: 'NATIONAL', scopeEntity: 'Ultimate Hound Club (UHC) HQ', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80', description: 'Set of 5 woven iron-on national association patches.' }
+  // 3. Hunting suppliers
+  {
+    id: 'mkt-hunt-1',
+    name: 'Timberline High-Beam Night Hunt LED Headlamp',
+    category: 'Gear',
+    price: 89.00,
+    wholesaleCost: 45.00,
+    margin: 44.00,
+    vendorName: 'Southern Timber Hunting Supply',
+    source: 'Hunting suppliers',
+    inStock: 55,
+    image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&auto=format&fit=crop&q=80',
+    description: '4000-lumen hands-free rechargeable night hunt spotlight with dual beam focus for tall timber.'
+  },
+  {
+    id: 'mkt-hunt-2',
+    name: 'Brass Treeing Bell & Quick-Release Snap',
+    category: 'Accessories',
+    price: 24.00,
+    wholesaleCost: 10.00,
+    margin: 14.00,
+    vendorName: 'Ozark Sporting Dog Supply',
+    source: 'Hunting suppliers',
+    inStock: 120,
+    image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+    description: 'Resonant acoustic brass bell tuned for locating treeing hounds in thick river bottoms.'
+  },
+
+  // 4. Dog equipment companies
+  {
+    id: 'mkt-dog-1',
+    name: 'Apex Waterproof BioThane Treeing Hound Lead Set',
+    category: 'Gear',
+    price: 45.00,
+    wholesaleCost: 22.00,
+    margin: 23.00,
+    vendorName: 'Apex Canine Equipment Co.',
+    source: 'Dog equipment companies',
+    inStock: 65,
+    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&auto=format&fit=crop&q=80',
+    description: '10-foot weather-proof odor-resistant BioThane dog lead with heavy-duty brass hardware.'
+  },
+  {
+    id: 'mkt-dog-2',
+    name: 'Padded Strike Harness for Coonhounds',
+    category: 'Gear',
+    price: 59.00,
+    wholesaleCost: 32.00,
+    margin: 27.00,
+    vendorName: 'Apex Canine Equipment Co.',
+    source: 'Dog equipment companies',
+    inStock: 35,
+    image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400&auto=format&fit=crop&q=80',
+    description: 'Ergonomic padded tracking harness designed to reduce throat pressure during long night casts.'
+  },
+
+  // 5. Apparel companies
+  {
+    id: 'mkt-apparel-1',
+    name: 'Briar-Proof Heavy Duty Upland Hunting Bibs',
+    category: 'Apparel',
+    price: 139.00,
+    wholesaleCost: 78.00,
+    margin: 61.00,
+    vendorName: 'Ridgeback Outdoor Apparel',
+    source: 'Apparel companies',
+    inStock: 25,
+    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&auto=format&fit=crop&q=80',
+    description: 'Reinforced 1000D Cordura front panels resistant to heavy greenbrier and thorny underbrush.'
+  },
+  {
+    id: 'mkt-apparel-2',
+    name: 'Thermal Softshell Field Jacket',
+    category: 'Jackets',
+    price: 119.00,
+    wholesaleCost: 65.00,
+    margin: 54.00,
+    vendorName: 'Ridgeback Outdoor Apparel',
+    source: 'Apparel companies',
+    inStock: 30,
+    image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80',
+    description: 'Windproof breathable hunting softshell with game pockets and insulated fleece backing.'
+  },
+
+  // 6. Sponsors
+  {
+    id: 'mkt-sp-1',
+    name: 'Garmin Alpha GPS Handheld & TT 15X Collar Bundle',
+    category: 'Gear',
+    price: 799.00,
+    wholesaleCost: 590.00,
+    margin: 209.00,
+    vendorName: 'Garmin Outdoors (Official Sponsor)',
+    source: 'Sponsors',
+    inStock: 15,
+    image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&auto=format&fit=crop&q=80',
+    description: 'Official UHC Gold Sponsor bundle featuring multi-dog tracking and 9-mile range.'
+  },
+  {
+    id: 'mkt-sp-2',
+    name: 'Purina Pro Plan Sport Performance 30/20 Dog Food (37.5 lb)',
+    category: 'Gear',
+    price: 74.00,
+    wholesaleCost: 48.00,
+    margin: 26.00,
+    vendorName: 'Purina Pro Plan (Official Sponsor)',
+    source: 'Sponsors',
+    inStock: 90,
+    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&auto=format&fit=crop&q=80',
+    description: 'High-protein sport canine formula optimized for hunting endurance and rapid muscle recovery.'
+  },
+
+  // 7. Outside vendors
+  {
+    id: 'mkt-out-1',
+    name: 'All-Weather Heavy Aluminum 2-Dog Hunting Box',
+    category: 'Gear',
+    price: 495.00,
+    wholesaleCost: 350.00,
+    margin: 145.00,
+    vendorName: 'Diamond Deluxe Dog Boxes',
+    source: 'Outside vendors',
+    inStock: 10,
+    image: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=400&auto=format&fit=crop&q=80',
+    description: 'Diamond-tread welded aluminum dog transport box with top storage and vented louvers.'
+  },
+
+  // 8. Drop-shipping vendors
+  {
+    id: 'mkt-ds-1',
+    name: 'Factory Direct Reflective Neon Hound Collar (10-Pack)',
+    category: 'Accessories',
+    price: 49.00,
+    wholesaleCost: 20.00,
+    margin: 29.00,
+    vendorName: 'National Drop-Ship Direct',
+    source: 'Drop-shipping vendors',
+    inStock: 150,
+    image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+    description: 'Bulk box of high-visibility reflective nylon strap collars with center safety ring.'
+  },
+
+  // 9. State Associations
+  {
+    id: 'mkt-state-1',
+    name: 'Texas Hound Association Championship Field Vest',
+    category: 'Apparel',
+    price: 65.00,
+    wholesaleCost: 35.00,
+    margin: 30.00,
+    vendorName: 'Texas Hound Association',
+    source: 'State Associations',
+    inStock: 40,
+    image: 'https://images.unsplash.com/photo-1531219432768-9f540ce91ef3?w=400&auto=format&fit=crop&q=80',
+    description: 'Official Texas state charter embroidered vest. Profit directly funds Texas state field trials.'
+  },
+  {
+    id: 'mkt-state-2',
+    name: 'Tennessee State Association Softshell Windbreaker',
+    category: 'Jackets',
+    price: 79.00,
+    wholesaleCost: 45.00,
+    margin: 34.00,
+    vendorName: 'Tennessee State Association',
+    source: 'State Associations',
+    inStock: 25,
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+    description: 'Official Tennessee State Association embroidered windproof fleece jacket.'
+  },
+
+  // 10. Local Clubs
+  {
+    id: 'mkt-club-1',
+    name: 'Houston County Coon Hunters Association Cap',
+    category: 'Caps',
+    price: 28.00,
+    wholesaleCost: 14.00,
+    margin: 14.00,
+    vendorName: 'Houston County Coon Hunters Association',
+    source: 'Local Clubs',
+    inStock: 60,
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&auto=format&fit=crop&q=80',
+    description: 'Custom Houston County local club embroidered cap. 100% of profits fund local trial grounds.'
+  },
+  {
+    id: 'mkt-club-2',
+    name: 'Oak Ridge Hunting Club Official Chapter T-Shirt',
+    category: 'Apparel',
+    price: 26.00,
+    wholesaleCost: 12.00,
+    margin: 14.00,
+    vendorName: 'Oak Ridge Hunting Club',
+    source: 'Local Clubs',
+    inStock: 50,
+    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&auto=format&fit=crop&q=80',
+    description: 'Heavyweight cotton crewneck t-shirt with Oak Ridge local chapter trial logo.'
+  }
 ];
 
 export const INITIAL_CLAIMS = [

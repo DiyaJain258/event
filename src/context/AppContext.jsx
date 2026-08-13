@@ -614,6 +614,67 @@ export const AppProvider = ({ children }) => {
     return newMember;
   };
 
+  // Local Club Membership Sign-Up Flow Action (Recording exact 7 fields required by client)
+  const registerLocalClubMembership = (formData) => {
+    const clubName = formData.clubAffiliation || formData.clubName || 'Houston County Coon Hunters Association';
+    const cleanEmail = String(formData.email || '').trim().toLowerCase();
+    const amountPaid = Number(formData.amount || 25.00);
+    const joinDate = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    const expirationDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    const newId = `CLUB-${Math.floor(10000 + Math.random() * 90000)}`;
+
+    // Automatically Record 7 Fields: Member name, Contact info, Join date, Expiration date, Payment, Membership type, Club affiliation
+    const newMember = {
+      id: `mem-${Date.now()}`,
+      name: formData.name, // 1. Member name
+      phone: formData.phone || '(936) 555-0182', // 2. Contact info
+      email: cleanEmail, // 2. Contact info
+      joined: joinDate, // 3. Join date
+      expires: expirationDate, // 4. Expiration date
+      amountPaid: amountPaid, // 5. Payment
+      paymentStatus: 'Completed', // 5. Payment
+      paymentRecorded: true, // 5. Payment
+      type: formData.membershipType || 'Individual Local Membership', // 6. Membership type
+      club: clubName, // 7. Club affiliation
+      state: formData.state || 'Texas',
+      membershipId: newId,
+      status: 'Active'
+    };
+
+    const newUser = {
+      id: newMember.id,
+      name: formData.name,
+      email: cleanEmail,
+      role: 'MEMBER',
+      scope: `${newMember.club} (${newMember.state})`,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      membershipId: newId,
+      club: newMember.club,
+      state: newMember.state
+    };
+
+    const newTransaction = {
+      id: `TXN-${Math.floor(10000 + Math.random() * 90000)}`,
+      description: `Local Club Membership Sign-Up - ${formData.name} (${clubName})`,
+      category: 'Local Club Membership Dues',
+      amount: amountPaid,
+      type: 'Credit',
+      status: 'Completed',
+      club: clubName,
+      memberId: newId,
+      reference: `PAY-${Date.now()}`,
+      date: joinDate
+    };
+
+    setMembers((prev) => [newMember, ...prev]);
+    setUsers((prev) => [newUser, ...prev]);
+    setTransactions((prev) => [newTransaction, ...prev]);
+    setCurrentUser(newUser);
+
+    showToast(`Local Club Membership successfully activated for ${formData.name}! Payment of $${amountPaid.toFixed(2)} recorded.`, 'success');
+    return newMember;
+  };
+
   // 2. Event Registration Flow Action
   const enterEvent = (eventId, dogId, participantName) => {
     const targetEvent = events.find((e) => e.id === eventId);
@@ -1124,6 +1185,7 @@ export const AppProvider = ({ children }) => {
         loginUser,
         registerMembership,
         registerStateMembership,
+        registerLocalClubMembership,
         enterEvent,
         toggleCheckIn,
         createEvent,

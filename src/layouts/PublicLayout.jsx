@@ -47,7 +47,7 @@ export const PublicLayout = () => {
     { label: 'LOCAL CLUBS', path: '/clubs' },
     { label: 'HOUND SPORTS', path: '/sports' },
     { label: 'NEWS', path: '/news' },
-    { label: 'MARKETPLACE', path: '/store' },
+    { label: 'MARKETPLACE', path: '/marketplace' },
     { label: 'MEMBERSHIP', path: '/join' },
     { label: 'RESULTS', path: '/results' },
     { label: 'AUCTIONS', path: '/auctions' },

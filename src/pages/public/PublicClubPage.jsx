@@ -291,13 +291,13 @@ export const PublicClubPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <a
-                href="#membership"
+              <Link
+                to={`/join-club/${club.id}`}
                 className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
-                <span>Join {club.name} ($25/yr)</span>
-              </a>
+                <span>Join {club.name}</span>
+              </Link>
             </div>
           </div>
 
@@ -491,11 +491,11 @@ export const PublicClubPage = () => {
           </div>
 
           <Link
-            to="/join"
+            to={`/join-club/${club.id}`}
             className="px-6 py-3.5 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>Complete {club.name} Membership Signup ($25/yr)</span>
+            <span>Join {club.name}</span>
           </Link>
         </div>
       </section>

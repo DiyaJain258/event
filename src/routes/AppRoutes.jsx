@@ -15,12 +15,14 @@ import { PublicClubPage } from '../pages/public/PublicClubPage';
 import { PublicResultsPage } from '../pages/public/PublicResultsPage';
 import { PublicNewsPage } from '../pages/public/PublicNewsPage';
 import { PublicStorePage } from '../pages/public/PublicStorePage';
+import { PublicMarketplacePage } from '../pages/public/PublicMarketplacePage';
 import { CartPage } from '../pages/public/CartPage';
 import { CheckoutPage } from '../pages/public/CheckoutPage';
 import { OrderConfirmationPage } from '../pages/public/OrderConfirmationPage';
 import { PublicSponsorsPage } from '../pages/public/PublicSponsorsPage';
 import { JoinPage } from '../pages/public/JoinPage';
 import { StateMembershipSignUpPage } from '../pages/public/StateMembershipSignUpPage';
+import { LocalClubMembershipSignUpPage } from '../pages/public/LocalClubMembershipSignUpPage';
 import { LoginPage } from '../pages/public/LoginPage';
 import { HoundSportsPage } from '../pages/public/HoundSportsPage';
 
@@ -98,6 +100,7 @@ export const AppRoutes = () => {
         <Route path="/results" element={<PublicResultsPage />} />
         <Route path="/news" element={<PublicNewsPage />} />
         <Route path="/store" element={<PublicStorePage />} />
+        <Route path="/marketplace" element={<PublicMarketplacePage />} />
         <Route path="/auctions" element={<PublicStorePage />} />
         <Route path="/education" element={<HomePage />} />
         <Route path="/cart" element={<CartPage />} />
@@ -109,6 +112,10 @@ export const AppRoutes = () => {
         <Route path="/join-state/:stateId" element={<StateMembershipSignUpPage />} />
         <Route path="/states/:stateId/join" element={<StateMembershipSignUpPage />} />
         <Route path="/join-texas" element={<StateMembershipSignUpPage />} />
+        <Route path="/join-club" element={<LocalClubMembershipSignUpPage />} />
+        <Route path="/join-club/:clubId" element={<LocalClubMembershipSignUpPage />} />
+        <Route path="/clubs/:clubId/join" element={<LocalClubMembershipSignUpPage />} />
+        <Route path="/join-houston-county" element={<LocalClubMembershipSignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 
