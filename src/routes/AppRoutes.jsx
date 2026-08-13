@@ -69,6 +69,7 @@ import { SuperAdminPermissions } from '../pages/superAdmin/SuperAdminPermissions
 import { NationalHeadquartersSettings } from '../pages/superAdmin/NationalHeadquartersSettings';
 
 // Shared Common Functional Views
+import { PlatformStructurePage } from '../pages/admin/PlatformStructurePage';
 import { ConnectedNetworkArchitecturePage } from '../pages/admin/ConnectedNetworkArchitecturePage';
 import { RolePermissionsPage } from '../pages/admin/RolePermissionsPage';
 import { MembershipFlowPage } from '../pages/admin/MembershipFlowPage';
@@ -129,6 +130,7 @@ export const AppRoutes = () => {
         <Route path="/membership-flow" element={<MembershipFlowPage />} />
         <Route path="/role-permissions" element={<RolePermissionsPage />} />
         <Route path="/network-architecture" element={<ConnectedNetworkArchitecturePage />} />
+        <Route path="/platform-structure" element={<PlatformStructurePage />} />
         <Route path="/login" element={<LoginPage />} />
       </Route>
 
