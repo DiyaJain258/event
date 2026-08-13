@@ -16,8 +16,10 @@ import {
   ShieldCheck,
   Search,
   ChevronRight,
-  Award,
-  DollarSign
+  Phone,
+  UserCheck,
+  Send,
+  Info
 } from 'lucide-react';
 
 export const PublicStatePage = () => {
@@ -27,6 +29,16 @@ export const PublicStatePage = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEventForPreSignUp, setSelectedEventForPreSignUp] = useState(null);
+  const [activeTab, setActiveTab] = useState('HOME');
+  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
+
+  // 6 State Events Filters required by Client: Date, Organization, Dog type, Event type, Region, Local club
+  const [eventDateFilter, setEventDateFilter] = useState('');
+  const [eventOrgFilter, setEventOrgFilter] = useState('ALL');
+  const [eventDogTypeFilter, setEventDogTypeFilter] = useState('ALL');
+  const [eventTypeFilter, setEventTypeFilter] = useState('ALL');
+  const [eventRegionFilter, setEventRegionFilter] = useState('ALL');
+  const [eventClubFilter, setEventClubFilter] = useState('ALL');
 
   // Match stateId from URL parameter or direct route path (e.g. /texas or /states/texas)
   const pathSlug = location.pathname.replace(/^\/states\//, '').replace(/^\//, '').toLowerCase();
@@ -36,10 +48,11 @@ export const PublicStatePage = () => {
     (s) =>
       s.id === effectiveStateId ||
       s.code.toLowerCase() === effectiveStateId?.toLowerCase() ||
-      s.name.toLowerCase() === effectiveStateId?.toLowerCase()
+      s.name.toLowerCase() === effectiveStateId?.toLowerCase() ||
+      s.name.toLowerCase().includes(effectiveStateId?.toLowerCase())
   );
 
-  // Filter states for listing view
+  // Filter states for directory view
   const filteredStates = states.filter(
     (s) =>
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -49,24 +62,55 @@ export const PublicStatePage = () => {
 
   // Data scoped to selected State
   const stateData = currentState || states[0];
+  const stateTitle = stateData.name.includes('Association') ? stateData.name : `${stateData.name} State Association`;
   const stateClubs = clubs.filter((c) => c.state === stateData.name || c.stateCode === stateData.code || c.stateId === stateData.id);
   const stateEvents = events.filter((e) => e.state === stateData.name || e.stateCode === stateData.code || e.stateId === stateData.id);
+
+  // Filtered State Events automatically showing all events in that state filtered by 6 criteria
+  const filteredStateEvents = stateEvents.filter((evt) => {
+    if (eventOrgFilter !== 'ALL' && !evt.federation?.toLowerCase().includes(eventOrgFilter.toLowerCase())) return false;
+    if (eventDogTypeFilter !== 'ALL' && evt.dogType !== eventDogTypeFilter && !evt.sport?.toLowerCase().includes(eventDogTypeFilter.toLowerCase())) return false;
+    if (eventTypeFilter !== 'ALL' && evt.type !== eventTypeFilter) return false;
+    if (eventRegionFilter !== 'ALL' && evt.region !== eventRegionFilter && !evt.city?.toLowerCase().includes(eventRegionFilter.toLowerCase())) return false;
+    if (eventClubFilter !== 'ALL' && evt.club !== eventClubFilter) return false;
+    if (eventDateFilter && !evt.date?.toLowerCase().includes(eventDateFilter.toLowerCase())) return false;
+    return true;
+  });
+
   const stateProducts = products.filter(
     (p) =>
       (p.scopeChannel === 'STATE' || p.organizationType === 'STATE') &&
       (p.scopeEntity === `${stateData.name} State Association` || p.organizationId === stateData.id || p.organizationId === stateData.code)
   );
-  // Fallback state products if specific state has no custom items
   const displayProducts = stateProducts.length > 0 ? stateProducts : products.filter((p) => p.scopeChannel === 'STATE');
-
   const stateNews = news.filter((n) => n.category?.includes('State') || n.summary?.includes(stateData.name));
   const stateResults = results.filter((r) => r.state === stateData.name || r.stateCode === stateData.code);
 
   const mockOfficers = [
-    { name: stateData.adminName || 'Sarah Tennessee', title: 'State Association Director', term: '2025 - 2027', photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80' },
-    { name: 'Marcus Vance', title: 'Vice State Director', term: '2026 - 2028', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
-    { name: 'Elena Rostova', title: 'State Secretary & Treasurer', term: '2025 - 2027', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }
+    { name: stateData.adminName || 'Austin Sterling', title: 'State Association Director', term: '2025 - 2027', email: `director@${stateData.code.toLowerCase()}hunting.org`, phone: '(800) 555-0192', photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80' },
+    { name: 'Marcus Vance', title: 'Vice State Director', term: '2026 - 2028', email: `vice@${stateData.code.toLowerCase()}hunting.org`, phone: '(800) 555-0193', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
+    { name: 'Elena Rostova', title: 'State Secretary & Treasurer', term: '2025 - 2027', email: `treasurer@${stateData.code.toLowerCase()}hunting.org`, phone: '(800) 555-0194', photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }
   ];
+
+  // Exact 10 Navigation Items requested by Client
+  const navItems = [
+    { id: 'HOME', label: 'HOME' },
+    { id: 'ABOUT', label: 'ABOUT' },
+    { id: 'NEWS', label: 'NEWS' },
+    { id: 'EVENTS', label: 'EVENTS' },
+    { id: 'CLUBS', label: 'CLUBS' },
+    { id: 'MEMBERSHIP', label: 'MEMBERSHIP' },
+    { id: 'RESULTS', label: 'RESULTS' },
+    { id: 'MERCHANDISE', label: 'MERCHANDISE' },
+    { id: 'OFFICERS', label: 'OFFICERS' },
+    { id: 'CONTACT', label: 'CONTACT' },
+  ];
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    showToast(`Thank you! Your message has been sent to ${stateTitle}.`, 'success');
+    setContactForm({ name: '', email: '', subject: '', message: '' });
+  };
 
   // -------------------------------------------------------------
   // VIEW 1: State Associations Directory Listing (/states)
@@ -74,7 +118,6 @@ export const PublicStatePage = () => {
   if (!isDedicatedPage) {
     return (
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-10">
-        {/* Directory Header */}
         <div className="bg-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl space-y-6">
           <span className="px-3.5 py-1 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
             State Governance Directory
@@ -83,10 +126,9 @@ export const PublicStatePage = () => {
             State Associations
           </h1>
           <p className="text-xs sm:text-sm text-tan-200 max-w-2xl font-medium leading-relaxed">
-            Every state features a dedicated public association portal overseeing affiliated local clubs, state championships, officer elections, and custom merchandise.
+            Select a state association to view its dedicated public website, officers, affiliated clubs, events, and merchandise.
           </p>
 
-          {/* Search Toolbar */}
           <div className="relative max-w-md">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-light" />
             <input
@@ -99,10 +141,8 @@ export const PublicStatePage = () => {
           </div>
         </div>
 
-        {/* Interactive U.S. Map State Directory Selection */}
         <InteractiveUsMap />
 
-        {/* State Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStates.map((s) => (
             <div
@@ -119,7 +159,7 @@ export const PublicStatePage = () => {
                       {s.code} Charter
                     </span>
                     <h3 className="font-black text-lg text-forest-950 group-hover:text-tan-700 transition-colors mt-0.5">
-                      {s.name} Association
+                      {s.name.includes('Association') ? s.name : `${s.name} Association`}
                     </h3>
                   </div>
                 </div>
@@ -149,49 +189,541 @@ export const PublicStatePage = () => {
                   to={`/states/${s.id}`}
                   className="w-full py-3 bg-forest-900 hover:bg-forest-950 text-white font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all"
                 >
-                  <span>View Dedicated {s.name} Page</span>
+                  <span>View Dedicated State Page</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
 
-        {/* ─── STATE STORE PRODUCTS SECTION ─── */}
-        <div className="space-y-6 pt-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
-                🏛️ State Association Store
-              </span>
-              <h2 className="text-2xl font-black text-charcoal mt-2">State Association Merchandise</h2>
-              <p className="text-xs text-charcoal-muted mt-1">Official gear sold by state associations — all profits fund state championship events.</p>
+  // -------------------------------------------------------------
+  // VIEW 2: Dedicated Public State Association Page
+  // -------------------------------------------------------------
+  return (
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-8">
+      {/* Hierarchy Breadcrumbs */}
+      <div className="flex items-center gap-2 text-xs font-bold text-charcoal-muted">
+        <Link to="/" className="hover:text-forest-950 transition-colors">National</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <Link to="/states" className="hover:text-forest-950 transition-colors">State Associations</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <span className="text-forest-950 font-black">{stateTitle}</span>
+      </div>
+
+      {/* 🏛️ REQUIREMENT 2: STATE HEADER */}
+      {/* Must contain: Logo, Name, Branding/Colors, Contact Info, Association Officers */}
+      <header className="relative bg-gradient-to-r from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-6 sm:p-8 lg:p-10 border-2 border-tan-500/40 shadow-2xl overflow-hidden space-y-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+          
+          {/* Logo & State Association Name */}
+          <div className="flex items-start sm:items-center gap-4 sm:gap-6 min-w-0 flex-1">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-tan-500/20 border-2 border-tan-400 flex items-center justify-center overflow-hidden shrink-0 shadow-xl">
+              {stateData.logo ? (
+                <img src={stateData.logo} alt={stateTitle} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-3xl font-black text-tan-300">{stateData.code}</span>
+              )}
+            </div>
+
+            <div className="space-y-2 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* State Branding / Colors Badge */}
+                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
+                  Official State Charter ({stateData.code})
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase bg-forest-900 text-tan-300 border border-forest-700">
+                  State Colors: Forest & Tan
+                </span>
+              </div>
+              
+              {/* State Association Name */}
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+                {stateTitle}
+              </h1>
+
+              {/* State Contact Information Header Bar */}
+              <div className="flex flex-wrap items-center gap-4 text-xs text-tan-200 font-medium pt-1">
+                <div className="flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-tan-400" />
+                  <span>(800) 555-0192</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-tan-400" />
+                  <span>contact@{stateData.code.toLowerCase()}hunting.org</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-tan-400" />
+                  <span>State Headquarters, {stateData.name}</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Association Officers Header Summary & Action */}
+          <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-3 shrink-0">
+            <div className="p-3 rounded-2xl bg-forest-900/90 border border-forest-700 space-y-1.5 text-xs text-left lg:text-right">
+              <div className="text-[10px] font-black uppercase text-tan-400 flex items-center gap-1 lg:justify-end">
+                <UserCheck className="w-3.5 h-3.5 text-tan-400" />
+                <span>Association Officers</span>
+              </div>
+              <div className="font-extrabold text-white">{stateData.adminName || 'Austin Sterling'} (Director)</div>
+              <div className="text-[11px] text-tan-200">Board: 3 Elected State Officers</div>
+            </div>
+
+            <Link
+              to="/join"
+              className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Join State Association</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Quick Stat Counter Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-forest-800 text-center">
+          <div className="bg-forest-900/60 p-3 rounded-xl border border-forest-800">
+            <strong className="block text-xl sm:text-2xl font-black text-tan-300">{stateData.clubsCount}</strong>
+            <span className="text-[10px] uppercase font-bold text-tan-200">Affiliated Clubs</span>
+          </div>
+          <div className="bg-forest-900/60 p-3 rounded-xl border border-forest-800">
+            <strong className="block text-xl sm:text-2xl font-black text-tan-300">{stateData.membersCount}</strong>
+            <span className="text-[10px] uppercase font-bold text-tan-200">State Members</span>
+          </div>
+          <div className="bg-forest-900/60 p-3 rounded-xl border border-forest-800">
+            <strong className="block text-xl sm:text-2xl font-black text-tan-300">{stateEvents.length || stateData.eventsCount}</strong>
+            <span className="text-[10px] uppercase font-bold text-tan-200">Sanctioned Events</span>
+          </div>
+          <div className="bg-forest-900/60 p-3 rounded-xl border border-forest-800">
+            <strong className="block text-xl sm:text-2xl font-black text-emerald-400">${stateData.revenue?.toLocaleString() || '245,000'}</strong>
+            <span className="text-[10px] uppercase font-bold text-tan-200">State Margin</span>
+          </div>
+        </div>
+      </header>
+
+      {/* 🧭 REQUIREMENT 3: EXACT STATE NAVIGATION ITEMS (10 Items) */}
+      {/* HOME, ABOUT, NEWS, EVENTS, CLUBS, MEMBERSHIP, RESULTS, MERCHANDISE, OFFICERS, CONTACT */}
+      <nav className="sticky top-16 z-40 bg-surface-lowest/95 backdrop-blur-md p-1.5 rounded-2xl border border-surface-border shadow-xl overflow-x-auto flex items-center gap-1 scrollbar-none">
+        {navItems.map((item) => {
+          const isActive = activeTab === item.id;
+          return (
+            <a
+              key={item.id}
+              href={`#${item.id.toLowerCase()}`}
+              onClick={() => setActiveTab(item.id)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-black tracking-wide whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-forest-950 text-tan-300 shadow-md'
+                  : 'text-charcoal hover:bg-surface-low hover:text-forest-950'
+              }`}
+            >
+              <span>{item.label}</span>
+            </a>
+          );
+        })}
+      </nav>
+
+      {/* SECTION 1: HOME */}
+      <section id="home" className="space-y-6">
+        <div className="bg-surface-lowest p-6 sm:p-8 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-tan-100 text-tan-900">
+              Welcome to {stateTitle}
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-forest-950">
+            Official Public Portal of {stateTitle}
+          </h2>
+          <p className="text-xs sm:text-sm text-charcoal leading-relaxed font-medium">
+            {stateData.description ||
+              `The ${stateTitle} is the governing state charter responsible for sanctioning field trials, coonhound night hunts, beagle pack trials, and state championships across ${stateData.name}.`}
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 2: ABOUT */}
+      <section id="about" className="space-y-6">
+        <div className="bg-surface-lowest p-6 sm:p-8 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+            <Info className="w-5 h-5 text-tan-600" />
+            <span>About {stateTitle}</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-charcoal leading-relaxed font-medium">
+            Founded to advance ethical sporting dog trials, wildlife preservation, and youth education programs. {stateTitle} provides leadership to affiliated local clubs and enforces national sanctioning rules.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-surface-border text-xs font-medium">
+            <div className="p-4 rounded-xl bg-surface-low border border-surface-border space-y-1">
+              <strong className="block font-black text-forest-950 text-sm">Our Mission</strong>
+              <p className="text-charcoal-muted">Promoting ethical sporting hound competition, state championship qualifications, and hunter education across {stateData.name}.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-surface-low border border-surface-border space-y-1">
+              <strong className="block font-black text-forest-950 text-sm">State Charter Governance</strong>
+              <p className="text-charcoal-muted">Governed by elected state officers with full financial transparency and automated local club commission distributions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: NEWS */}
+      <section id="news" className="space-y-6">
+        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <div className="flex items-center justify-between border-b border-surface-border pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+              <Newspaper className="w-5 h-5 text-tan-600" />
+              <span>{stateData.name} State News & Bulletins</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {stateNews.length > 0 ? (
+              stateNews.map((n) => (
+                <div key={n.id} className="p-4 bg-surface-low rounded-xl border border-surface-border space-y-2">
+                  <span className="text-[10px] font-black uppercase text-tan-700 bg-tan-100 px-2 py-0.5 rounded">{n.date}</span>
+                  <h4 className="font-extrabold text-sm text-forest-950">{n.title}</h4>
+                  <p className="text-xs text-charcoal-muted leading-relaxed">{n.summary}</p>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-2 p-6 text-center text-xs text-charcoal-muted bg-surface-low rounded-xl border">
+                No recent news bulletins posted for {stateTitle}.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: EVENTS - STATE EVENTS PAGE */}
+      <section id="events" className="space-y-6">
+        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border pb-4 gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+                  State Sanctioned Events Directory
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2 mt-1">
+                <Calendar className="w-5 h-5 text-tan-600" />
+                <span>{stateData.name} State Events ({filteredStateEvents.length})</span>
+              </h2>
+              <p className="text-xs text-charcoal-muted mt-0.5">
+                Automatically displaying all events held in {stateData.name} across all federations, event types, and local clubs.
+              </p>
+            </div>
+
+            {(eventOrgFilter !== 'ALL' || eventTypeFilter !== 'ALL' || eventDogTypeFilter !== 'ALL' || eventRegionFilter !== 'ALL' || eventClubFilter !== 'ALL' || eventDateFilter) && (
+              <button
+                onClick={() => {
+                  setEventOrgFilter('ALL');
+                  setEventTypeFilter('ALL');
+                  setEventDogTypeFilter('ALL');
+                  setEventRegionFilter('ALL');
+                  setEventClubFilter('ALL');
+                  setEventDateFilter('');
+                }}
+                className="px-3 py-1.5 bg-surface-low border border-surface-border text-charcoal hover:bg-tan-100 text-xs font-bold rounded-lg transition-colors self-start sm:self-auto"
+              >
+                Reset Filters
+              </button>
+            )}
+          </div>
+
+          {/* REQUIREMENT 4: 6 FILTER CONTROLS BAR (Date, Organization, Dog type, Event type, Region, Local club) */}
+          <div className="p-4 bg-surface-low rounded-2xl border border-surface-border space-y-3 text-xs">
+            <div className="text-[11px] font-black uppercase tracking-wider text-forest-950 flex items-center gap-1.5">
+              <span>Filter State Events By:</span>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {/* 1. Date Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">1. Date</label>
+                <input
+                  type="text"
+                  value={eventDateFilter}
+                  onChange={(e) => setEventDateFilter(e.target.value)}
+                  placeholder="Filter by date (e.g. October, Sep)..."
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              {/* 2. Organization (Federation) Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">2. Organization / Federation</label>
+                <select
+                  value={eventOrgFilter}
+                  onChange={(e) => setEventOrgFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Organizations</option>
+                  <option value="UKC">UKC (United Kennel Club)</option>
+                  <option value="PKC">PKC (Professional Kennel Club)</option>
+                  <option value="AKC">AKC (American Kennel Club)</option>
+                  <option value="Independent">Independent (Non-Affiliated)</option>
+                  <option value="UHC">UHC (Ultimate Hound Club)</option>
+                </select>
+              </div>
+
+              {/* 3. Dog Type Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">3. Dog Type</label>
+                <select
+                  value={eventDogTypeFilter}
+                  onChange={(e) => setEventDogTypeFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Dog Types & Breeds</option>
+                  <option value="Treeing Walker Coonhound">Treeing Walker Coonhound</option>
+                  <option value="Black & Tan Coonhound">Black & Tan Coonhound</option>
+                  <option value="Beagle Pack">Beagle Pack</option>
+                  <option value="Youth Handler (All Breeds)">Youth Handler (All Breeds)</option>
+                  <option value="Purebred Coonhounds">Purebred Coonhounds</option>
+                  <option value="All Sporting Dogs">All Sporting Dogs</option>
+                </select>
+              </div>
+
+              {/* 4. Event Type Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">4. Event Type</label>
+                <select
+                  value={eventTypeFilter}
+                  onChange={(e) => setEventTypeFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Event Types</option>
+                  <option value="UKC Event">UKC Event</option>
+                  <option value="PKC Event">PKC Event</option>
+                  <option value="Independent Event">Independent Event</option>
+                  <option value="State Championship Event">State Championship Event</option>
+                  <option value="Youth Event">Youth Event</option>
+                  <option value="Bench Show">Bench Show</option>
+                  <option value="Field Trial">Field Trial</option>
+                  <option value="Club Fundraiser">Club Fundraiser</option>
+                </select>
+              </div>
+
+              {/* 5. Region Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">5. Region / City</label>
+                <select
+                  value={eventRegionFilter}
+                  onChange={(e) => setEventRegionFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Regions in {stateData.name}</option>
+                  <option value="Central Texas">Central Texas (Austin/Fredericksburg)</option>
+                  <option value="South Texas">South Texas (San Antonio)</option>
+                  <option value="East Texas">East Texas (Tyler/Lufkin)</option>
+                  <option value="North Texas">North Texas (Waco/Dallas)</option>
+                </select>
+              </div>
+
+              {/* 6. Local Club Filter */}
+              <div>
+                <label className="block font-extrabold text-charcoal-muted text-[10px] uppercase mb-1">6. Local Club</label>
+                <select
+                  value={eventClubFilter}
+                  onChange={(e) => setEventClubFilter(e.target.value)}
+                  className="w-full px-3 py-2 bg-surface-lowest border border-surface-border rounded-xl font-bold text-xs focus:outline-none focus:border-forest-800"
+                >
+                  <option value="ALL">All Local Clubs</option>
+                  {stateClubs.map((c) => (
+                    <option key={c.id} value={c.name}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* STATE EVENTS GRID */}
+          {filteredStateEvents.length === 0 ? (
+            <div className="p-8 text-center bg-surface-low rounded-2xl border border-surface-border text-xs text-charcoal-muted space-y-2">
+              <div className="font-extrabold text-forest-900 text-sm">No Events Found</div>
+              <p>No events match the selected filters. Try broadening your filter selections.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredStateEvents.map((evt) => (
+                <div key={evt.id} className="p-5 rounded-2xl border border-surface-border bg-surface-low space-y-3 flex flex-col justify-between hover:shadow-lg transition-all">
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase bg-forest-900 text-tan-300">
+                        {evt.federation || 'UHC Sanctioned'}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+                        {evt.type}
+                      </span>
+                      <span className="text-xs font-black text-forest-800 ml-auto">${evt.fee} Fee</span>
+                    </div>
+
+                    <h3 className="font-black text-base text-forest-950 leading-tight">{evt.name}</h3>
+                    
+                    <p className="text-xs text-charcoal-muted line-clamp-2">{evt.description}</p>
+
+                    <div className="text-xs text-charcoal space-y-1 font-medium pt-1 border-t border-surface-border">
+                      <div className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-tan-600" /> {evt.date} @ {evt.startTime}</div>
+                      <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-tan-600" /> Location: {evt.city}, {evt.state} ({evt.region || 'Statewide'})</div>
+                      
+                      {/* REQUIREMENT 5: CONNECTED TO LOCAL HOST CLUB */}
+                      <div className="pt-1">
+                        <Link
+                          to={`/clubs/${evt.clubId || 'club-5'}`}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-lowest border border-surface-border hover:border-forest-800 text-forest-950 font-black text-xs transition-colors"
+                        >
+                          <Building2 className="w-3.5 h-3.5 text-tan-600" />
+                          <span>Hosted by: {evt.club}</span>
+                          <ChevronRight className="w-3 h-3 text-tan-600" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-surface-border flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setSelectedEventForPreSignUp(evt)}
+                      className="px-4 py-2 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow cursor-pointer transition-all"
+                    >
+                      Pre-Sign Up
+                    </button>
+                    <Link to={`/find-hunt?event=${evt.id}`} className="text-xs font-extrabold text-forest-800 hover:text-tan-700 flex items-center gap-0.5">
+                      <span>View Details</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* SECTION 5: CLUBS */}
+      <section id="clubs" className="space-y-6">
+        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <div className="flex items-center justify-between border-b border-surface-border pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-tan-600" />
+              <span>Affiliated Local Clubs ({stateClubs.length})</span>
+            </h2>
+            <Link to="/clubs" className="text-xs font-black text-forest-800 hover:text-tan-700 flex items-center gap-1">
+              <span>All Clubs</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {stateClubs.map((c) => (
+              <div key={c.id} className="p-4 bg-surface-low rounded-2xl border border-surface-border space-y-3 flex flex-col justify-between">
+                <div className="flex items-center gap-3">
+                  <img src={c.logo} alt={c.name} className="w-12 h-12 rounded-xl object-cover border border-surface-border shrink-0" />
+                  <div>
+                    <h4 className="font-extrabold text-sm text-forest-950">{c.name}</h4>
+                    <div className="text-xs text-charcoal-muted font-medium">{c.city}, {c.stateCode} • {c.membersCount} Members</div>
+                  </div>
+                </div>
+                <Link to={`/clubs/${c.id}`} className="w-full py-2 bg-forest-900 hover:bg-forest-950 text-white rounded-xl text-xs font-bold text-center transition-colors">
+                  View Dedicated Club Page
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 6: MEMBERSHIP */}
+      <section id="membership" className="space-y-6">
+        <div className="bg-forest-950 text-white p-6 sm:p-8 rounded-3xl border border-forest-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
+              State Membership Charter
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white">{stateTitle} Membership</h2>
+            <p className="text-xs sm:text-sm text-tan-200 font-medium">
+              Join the official {stateTitle} for $35.00/year to qualify for state championship points, voting rights in state officer elections, and merchandise discounts.
+            </p>
+          </div>
+          <Link
+            to="/join"
+            className="px-6 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Join Now ($35.00/yr)</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* SECTION 7: RESULTS */}
+      <section id="results" className="space-y-6">
+        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <div className="flex items-center justify-between border-b border-surface-border pb-3">
+            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-tan-600" />
+              <span>{stateData.name} State Hunt Results</span>
+            </h2>
+          </div>
+
+          <div className="space-y-3">
+            {stateResults.length > 0 ? (
+              stateResults.map((r) => (
+                <div key={r.id} className="p-4 bg-surface-low rounded-xl border border-surface-border flex items-center justify-between">
+                  <div>
+                    <h4 className="font-black text-xs sm:text-sm text-forest-950">{r.eventName}</h4>
+                    <div className="text-xs text-charcoal-muted mt-0.5">{r.date} • Winner: {r.winnerDog} ({r.owner})</div>
+                  </div>
+                  <span className="px-3 py-1 rounded-lg bg-tan-500 text-forest-950 font-black text-xs">{r.placement} ({r.score})</span>
+                </div>
+              ))
+            ) : (
+              <div className="p-6 text-center text-xs text-charcoal-muted bg-surface-low rounded-xl border">
+                No official state hunt results archived yet.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 8: MERCHANDISE */}
+      <section id="merchandise" className="space-y-6">
+        <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+          <div className="border-b border-surface-border pb-3 flex items-center justify-between">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-tan-600" />
+                <span>{stateData.name} State Official Merchandise</span>
+              </h2>
+              <p className="text-xs text-charcoal-muted mt-0.5">Purchases directly support the {stateTitle} treasury and state championships.</p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {products.filter((p) => p.scopeChannel === 'STATE').slice(0, 4).map((product) => (
-              <div key={product.id} className="bg-surface-lowest rounded-2xl border border-surface-border shadow-ambient overflow-hidden group hover:shadow-xl hover:border-tan-500/50 transition-all duration-300 flex flex-col">
-                <div className="relative overflow-hidden h-40 bg-surface-low">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-forest-950/80 text-tan-300 text-[9px] font-black uppercase backdrop-blur-sm">
-                    {product.category}
-                  </span>
-                  <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-tan-500/90 text-forest-950 text-[9px] font-black uppercase">
-                    State
+            {displayProducts.map((p) => (
+              <div key={p.id} className="bg-surface-low rounded-2xl border border-surface-border overflow-hidden flex flex-col justify-between">
+                <div className="relative h-44 bg-surface-lowest">
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-950/90 text-tan-300">
+                    {p.category}
                   </span>
                 </div>
-                <div className="p-4 flex flex-col flex-1 gap-3">
+                <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-black text-sm text-charcoal leading-snug line-clamp-2">{product.name}</h3>
-                    <p className="text-[10px] text-charcoal-muted mt-1 line-clamp-2">{product.description}</p>
+                    <h4 className="font-black text-sm text-forest-950 line-clamp-1">{p.name}</h4>
+                    <p className="text-xs text-charcoal-muted line-clamp-2 mt-1">{p.description}</p>
                   </div>
-                  <div className="mt-auto flex items-center justify-between pt-2 border-t border-surface-border">
-                    <span className="text-lg font-black text-forest-800">${product.price.toLocaleString()}</span>
+                  <div className="pt-2 flex items-center justify-between border-t border-surface-border">
+                    <span className="text-base font-black text-forest-950">${p.price}</span>
                     <button
-                      onClick={() => { addToCart(product, 1); showToast(`${product.name} added to cart!`, 'success'); }}
-                      className="px-3 py-1.5 rounded-lg bg-forest-900 hover:bg-forest-950 text-white text-[10px] font-black flex items-center gap-1 transition-all"
+                      onClick={() => {
+                        addToCart(p);
+                        showToast(`Added ${p.name} to cart!`, 'success');
+                      }}
+                      className="px-3 py-1.5 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-lg shadow transition-all flex items-center gap-1"
                     >
-                      <ShoppingBag className="w-3 h-3" />
+                      <ShoppingBag className="w-3.5 h-3.5" />
                       Add
                     </button>
                   </div>
@@ -200,369 +732,125 @@ export const PublicStatePage = () => {
             ))}
           </div>
         </div>
-      </div>
-    );
-  }
+      </section>
 
-  // -------------------------------------------------------------
-  // VIEW 2: Dedicated State Association Page (/states/:stateId)
-  // -------------------------------------------------------------
-  return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-12">
-      {/* Hierarchy Breadcrumbs: National -> State Associations -> State */}
-      <div className="flex items-center gap-2 text-xs font-bold text-charcoal-muted">
-        <Link to="/" className="hover:text-forest-950 transition-colors">National</Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <Link to="/states" className="hover:text-forest-950 transition-colors">State Associations</Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-forest-950 font-black">{stateData.name} State Association</span>
-      </div>
-
-      {/* A. State Hero */}
-      <div className="relative bg-gradient-to-r from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl overflow-hidden space-y-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl bg-tan-500/20 border-2 border-tan-400 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
-              {stateData.logo ? (
-                <img src={stateData.logo} alt={stateData.name} className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-2xl font-black text-tan-300">{stateData.code}</span>
-              )}
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
-                  State Association Mini Website
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase bg-forest-900 text-tan-300 border border-forest-700">
-                  URL: /states/{stateData.code.toLowerCase()} • /{stateData.name.toLowerCase()}
-                </span>
-              </div>
-              <h1 className="text-3xl lg:text-5xl font-black text-white">{stateData.name} State Association</h1>
-              <p className="text-xs sm:text-sm text-tan-200 font-medium">
-                Dedicated state mini website portal for {stateData.name}. Controlled by state officers via the State Dashboard.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              to="/join"
-              className="px-5 py-3 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Join {stateData.name} Association</span>
-            </Link>
-            <Link
-              to="/login"
-              className="px-4 py-3 bg-forest-900 hover:bg-forest-800 text-tan-300 border border-forest-700 font-black text-xs rounded-xl shadow flex items-center gap-1.5 transition-all shrink-0"
-            >
-              <span>State Dashboard</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Quick Stat Counter */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-forest-800 text-center">
-          <div className="bg-forest-900/60 p-3.5 rounded-xl border border-forest-800">
-            <strong className="block text-2xl font-black text-tan-300">{stateData.clubsCount}</strong>
-            <span className="text-[10px] uppercase font-bold text-tan-200">Affiliated Clubs</span>
-          </div>
-          <div className="bg-forest-900/60 p-3.5 rounded-xl border border-forest-800">
-            <strong className="block text-2xl font-black text-tan-300">{stateData.membersCount}</strong>
-            <span className="text-[10px] uppercase font-bold text-tan-200">State Members</span>
-          </div>
-          <div className="bg-forest-900/60 p-3.5 rounded-xl border border-forest-800">
-            <strong className="block text-2xl font-black text-tan-300">{stateEvents.length || stateData.eventsCount}</strong>
-            <span className="text-[10px] uppercase font-bold text-tan-200">Sanctioned Events</span>
-          </div>
-          <div className="bg-forest-900/60 p-3.5 rounded-xl border border-forest-800">
-            <strong className="block text-2xl font-black text-emerald-400">${stateData.revenue?.toLocaleString() || '184,250'}</strong>
-            <span className="text-[10px] uppercase font-bold text-tan-200">State Treasury Margin</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Exact State Association Section Tabs requested by Client (Sticky Navigation) */}
-      <div className="sticky top-16 z-40 bg-surface-lowest/95 backdrop-blur-md p-2 rounded-2xl border border-surface-border shadow-xl flex flex-wrap items-center gap-2">
-        <a
-          href="#state-homepage"
-          className="px-3.5 py-2 rounded-xl text-xs font-black bg-forest-950 text-tan-300 hover:bg-forest-900 shadow-sm flex items-center gap-1.5 transition-all"
-        >
-          <Building2 className="w-3.5 h-3.5" />
-          <span>State Homepage</span>
-        </a>
-        <a
-          href="#state-events"
-          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
-        >
-          <Calendar className="w-3.5 h-3.5 text-tan-600" />
-          <span>State Events</span>
-        </a>
-        <a
-          href="#state-news"
-          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
-        >
-          <Newspaper className="w-3.5 h-3.5 text-tan-600" />
-          <span>State News</span>
-        </a>
-        <a
-          href="#state-membership"
-          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-tan-600" />
-          <span>State Membership</span>
-        </a>
-        <a
-          href="#state-merchandise"
-          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
-        >
-          <ShoppingBag className="w-3.5 h-3.5 text-tan-600" />
-          <span>State Merchandise</span>
-        </a>
-        <a
-          href="#state-club-directory"
-          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
-        >
-          <Users className="w-3.5 h-3.5 text-tan-600" />
-          <span>State Club Directory</span>
-        </a>
-        <Link
-          to="/login"
-          className="px-4 py-2 rounded-xl text-xs font-black text-forest-950 bg-tan-500 hover:bg-tan-400 shadow-md flex items-center gap-1 transition-all ml-auto"
-        >
-          <span>State Management Dashboard</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-
-      {/* B & C. About & State Governance Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-surface-lowest p-6 lg:p-8 rounded-2xl border border-surface-border shadow-ambient space-y-4">
-          <h2 className="text-xl font-black text-forest-800">About {stateData.name} State Hunting Association</h2>
-          <p className="text-xs sm:text-sm text-charcoal leading-relaxed font-medium">
-            {stateData.description ||
-              `The ${stateData.name} State Hunting Association oversees sanctioned competitive field trials, water races, nite hunts, and youth education programs. It manages state championship qualifications and guarantees that member local clubs receive full financial transparency.`}
-          </p>
-
-          <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-surface-border text-xs font-medium">
-            <div className="p-3.5 rounded-xl bg-surface-low border border-surface-border">
-              <strong className="block font-black text-forest-950 mb-0.5">Mission</strong>
-              <span className="text-charcoal-muted">Promoting ethical sporting hound competition and wildlife conservation across {stateData.name}.</span>
-            </div>
-            <div className="p-3.5 rounded-xl bg-surface-low border border-surface-border">
-              <strong className="block font-black text-forest-950 mb-0.5">State Charter Headquarters</strong>
-              <span className="text-charcoal-muted">Official State Office • Admin: {stateData.adminName}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* State Officers (J) */}
+      {/* SECTION 9: OFFICERS */}
+      <section id="officers" className="space-y-6">
         <div className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
-          <h3 className="font-extrabold text-base text-forest-800">State Association Officers</h3>
-          <div className="space-y-3">
+          <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+            <UserCheck className="w-5 h-5 text-tan-600" />
+            <span>{stateTitle} Officers & Board of Directors</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {mockOfficers.map((off, idx) => (
-              <div key={idx} className="p-3 bg-surface-low rounded-xl border border-surface-border flex items-center gap-3">
-                <img src={off.photo} alt={off.name} className="w-10 h-10 rounded-full object-cover border border-tan-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="font-black text-xs text-forest-950 truncate">{off.name}</div>
-                  <div className="text-[11px] text-charcoal-muted truncate">{off.title}</div>
-                  <div className="text-[9px] text-tan-700 font-bold">Term: {off.term}</div>
+              <div key={idx} className="p-5 bg-surface-low rounded-2xl border border-surface-border flex items-center gap-4">
+                <img src={off.photo} alt={off.name} className="w-14 h-14 rounded-full object-cover border-2 border-tan-400 shrink-0 shadow-md" />
+                <div className="space-y-1 min-w-0">
+                  <h4 className="font-black text-sm text-forest-950 truncate">{off.name}</h4>
+                  <div className="text-xs font-bold text-tan-800 truncate">{off.title}</div>
+                  <div className="text-[10px] text-charcoal-muted font-semibold">Term: {off.term}</div>
+                  <div className="text-[10px] text-forest-800 font-mono pt-1 truncate">{off.email}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* D. State Affiliated Local Clubs */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-surface-border pb-3">
-          <h2 className="text-2xl font-black text-forest-800">{stateData.name} Affiliated Local Clubs ({stateClubs.length})</h2>
-          <Link to="/clubs" className="text-xs font-black text-forest-800 hover:text-tan-700 flex items-center gap-1">
-            <span>Browse All Clubs</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stateClubs.map((c) => (
-            <div key={c.id} className="bg-surface-lowest p-5 rounded-2xl border border-surface-border shadow-ambient space-y-3 flex flex-col justify-between">
-              <div className="flex items-center gap-3">
-                <img src={c.logo} alt={c.name} className="w-12 h-12 rounded-xl object-cover border border-surface-border shrink-0" />
-                <div>
-                  <h4 className="font-extrabold text-sm text-forest-950">{c.name}</h4>
-                  <div className="text-xs text-charcoal-muted font-medium">{c.city}, {c.stateCode} • {c.membersCount} Members</div>
-                </div>
-              </div>
-              <Link to={`/clubs/${c.id}`} className="w-full py-2 bg-forest-900 hover:bg-forest-950 text-white rounded-xl text-xs font-bold text-center transition-colors">
-                View Dedicated Club Page
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* E. State Sanctioned Events */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-surface-border pb-3">
-          <h2 className="text-2xl font-black text-forest-800">{stateData.name} Sanctioned Events ({stateEvents.length})</h2>
-          <Link to="/find-hunt" className="text-xs font-black text-forest-800 hover:text-tan-700 flex items-center gap-1">
-            <span>Full Event Calendar</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {stateEvents.map((evt) => (
-            <div key={evt.id} className="bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded text-[10px] font-black uppercase bg-tan-100 text-tan-900">
-                    {evt.federation || 'UHC Sanctioned'}
-                  </span>
-                  <span className="text-xs font-black text-forest-800">${evt.fee} Fee</span>
-                </div>
-                <h3 className="font-black text-lg text-forest-950">{evt.name}</h3>
-                <div className="text-xs text-charcoal-muted font-medium space-y-1">
-                  <div className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-tan-600" /> {evt.date} @ {evt.startTime}</div>
-                  <div className="flex items-center gap-1.5"><Building2 className="w-3.5 h-3.5 text-tan-600" /> Host: {evt.club}</div>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-surface-border flex items-center justify-between gap-3">
-                <button
-                  onClick={() => setSelectedEventForPreSignUp(evt)}
-                  className="px-4 py-2 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow transition-all cursor-pointer"
-                >
-                  Pre-Sign Up
-                </button>
-                <Link to={`/find-hunt?event=${evt.id}`} className="text-xs font-extrabold text-forest-800 hover:text-tan-700">
-                  View Details
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* F. State Merchandise (BUSINESS RULE: State Margin Earnings) */}
-      <div className="space-y-6">
-        <div className="border-b border-surface-border pb-3 flex items-center justify-between">
+      {/* SECTION 10: CONTACT */}
+      <section id="contact" className="space-y-6">
+        <div className="bg-surface-lowest p-6 sm:p-8 rounded-2xl border border-surface-border shadow-ambient space-y-6">
           <div>
-            <h2 className="text-2xl font-black text-forest-800">{stateData.name} State Merchandise</h2>
-            <p className="text-xs text-charcoal-muted mt-0.5">
-              Purchases made from this State merchandise page directly fund the {stateData.name} State Association Treasury.
+            <h2 className="text-xl sm:text-2xl font-black text-forest-800 flex items-center gap-2">
+              <Mail className="w-5 h-5 text-tan-600" />
+              <span>Contact {stateTitle}</span>
+            </h2>
+            <p className="text-xs text-charcoal-muted mt-1">
+              Have questions regarding state sanctioning rules, club charters, or event schedules? Contact our office directly.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
-            State Margin Earned: Retail - Wholesale
-          </span>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {displayProducts.map((p) => {
-            const wholesale = p.wholesaleCost || Number((p.price * 0.7).toFixed(2));
-            const stateMargin = Number((p.price - wholesale).toFixed(2));
-
-            return (
-              <div key={p.id} className="bg-surface-lowest rounded-2xl border border-surface-border shadow-ambient overflow-hidden flex flex-col justify-between">
-                <div className="relative h-48 bg-surface-low">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-950/90 text-tan-300 backdrop-blur-md">
-                    {p.category}
-                  </span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="space-y-4 p-5 rounded-2xl bg-surface-low border border-surface-border text-xs">
+              <h4 className="font-black text-sm text-forest-950">State Headquarters</h4>
+              <div className="space-y-2 text-charcoal font-medium">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-tan-600" />
+                  <span>State Office, {stateData.name} State Charter</span>
                 </div>
-                <div className="p-4 space-y-3">
-                  <h4 className="font-black text-sm text-forest-950 line-clamp-1">{p.name}</h4>
-                  <p className="text-xs text-charcoal-muted line-clamp-2">{p.description}</p>
-                  <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-charcoal-muted font-bold">Retail Price:</span>
-                      <span className="font-black text-forest-950">${p.price}</span>
-                    </div>
-                    <div className="flex justify-between text-[11px]">
-                      <span className="text-amber-900 font-bold">State Treasury Margin:</span>
-                      <span className="font-black text-amber-900">+${stateMargin}</span>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-tan-600" />
+                  <span>(800) 555-0192</span>
                 </div>
-                <div className="p-4 pt-0">
-                  <button
-                    onClick={() => {
-                      addToCart(p);
-                      showToast(`Added ${p.name} to cart. Margin payout recorded for ${stateData.name} State Treasury.`, 'success');
-                    }}
-                    className="w-full py-2.5 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow cursor-pointer transition-all flex items-center justify-center gap-1.5"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>Add to Cart</span>
-                  </button>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-tan-600" />
+                  <span>contact@{stateData.code.toLowerCase()}hunting.org</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
 
-      {/* G & H. State News & Hunt Results */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-4 bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient">
-          <h3 className="font-extrabold text-xl text-forest-800">{stateData.name} State News & Bulletins</h3>
-          <div className="space-y-3">
-            {stateNews.length > 0 ? (
-              stateNews.map((n) => (
-                <div key={n.id} className="p-3.5 bg-surface-low rounded-xl border border-surface-border space-y-1">
-                  <span className="text-[10px] font-black uppercase text-tan-700">{n.date}</span>
-                  <h4 className="font-extrabold text-sm text-forest-950">{n.title}</h4>
-                  <p className="text-xs text-charcoal-muted">{n.summary}</p>
+            <form onSubmit={handleContactSubmit} className="lg:col-span-2 space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-bold text-charcoal mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={contactForm.name}
+                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                    placeholder="Enter your full name"
+                    className="w-full px-3.5 py-2.5 bg-surface-low border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  />
                 </div>
-              ))
-            ) : (
-              <p className="text-xs text-charcoal-muted font-medium">No recent news bulletins posted for this state.</p>
-            )}
+                <div>
+                  <label className="block font-bold text-charcoal mb-1">Your Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                    placeholder="name@example.com"
+                    className="w-full px-3.5 py-2.5 bg-surface-low border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-charcoal mb-1">Subject</label>
+                <input
+                  type="text"
+                  required
+                  value={contactForm.subject}
+                  onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                  placeholder="Sanctioning rules, membership inquiry, etc."
+                  className="w-full px-3.5 py-2.5 bg-surface-low border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-charcoal mb-1">Message</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={contactForm.message}
+                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                  placeholder="Write your message here..."
+                  className="w-full px-3.5 py-2.5 bg-surface-low border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="px-6 py-3 bg-forest-900 hover:bg-forest-950 text-white font-black text-xs rounded-xl shadow flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <Send className="w-4 h-4 text-tan-400" />
+                <span>Send Message</span>
+              </button>
+            </form>
           </div>
         </div>
-
-        <div className="space-y-4 bg-surface-lowest p-6 rounded-2xl border border-surface-border shadow-ambient">
-          <h3 className="font-extrabold text-xl text-forest-800">{stateData.name} State Hunt Results</h3>
-          <div className="space-y-3">
-            {stateResults.length > 0 ? (
-              stateResults.map((r) => (
-                <div key={r.id} className="p-3.5 bg-surface-low rounded-xl border border-surface-border flex items-center justify-between">
-                  <div>
-                    <h4 className="font-black text-xs text-forest-950">{r.eventName}</h4>
-                    <div className="text-[11px] text-charcoal-muted">{r.date} • Winner: {r.winnerDog} ({r.owner})</div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded bg-tan-500 text-forest-950 font-black text-xs">{r.placement} ({r.score})</span>
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-charcoal-muted font-medium">No state hunt results archived yet.</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* I. State Membership Information */}
-      <div className="bg-forest-950 text-white p-8 rounded-3xl border border-forest-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="space-y-2 max-w-xl">
-          <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950">
-            State Membership
-          </span>
-          <h3 className="text-2xl font-black text-white">{stateData.name} State Association Membership</h3>
-          <p className="text-xs text-tan-200 font-medium">
-            Join the official {stateData.name} State Charter for $35.00/year to qualify for state championship points, voting rights, and state merchandise discounts.
-          </p>
-        </div>
-        <Link
-          to="/join"
-          className="px-6 py-3 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
-        >
-          <span>Join Now ($35.00/yr)</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
-      </div>
+      </section>
 
       {/* Pre-Sign Up Modal rendering */}
       {selectedEventForPreSignUp && (

@@ -1,134 +1,242 @@
 import React from 'react';
 import {
-  Network,
-  Building2,
   Shield,
   Layers,
+  Building2,
+  Cpu,
+  ShoppingBag,
   Calendar,
   Users,
-  ShoppingBag,
   DollarSign,
-  Database,
-  Lock,
-  Cpu,
-  ShieldCheck,
-  ArrowDown
+  Globe,
+  ArrowDown,
+  ShieldCheck
 } from 'lucide-react';
 
 export const ConnectedNetworkBanner = () => {
-  const sharedSystems = [
-    { name: 'Event System', icon: Calendar, desc: 'Unified hunt calendar, pre-signups & live schedules' },
-    { name: 'Member System', icon: Users, desc: 'Digital membership credentials & automated roster management' },
-    { name: 'Marketplace', icon: ShoppingBag, desc: 'Turnkey merchandise storefronts with margin share payouts' },
-    { name: 'Accounting System', icon: DollarSign, desc: 'Automated revenue share & treasury ledger tracking' },
-    { name: 'Database', icon: Database, desc: 'National canine pedigree records & official trial results' },
-    { name: 'Login System', icon: Lock, desc: 'One single account across all 635+ club & state portals' },
-    { name: 'Technology', icon: Cpu, desc: 'Mobile event check-ins & automated bench scorekeeping' },
-  ];
-
   return (
-    <div className="bg-gradient-to-br from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl space-y-10 relative overflow-hidden">
+    <div className="bg-gradient-to-br from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-6 sm:p-8 lg:p-12 border-2 border-tan-500/40 shadow-2xl space-y-10 relative overflow-hidden">
       <div className="absolute -right-20 -top-20 w-80 h-80 bg-tan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      {/* Header */}
+      {/* Main Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="px-3.5 py-1 rounded-full bg-tan-500/20 text-tan-300 border border-tan-500/40 text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1.5">
-          <Network className="w-3.5 h-3.5" />
-          <span>Connected Platform Architecture</span>
+        <span className="px-3.5 py-1 rounded-full bg-tan-500 text-forest-950 text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 shadow">
+          <Shield className="w-3.5 h-3.5" />
+          <span>3-Level National Platform Architecture</span>
         </span>
         <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
-          A Connected Network of Platforms, <br className="hidden sm:block" />
-          <span className="text-tan-400">Powered by Shared Infrastructure</span>
+          UHC National Management & Promotion Platform
         </h2>
-        <p className="text-xs sm:text-sm text-tan-100/80 font-medium leading-relaxed">
-          UHC connects National, State, and Local Club platforms into one unified network — sharing technology, event tools, and databases while preserving each organization's individual identity.
+        <p className="text-xs sm:text-sm text-tan-100/90 font-medium leading-relaxed">
+          UHC is built as a complete national management and promotion platform for the entire hound community — connecting National, State, and Local Club levels into one seamless ecosystem.
         </p>
       </div>
 
-      {/* 3-Tier Visual Network Hierarchy Diagram */}
-      <div className="max-w-4xl mx-auto space-y-3 text-center">
-        {/* Tier 1: National */}
-        <div className="bg-forest-900/90 border-2 border-tan-400/80 p-4 rounded-2xl shadow-xl flex items-center justify-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-tan-500 text-forest-950 font-black flex items-center justify-center shrink-0">
-            <Shield className="w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <span className="text-[9px] font-black uppercase tracking-widest text-tan-300">Level 1 — Central Hub</span>
-            <h3 className="text-base font-black text-white">Ultimate Hound Club — National Platform</h3>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
-          <ArrowDown className="w-5 h-5 text-tan-400 animate-bounce" />
-        </div>
-
-        {/* Tier 2: 50 State Platforms */}
-        <div className="bg-forest-900/70 border border-forest-700 p-4 rounded-2xl shadow-lg flex items-center justify-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-forest-800 text-tan-300 font-black flex items-center justify-center shrink-0 border border-forest-700">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <span className="text-[9px] font-black uppercase tracking-widest text-tan-300">Level 2 — State Governance</span>
-            <h3 className="text-base font-black text-white">50 Connected State Platforms (TX, AR, LA, OK, MO, etc.)</h3>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
-          <ArrowDown className="w-5 h-5 text-tan-400 animate-bounce" />
-        </div>
-
-        {/* Tier 3: Local Club Platforms */}
-        <div className="bg-forest-900/50 border border-forest-800 p-4 rounded-2xl shadow-md flex items-center justify-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-forest-800/80 text-tan-300 font-black flex items-center justify-center shrink-0 border border-forest-700">
-            <Building2 className="w-5 h-5" />
-          </div>
-          <div className="text-left">
-            <span className="text-[9px] font-black uppercase tracking-widest text-tan-300">Level 3 — Local Community</span>
-            <h3 className="text-base font-black text-white">Hundreds of Connected Local Club Platforms</h3>
-          </div>
-        </div>
-      </div>
-
-      {/* 7 Shared Systems Grid */}
-      <div className="space-y-4 pt-4 border-t border-forest-800">
-        <div className="text-center">
-          <span className="text-[10px] font-black uppercase tracking-widest text-tan-400">Shared Network Systems</span>
-          <h3 className="text-lg font-black text-white mt-0.5">Common Systems Across All Connected Platforms</h3>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {sharedSystems.map((sys, idx) => {
-            const IconComponent = sys.icon;
-            return (
-              <div key={idx} className="bg-forest-900/80 p-4 rounded-2xl border border-forest-800 space-y-2 hover:border-tan-500/50 transition-all">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-tan-500/20 text-tan-300 flex items-center justify-center shrink-0 border border-tan-500/30">
-                    <IconComponent className="w-4 h-4" />
-                  </div>
-                  <h4 className="font-extrabold text-xs text-white">{sys.name}</h4>
-                </div>
-                <p className="text-[11px] text-tan-200/80 font-medium leading-tight">{sys.desc}</p>
+      {/* 3-LEVEL ARCHITECTURE FLOW */}
+      <div className="space-y-6 max-w-5xl mx-auto">
+        
+        {/* LEVEL 1 — UHC NATIONAL */}
+        <div className="bg-forest-900/90 border-2 border-tan-400 p-6 rounded-3xl shadow-2xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-forest-700 pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-tan-500 text-forest-950 font-black flex items-center justify-center shrink-0 shadow-lg">
+                <Shield className="w-6 h-6" />
               </div>
-            );
-          })}
+              <div>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-tan-500/20 text-tan-300 border border-tan-500/40">
+                  Level 1 — Central Platform Hub
+                </span>
+                <h3 className="text-xl font-black text-white mt-0.5">LEVEL 1 — UHC NATIONAL</h3>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-tan-300 bg-forest-950 px-3 py-1 rounded-xl border border-forest-800 self-start sm:self-auto">
+              National Platform Infrastructure
+            </span>
+          </div>
+
+          <p className="text-xs text-tan-200 font-medium">
+            UHC National provides the central foundation, nationwide reach, technology, and governance tools powering the entire platform:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <Cpu className="w-4 h-4" />
+                <span>• Technology</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">SaaS platform infrastructure, digital pedigree database & check-ins</p>
+            </div>
+
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <ShoppingBag className="w-4 h-4" />
+                <span>• Marketplace</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">National store & drop-ship vendor supply chain network</p>
+            </div>
+
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <Calendar className="w-4 h-4" />
+                <span>• Event System</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">Unified event registration, pre-signups & live leaderboards</p>
+            </div>
+
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <Users className="w-4 h-4" />
+                <span>• Membership Tools</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">National canine registry credentials & membership tools</p>
+            </div>
+
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <DollarSign className="w-4 h-4" />
+                <span>• Accounting Tools</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">Automated revenue share splits & treasury accounting ledger</p>
+            </div>
+
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 space-y-1">
+              <div className="flex items-center gap-2 text-tan-400 font-extrabold text-xs">
+                <Globe className="w-4 h-4" />
+                <span>• National Exposure</span>
+              </div>
+              <p className="text-[11px] text-tan-200/80">Nationwide promotion, sponsor exposure & national rankings</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Down Arrow Indicator */}
+        <div className="flex justify-center">
+          <ArrowDown className="w-6 h-6 text-tan-400 animate-bounce" />
+        </div>
+
+        {/* LEVEL 2 — STATE ASSOCIATIONS */}
+        <div className="bg-forest-900/80 border-2 border-forest-700 p-6 rounded-3xl shadow-xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-forest-700 pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-forest-800 text-tan-300 font-black flex items-center justify-center shrink-0 border border-forest-700 shadow">
+                <Layers className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-800 text-tan-300 border border-forest-700">
+                  Level 2 — State Governance
+                </span>
+                <h3 className="text-xl font-black text-white mt-0.5">LEVEL 2 — STATE ASSOCIATIONS</h3>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-tan-300 bg-forest-950 px-3 py-1 rounded-xl border border-forest-800 self-start sm:self-auto">
+              50 Independent State Charters
+            </span>
+          </div>
+
+          <p className="text-xs text-tan-200 font-medium">
+            Each State Association operates inside the UHC system while maintaining its own:
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1 text-xs">
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Identity</div>
+              <div className="text-[10px] text-tan-200/80">State logo & colors</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Page</div>
+              <div className="text-[10px] text-tan-200/80">Public state site</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Members</div>
+              <div className="text-[10px] text-tan-200/80">State roster & dues</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Events</div>
+              <div className="text-[10px] text-tan-200/80">State trial meets</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Merchandise</div>
+              <div className="text-[10px] text-tan-200/80">State gear store</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Income</div>
+              <div className="text-[10px] text-tan-200/80">7% Margin share</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Down Arrow Indicator */}
+        <div className="flex justify-center">
+          <ArrowDown className="w-6 h-6 text-tan-400 animate-bounce" />
+        </div>
+
+        {/* LEVEL 3 — LOCAL CLUBS */}
+        <div className="bg-forest-900/70 border-2 border-forest-800 p-6 rounded-3xl shadow-lg space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-forest-700 pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-forest-800 text-tan-300 font-black flex items-center justify-center shrink-0 border border-forest-700 shadow">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-forest-800 text-tan-300 border border-forest-700">
+                  Level 3 — Local Community
+                </span>
+                <h3 className="text-xl font-black text-white mt-0.5">LEVEL 3 — LOCAL CLUBS</h3>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-tan-300 bg-forest-950 px-3 py-1 rounded-xl border border-forest-800 self-start sm:self-auto">
+              635+ Chartered Local Clubs
+            </span>
+          </div>
+
+          <p className="text-xs text-tan-200 font-medium">
+            Each Local Club operates inside the UHC system while maintaining its own:
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1 text-xs">
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Identity</div>
+              <div className="text-[10px] text-tan-200/80">Club emblem & history</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Page</div>
+              <div className="text-[10px] text-tan-200/80">Public club portal</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Members</div>
+              <div className="text-[10px] text-tan-200/80">Local club roster</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Events</div>
+              <div className="text-[10px] text-tan-200/80">Hosted hunts & races</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Merchandise</div>
+              <div className="text-[10px] text-tan-200/80">Local club caps & gear</div>
+            </div>
+            <div className="p-3 bg-forest-950/80 rounded-xl border border-forest-800 text-center space-y-1">
+              <div className="font-extrabold text-tan-300 text-xs">Income</div>
+              <div className="text-[10px] text-tan-200/80">15% Margin share</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Individual Identity Guarantee Badge */}
+      {/* Summary Footer */}
       <div className="p-4 rounded-2xl bg-forest-900/90 border border-tan-500/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-tan-500 text-forest-950 flex items-center justify-center shrink-0 shadow">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="font-black text-xs text-white">100% Individual Platform Identity Maintained</h4>
+            <h4 className="font-black text-xs text-white">Full Independence & Shared Infrastructure Guaranteed</h4>
             <p className="text-[11px] text-tan-200/80 font-medium">
-              Every State Platform and Local Club Platform preserves its distinct logo, officers, local rules, and independent identity.
+              National exposure & technology for every level while guaranteeing 100% independent identity, events, merchandise, and treasury income.
             </p>
           </div>
         </div>
         <span className="px-3.5 py-1.5 rounded-xl bg-tan-500 text-forest-950 font-black text-[10px] uppercase tracking-wider shrink-0 shadow">
-          Identity Preserved
+          Platform Active
         </span>
       </div>
     </div>

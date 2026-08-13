@@ -24,9 +24,14 @@ export const StateAdminDashboard = () => {
           <p className="text-xs text-tan-200 mt-1">State Admin: {myState.adminName} • Governance over {myState.clubsCount} Local Clubs</p>
         </div>
 
-        <Link to="/state-admin/clubs" className="px-4 py-2 bg-tan-500 hover:bg-tan-600 text-forest-900 font-extrabold text-xs rounded-lg shadow">
-          Manage State Clubs
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link to="/state-admin/membership" className="px-4 py-2 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-lg shadow">
+            State Membership System
+          </Link>
+          <Link to="/state-admin/clubs" className="px-4 py-2 bg-forest-950 hover:bg-forest-900 text-white font-extrabold text-xs rounded-lg shadow border border-forest-700">
+            Manage State Clubs
+          </Link>
+        </div>
       </div>
 
       {/* KPI Cards */}
