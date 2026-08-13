@@ -46,7 +46,7 @@ export const FindClubPage = () => {
             onChange={(e) => setSelectedState(e.target.value)}
             className="w-full px-3 py-2 text-xs bg-surface-low border border-surface-border rounded-md focus:outline-none focus:border-forest-800 font-medium"
           >
-            <option value="ALL">All States</option>
+            <option value="ALL">All 50 States</option>
             {states.map((s) => (
               <option key={s.id} value={s.name}>{s.name} ({s.code})</option>
             ))}
