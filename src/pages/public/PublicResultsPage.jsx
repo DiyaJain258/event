@@ -55,7 +55,7 @@ export const PublicResultsPage = () => {
               onChange={(e) => setSelectedStateFilter(e.target.value)}
               className="w-full px-3.5 py-3 text-xs bg-surface-lowest border border-surface-border rounded-xl font-bold text-charcoal focus:border-tan-500 cursor-pointer"
             >
-              <option value="ALL">All States</option>
+              <option value="ALL">All 50 States</option>
               {states.map((s) => (
                 <option key={s.id} value={s.name}>
                   {s.name} ({s.code})

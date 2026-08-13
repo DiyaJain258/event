@@ -164,7 +164,7 @@ export const FindHuntPage = () => {
             onChange={(e) => setSelectedState(e.target.value)}
             className="w-full px-3.5 py-2.5 text-xs bg-surface-low border border-surface-border rounded-xl focus:outline-none focus:border-forest-800 font-bold"
           >
-            <option value="ALL">All States</option>
+            <option value="ALL">All 50 States</option>
             {states.map((s) => (
               <option key={s.id} value={s.name}>{s.name} ({s.code})</option>
             ))}
