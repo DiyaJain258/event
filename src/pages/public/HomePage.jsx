@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { ConnectedNetworkBanner } from '../../components/common/ConnectedNetworkBanner';
 import {
   Search,
   MapPin,
@@ -153,7 +154,7 @@ export const HomePage = () => {
           </h1>
 
           <p className="text-base sm:text-lg text-tan-100/90 max-w-3xl mx-auto leading-relaxed font-medium">
-            Search upcoming hunting events, discover local chartered clubs, become a member, and view official results from across the United States.
+            Providing the infrastructure that makes State Associations and Local Clubs stronger. Search upcoming hunts, join local chartered clubs, support state organizations, and participate in sanctioned competitions.
           </p>
 
           {/* Search Card Centered Over Hero */}
@@ -323,109 +324,275 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* 2. Featured Quick Actions */}
+      {/* 2. Core UHC Philosophy & Growth Interdependence Model */}
+      <section className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="bg-gradient-to-br from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl relative overflow-hidden space-y-8">
+          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-tan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3.5 py-1 rounded-full bg-tan-500/20 text-tan-300 border border-tan-500/40 text-[10px] font-black uppercase tracking-widest inline-block">
+              Core UHC Purpose & Ecosystem
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+              Building Infrastructure That Makes <br className="hidden sm:block" />
+              <span className="text-tan-400">State Associations & Local Clubs Stronger</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-tan-100/80 font-medium leading-relaxed">
+              The purpose of UHC is not to replace or alter existing organizations. We provide technology, exposure, membership tools, event promotion, merchandise systems, and new ways to generate income while each club and association maintains its independent identity.
+            </p>
+          </div>
+
+          {/* Growth Chain visual representation */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+            <div className="bg-forest-900/80 backdrop-blur-md rounded-2xl p-5 border border-forest-800 space-y-2 relative group hover:border-tan-500/50 transition-all">
+              <div className="w-8 h-8 rounded-lg bg-tan-500 text-forest-950 font-black text-xs flex items-center justify-center shadow-md">
+                1
+              </div>
+              <h3 className="text-sm font-black text-white">Hunters Participate</h3>
+              <p className="text-[11px] text-tan-200/80 font-medium leading-normal">
+                Hunters enter events, join local clubs, and participate in sanctioned sporting trials.
+              </p>
+            </div>
+
+            <div className="bg-forest-900/80 backdrop-blur-md rounded-2xl p-5 border border-forest-800 space-y-2 relative group hover:border-tan-500/50 transition-all">
+              <div className="w-8 h-8 rounded-lg bg-tan-500 text-forest-950 font-black text-xs flex items-center justify-center shadow-md">
+                2
+              </div>
+              <h3 className="text-sm font-black text-white">Local Clubs Grow</h3>
+              <p className="text-[11px] text-tan-200/80 font-medium leading-normal">
+                Increased participation builds active local club memberships and community trial grounds.
+              </p>
+            </div>
+
+            <div className="bg-forest-900/80 backdrop-blur-md rounded-2xl p-5 border border-forest-800 space-y-2 relative group hover:border-tan-500/50 transition-all">
+              <div className="w-8 h-8 rounded-lg bg-tan-500 text-forest-950 font-black text-xs flex items-center justify-center shadow-md">
+                3
+              </div>
+              <h3 className="text-sm font-black text-white">State Associations Grow</h3>
+              <p className="text-[11px] text-tan-200/80 font-medium leading-normal">
+                Stronger local clubs expand state championships, governance, and regional representation.
+              </p>
+            </div>
+
+            <div className="bg-forest-900/80 backdrop-blur-md rounded-2xl p-5 border border-forest-800 space-y-2 relative group hover:border-tan-500/50 transition-all">
+              <div className="w-8 h-8 rounded-lg bg-tan-500 text-forest-950 font-black text-xs flex items-center justify-center shadow-md">
+                4
+              </div>
+              <h3 className="text-sm font-black text-white">National UHC Thrives</h3>
+              <p className="text-[11px] text-tan-200/80 font-medium leading-normal">
+                The national organization grows when state associations and local clubs flourish together.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Connected Network of Platforms Architecture Section (Section 33 UI) */}
+      <section className="max-w-7xl mx-auto px-4 lg:px-8">
+        <ConnectedNetworkBanner />
+      </section>
+
+      {/* 3. The 5 Primary Visitor Actions */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Quick Gateway</span>
-          <h2 className="text-2xl lg:text-4xl font-extrabold text-forest-950 tracking-tight">Explore the Platform</h2>
+          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Core Visitor Journey</span>
+          <h2 className="text-2xl lg:text-4xl font-extrabold text-forest-950 tracking-tight">5 Primary Ways to Get Involved</h2>
+          <p className="text-xs text-charcoal-muted font-medium">
+            Explore how UHC connects hunters, local clubs, and state associations across America.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1: Find a Hunt */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          {/* Action 1: Find a Hunt */}
           <Link
             to="/find-hunt"
-            className="group bg-surface-lowest rounded-2xl p-6 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <Search className="w-6 h-6" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Search className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 1</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
                   Find a Hunt
                 </h3>
-                <p className="text-xs text-charcoal-muted leading-relaxed font-medium">
-                  Search nearby sanctioned field trials, nite hunts, and treeing contests across America.
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Discover upcoming field trials, nite hunts, and treeing contests near you.
                 </p>
               </div>
             </div>
-            <div className="pt-6 flex items-center text-xs font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Search nearby events</span>
-              <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Search hunts</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Card 2: Find a Club */}
+          {/* Action 2: Join a Club */}
           <Link
             to="/clubs"
-            className="group bg-surface-lowest rounded-2xl p-6 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <Building2 className="w-6 h-6" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Building2 className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Find a Club
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 2</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Join a Club
                 </h3>
-                <p className="text-xs text-charcoal-muted leading-relaxed font-medium">
-                  Locate chartered hunting clubs by state association and zip code radius.
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Locate chartered local clubs and become an active sporting club member.
                 </p>
               </div>
             </div>
-            <div className="pt-6 flex items-center text-xs font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Browse clubs by state</span>
-              <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Find local clubs</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Card 3: Become a Member */}
+          {/* Action 3: Support Your State */}
+          <Link
+            to="/states"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 3</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Support Your State
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Engage with State Associations overseeing chartered clubs & state trials.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>State associations</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Action 4: Shop Through Your Club */}
+          <Link
+            to="/store"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <ShoppingBag className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 4</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Shop Through Club
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Purchase gear where sales margin directly generates income for local clubs.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Browse gear store</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Action 5: Participate in the Sport */}
           <Link
             to="/join"
-            className="group bg-surface-lowest rounded-2xl p-6 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Trophy className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Become a Member
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 5</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Participate in Sport
                 </h3>
-                <p className="text-xs text-charcoal-muted leading-relaxed font-medium">
-                  Join America's largest hunting community and unlock official competition credentials.
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Register canines, earn official credentials, and compete in sanctioned trials.
                 </p>
               </div>
             </div>
-            <div className="pt-6 flex items-center text-xs font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Join today</span>
-              <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Register & enter</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+        </div>
+      </section>
 
-          {/* Card 4: Latest Results */}
-          <Link
-            to="/results"
-            className="group bg-surface-lowest rounded-2xl p-6 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
-          >
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <Trophy className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Latest Results
-                </h3>
-                <p className="text-xs text-charcoal-muted leading-relaxed font-medium">
-                  View official national trial scores, placement standings, and champion canine honors.
-                </p>
-              </div>
+      {/* 4. Infrastructure Support Pillars & Identity Preservation Banner */}
+      <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+        <div className="bg-surface-lowest border border-surface-border rounded-3xl p-8 lg:p-10 shadow-ambient space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-surface-border pb-6">
+            <div className="space-y-1">
+              <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Turnkey Technology Suite</span>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-forest-950 tracking-tight">How UHC Empowers Existing Organizations</h2>
             </div>
-            <div className="pt-6 flex items-center text-xs font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>View official results</span>
-              <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            <div className="px-4 py-2 rounded-full bg-forest-950 text-tan-300 text-xs font-black uppercase tracking-wider flex items-center gap-2 self-start md:self-auto border border-forest-800">
+              <ShieldCheck className="w-4 h-4 text-tan-400" />
+              <span>Independent Branding Maintained</span>
             </div>
-          </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">01. Technology</div>
+              <h3 className="text-base font-extrabold text-forest-950">Digital Event & Entry Management</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                Streamlined mobile check-ins, automated scorekeeping, and digital pedigree verification for club officers.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">02. Exposure</div>
+              <h3 className="text-base font-extrabold text-forest-950">Nationwide Event Promotion</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                Local club hunts and state championships are promoted directly to thousands of active hunters nationwide.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">03. Membership Tools</div>
+              <h3 className="text-base font-extrabold text-forest-950">Automated Roster & Dues</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                Digital member ID cards, instant online renewals, and automated dues distribution straight to club accounts.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">04. Event Promotion</div>
+              <h3 className="text-base font-extrabold text-forest-950">Pre-Signups & Live Schedules</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                Hunters pre-register for nite hunts and water races online, reducing registration table chaos.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">05. Merchandise Systems</div>
+              <h3 className="text-base font-extrabold text-forest-950">Custom Storefronts</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                State associations and local clubs get turn-key official apparel & gear online stores without inventory risk.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-low/60 border border-surface-border space-y-2">
+              <div className="text-tan-700 font-black text-xs uppercase tracking-wider">06. Income Generation</div>
+              <h3 className="text-base font-extrabold text-forest-950">Direct Margin Share Payouts</h3>
+              <p className="text-xs text-charcoal-muted font-medium leading-relaxed">
+                Wholesale-to-retail margin differences flow back to state associations and local clubs to fund youth events.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
