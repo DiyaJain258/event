@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { PreSignUpModal } from '../../components/events/PreSignUpModal';
+import { InteractiveUsMap } from '../../components/common/InteractiveUsMap';
 import {
   MapPin,
   Building2,
@@ -21,14 +22,22 @@ import {
 
 export const PublicStatePage = () => {
   const { stateId } = useParams();
+  const location = useLocation();
   const { states, clubs, events, products, news, results, addToCart, showToast } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEventForPreSignUp, setSelectedEventForPreSignUp] = useState(null);
 
-  // If stateId is present in URL (e.g. /states/tx or /states/tn)
-  const isDedicatedPage = Boolean(stateId);
-  const currentState = states.find((s) => s.id === stateId || s.code.toLowerCase() === stateId?.toLowerCase() || s.name.toLowerCase() === stateId?.toLowerCase());
+  // Match stateId from URL parameter or direct route path (e.g. /texas or /states/texas)
+  const pathSlug = location.pathname.replace(/^\/states\//, '').replace(/^\//, '').toLowerCase();
+  const effectiveStateId = stateId || (pathSlug !== 'states' && pathSlug ? pathSlug : null);
+  const isDedicatedPage = Boolean(effectiveStateId);
+  const currentState = states.find(
+    (s) =>
+      s.id === effectiveStateId ||
+      s.code.toLowerCase() === effectiveStateId?.toLowerCase() ||
+      s.name.toLowerCase() === effectiveStateId?.toLowerCase()
+  );
 
   // Filter states for listing view
   const filteredStates = states.filter(
@@ -89,6 +98,9 @@ export const PublicStatePage = () => {
             />
           </div>
         </div>
+
+        {/* Interactive U.S. Map State Directory Selection */}
+        <InteractiveUsMap />
 
         {/* State Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -197,6 +209,15 @@ export const PublicStatePage = () => {
   // -------------------------------------------------------------
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-12">
+      {/* Hierarchy Breadcrumbs: National -> State Associations -> State */}
+      <div className="flex items-center gap-2 text-xs font-bold text-charcoal-muted">
+        <Link to="/" className="hover:text-forest-950 transition-colors">National</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <Link to="/states" className="hover:text-forest-950 transition-colors">State Associations</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <span className="text-forest-950 font-black">{stateData.name} State Association</span>
+      </div>
+
       {/* A. State Hero */}
       <div className="relative bg-gradient-to-r from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl overflow-hidden space-y-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
@@ -209,23 +230,36 @@ export const PublicStatePage = () => {
               )}
             </div>
             <div className="space-y-1">
-              <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
-                Dedicated State Charter Portal
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
+                  State Association Mini Website
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase bg-forest-900 text-tan-300 border border-forest-700">
+                  URL: /states/{stateData.code.toLowerCase()} • /{stateData.name.toLowerCase()}
+                </span>
+              </div>
               <h1 className="text-3xl lg:text-5xl font-black text-white">{stateData.name} State Association</h1>
               <p className="text-xs sm:text-sm text-tan-200 font-medium">
-                Governing body for sanctioned trials, affiliated clubs, and state championships in {stateData.name}.
+                Dedicated state mini website portal for {stateData.name}. Controlled by state officers via the State Dashboard.
               </p>
             </div>
           </div>
 
-          <Link
-            to="/join"
-            className="px-6 py-3 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Join {stateData.name} Association</span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/join"
+              className="px-5 py-3 bg-tan-500 hover:bg-tan-600 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all shrink-0"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>Join {stateData.name} Association</span>
+            </Link>
+            <Link
+              to="/login"
+              className="px-4 py-3 bg-forest-900 hover:bg-forest-800 text-tan-300 border border-forest-700 font-black text-xs rounded-xl shadow flex items-center gap-1.5 transition-all shrink-0"
+            >
+              <span>State Dashboard</span>
+            </Link>
+          </div>
         </div>
 
         {/* Quick Stat Counter */}
@@ -247,6 +281,59 @@ export const PublicStatePage = () => {
             <span className="text-[10px] uppercase font-bold text-tan-200">State Treasury Margin</span>
           </div>
         </div>
+      </div>
+
+      {/* Exact State Association Section Tabs requested by Client (Sticky Navigation) */}
+      <div className="sticky top-16 z-40 bg-surface-lowest/95 backdrop-blur-md p-2 rounded-2xl border border-surface-border shadow-xl flex flex-wrap items-center gap-2">
+        <a
+          href="#state-homepage"
+          className="px-3.5 py-2 rounded-xl text-xs font-black bg-forest-950 text-tan-300 hover:bg-forest-900 shadow-sm flex items-center gap-1.5 transition-all"
+        >
+          <Building2 className="w-3.5 h-3.5" />
+          <span>State Homepage</span>
+        </a>
+        <a
+          href="#state-events"
+          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
+        >
+          <Calendar className="w-3.5 h-3.5 text-tan-600" />
+          <span>State Events</span>
+        </a>
+        <a
+          href="#state-news"
+          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
+        >
+          <Newspaper className="w-3.5 h-3.5 text-tan-600" />
+          <span>State News</span>
+        </a>
+        <a
+          href="#state-membership"
+          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-tan-600" />
+          <span>State Membership</span>
+        </a>
+        <a
+          href="#state-merchandise"
+          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
+        >
+          <ShoppingBag className="w-3.5 h-3.5 text-tan-600" />
+          <span>State Merchandise</span>
+        </a>
+        <a
+          href="#state-club-directory"
+          className="px-3.5 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low hover:text-forest-950 flex items-center gap-1.5 transition-all"
+        >
+          <Users className="w-3.5 h-3.5 text-tan-600" />
+          <span>State Club Directory</span>
+        </a>
+        <Link
+          to="/login"
+          className="px-4 py-2 rounded-xl text-xs font-black text-forest-950 bg-tan-500 hover:bg-tan-400 shadow-md flex items-center gap-1 transition-all ml-auto"
+        >
+          <span>State Management Dashboard</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
       {/* B & C. About & State Governance Stats */}

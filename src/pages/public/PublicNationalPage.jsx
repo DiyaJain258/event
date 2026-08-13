@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ShoppingBag, ShieldCheck } from 'lucide-react';
+import { ConnectedNetworkBanner } from '../../components/common/ConnectedNetworkBanner';
 
 export const PublicNationalPage = () => {
   const { products, addToCart, showToast } = useApp();
@@ -10,25 +11,28 @@ export const PublicNationalPage = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-10">
       {/* Header Banner */}
       <div className="bg-forest-950 text-white rounded-3xl p-8 lg:p-10 border border-forest-800 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-2">
           <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase bg-tan-500 text-forest-950 tracking-wider">
-            🏠 National Headquarters Store
+            🏠 Ultimate Hound Club National Headquarters
           </span>
           <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tight">
-            Official National Products
+            National Platform Hub & Store
           </h1>
           <p className="text-xs sm:text-sm text-tan-200 font-medium max-w-xl">
-            Exclusive official gear, tracking equipment, and apparel straight from UHC National Headquarters.
+            Connecting 50 State Platforms and hundreds of Local Club Platforms across America.
           </p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-forest-900 border border-forest-700 rounded-xl text-tan-300 text-xs font-bold shrink-0">
           <ShieldCheck className="w-4 h-4 text-tan-400" />
-          <span>Sanctioned National Gear</span>
+          <span>Central Network Hub</span>
         </div>
       </div>
+
+      {/* Connected Network Architecture (Section 33 UI) */}
+      <ConnectedNetworkBanner />
 
       {/* Products Grid ONLY */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

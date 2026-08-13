@@ -86,10 +86,12 @@ export const AppRoutes = () => {
         <Route path="/national" element={<PublicNationalPage />} />
         <Route path="/find-hunt" element={<FindHuntPage />} />
         <Route path="/events" element={<FindHuntPage />} />
+        <Route path="/sports" element={<HomePage />} />
         <Route path="/clubs" element={<FindClubPage />} />
         <Route path="/clubs/:clubId" element={<PublicClubPage />} />
         <Route path="/states" element={<PublicStatePage />} />
         <Route path="/states/:stateId" element={<PublicStatePage />} />
+        <Route path="/texas" element={<PublicStatePage />} />
         <Route path="/results" element={<PublicResultsPage />} />
         <Route path="/news" element={<PublicNewsPage />} />
         <Route path="/store" element={<PublicStorePage />} />

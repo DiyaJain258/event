@@ -171,6 +171,15 @@ export const PublicClubPage = () => {
   // -------------------------------------------------------------
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-12">
+      {/* Hierarchy Breadcrumbs: National -> State Association -> Local Club */}
+      <div className="flex items-center gap-2 text-xs font-bold text-charcoal-muted">
+        <Link to="/" className="hover:text-forest-950 transition-colors">National</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <Link to={`/states/${club.stateId || 'tn'}`} className="hover:text-forest-950 transition-colors">{club.state} State Association</Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <span className="text-forest-950 font-black">{club.name}</span>
+      </div>
+
       {/* A. Club Hero */}
       <div className="bg-gradient-to-r from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-5">
@@ -194,7 +203,38 @@ export const PublicClubPage = () => {
             <ShieldCheck className="w-4 h-4" />
             <span>Join {club.name}</span>
           </Link>
+          <Link
+            to="/login"
+            className="px-4 py-3 bg-forest-900 hover:bg-forest-800 text-tan-300 border border-forest-700 font-black text-xs rounded-xl shadow flex items-center gap-1.5 transition-all shrink-0"
+          >
+            <span>Club Dashboard</span>
+          </Link>
         </div>
+      </div>
+
+      {/* Exact Local Club Section Tabs requested by Client */}
+      <div className="border-b border-surface-border bg-surface-lowest p-2 rounded-2xl shadow-ambient flex flex-wrap gap-2">
+        <a href="#club-homepage" className="px-4 py-2 rounded-xl text-xs font-black bg-forest-950 text-white shadow-sm">
+          Club Homepage
+        </a>
+        <a href="#club-events" className="px-4 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low transition-colors">
+          Club Events
+        </a>
+        <a href="#club-news" className="px-4 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low transition-colors">
+          Club News
+        </a>
+        <a href="#club-membership" className="px-4 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low transition-colors">
+          Club Membership
+        </a>
+        <a href="#club-merchandise" className="px-4 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low transition-colors">
+          Club Merchandise
+        </a>
+        <a href="#club-results" className="px-4 py-2 rounded-xl text-xs font-bold text-charcoal hover:bg-surface-low transition-colors">
+          Club Results
+        </a>
+        <Link to="/login" className="px-4 py-2 rounded-xl text-xs font-black text-tan-700 bg-tan-100 hover:bg-tan-200 transition-colors ml-auto">
+          Club Management Dashboard →
+        </Link>
       </div>
 
       {/* C. Club Stats Cards */}

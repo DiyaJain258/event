@@ -41,13 +41,13 @@ export const PublicLayout = () => {
   }, []);
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'National', path: '/national' },
-    { label: 'State Associations', path: '/states' },
-    { label: 'Local Clubs', path: '/clubs' },
-    { label: 'Merchandise', path: '/store' },
+    { label: 'National Homepage', path: '/' },
     { label: 'Events', path: '/find-hunt' },
-    { label: 'News', path: '/news' },
+    { label: 'National News', path: '/news' },
+    { label: 'Marketplace', path: '/store' },
+    { label: 'State Directory', path: '/states' },
+    { label: 'Hound Sports', path: '/sports' },
+    { label: 'National Membership', path: '/join' },
   ];
 
   return (
@@ -191,7 +191,7 @@ export const PublicLayout = () => {
                   <img src="/logo.png" alt="UHC Logo" className="h-9 w-auto object-contain" />
                 </div>
                 <p className="text-xs text-tan-100/70 leading-relaxed font-normal">
-                  The official nationwide organization connecting state associations, local clubs, field trials, canine registries, and conservation members.
+                  Providing the infrastructure that makes State Associations and Local Clubs stronger while preserving every organization's unique identity.
                 </p>
                 {/* Social Icons */}
                 <div className="flex items-center gap-3 pt-2">
