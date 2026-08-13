@@ -869,17 +869,62 @@ export const AppProvider = ({ children }) => {
     showToast(`Updated ${role} permission for ${module}:${action}`, 'info');
   };
 
+  const postLocalClubNews = (newsData) => {
+    const newItem = {
+      id: `news-${Date.now()}`,
+      title: newsData.title,
+      category: newsData.category || 'Important Club News',
+      level: 'LOCAL_CLUB',
+      club: newsData.club || 'Houston County Coon Hunters Association',
+      state: newsData.state || 'Texas',
+      stateId: newsData.stateId || 'texas',
+      stateCode: newsData.stateCode || 'TX',
+      author: newsData.author || currentUser.name || 'Club Secretary',
+      summary: newsData.summary || 'Important local club news announcement.',
+      isPromotedToState: false,
+      isPromotedToNational: false,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      image: newsData.image || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&auto=format&fit=crop&q=80'
+    };
+    setNews((prev) => [newItem, ...prev]);
+    showToast(`Posted Local Club News: "${newItem.title}"!`, 'success');
+    return newItem;
+  };
+
+  const promoteNewsToState = (newsId) => {
+    setNews((prev) =>
+      prev.map((n) => {
+        if (n.id === newsId) {
+          const newStatus = !n.isPromotedToState;
+          showToast(
+            newStatus
+              ? `State Association promoted "${n.title}" to State News Feed!`
+              : `Removed "${n.title}" State promotion.`,
+            newStatus ? 'success' : 'info'
+          );
+          return {
+            ...n,
+            isPromotedToState: newStatus,
+            level: newStatus ? 'STATE_ASSOCIATION' : 'LOCAL_CLUB'
+          };
+        }
+        return n;
+      })
+    );
+  };
+
   const addNews = (newsData) => {
     const newItem = {
       id: `news-${Date.now()}`,
       title: newsData.title,
       category: newsData.category || 'State Hunt announcements',
-      level: newsData.level || 'STATE',
+      level: newsData.level || 'STATE_ASSOCIATION',
       state: newsData.state || 'Texas',
       stateId: newsData.stateId || 'texas',
       stateCode: newsData.stateCode || 'TX',
       author: newsData.author || currentUser.name,
       summary: newsData.summary || 'Official article published to state news feed.',
+      isPromotedToState: true,
       isPromotedToNational: Boolean(newsData.isPromotedToNational),
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
       image: newsData.image || 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=600&auto=format&fit=crop&q=80'
@@ -895,11 +940,15 @@ export const AppProvider = ({ children }) => {
           const updatedStatus = !n.isPromotedToNational;
           showToast(
             updatedStatus
-              ? `Promoted "${n.title}" to National UHC News Feed!`
+              ? `National UHC promoted "${n.title}" to National News Feed!`
               : `Removed "${n.title}" promotion from National Feed.`,
             updatedStatus ? 'success' : 'info'
           );
-          return { ...n, isPromotedToNational: updatedStatus };
+          return {
+            ...n,
+            isPromotedToNational: updatedStatus,
+            level: updatedStatus ? 'NATIONAL_UHC' : (n.isPromotedToState ? 'STATE_ASSOCIATION' : 'LOCAL_CLUB')
+          };
         }
         return n;
       })
@@ -1211,6 +1260,8 @@ export const AppProvider = ({ children }) => {
         news,
         setNews,
         addNews,
+        postLocalClubNews,
+        promoteNewsToState,
         promoteNewsToNational,
         announcements,
         setAnnouncements,
