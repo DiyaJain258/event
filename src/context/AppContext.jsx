@@ -220,6 +220,70 @@ export const AppProvider = ({ children }) => {
   const [sponsors] = useState(INITIAL_SPONSORS);
   const [permissions, setPermissions] = useState(DEFAULT_PERMISSIONS);
 
+  // Global Hound Sport Category State
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const matchesCategory = (item, cat = selectedCategory) => {
+    if (!item) return false;
+    if (!cat || cat === 'All') return true;
+    const searchTarget = [
+      item.sport,
+      item.type,
+      item.category,
+      item.breed,
+      item.name,
+      item.description,
+      item.title,
+      item.summary,
+      item.club,
+      item.winnerDog,
+      item.federation
+    ].filter(Boolean).join(' ').toLowerCase();
+
+    const catLower = cat.toLowerCase();
+
+    if (catLower === 'coonhounds') {
+      return searchTarget.includes('coonhound') || searchTarget.includes('treeing') || searchTarget.includes('nite hunt') || searchTarget.includes('water race');
+    }
+    if (catLower === 'beagles') {
+      return searchTarget.includes('beagle') || searchTarget.includes('rabbit');
+    }
+    if (catLower === 'squirrel dogs') {
+      return searchTarget.includes('squirrel') || searchTarget.includes('feist') || searchTarget.includes('cur');
+    }
+    if (catLower === 'hog dogs') {
+      return searchTarget.includes('hog') || searchTarget.includes('bay');
+    }
+    if (catLower === 'bear dogs') {
+      return searchTarget.includes('bear');
+    }
+    if (catLower === 'rabbit dogs') {
+      return searchTarget.includes('rabbit') || searchTarget.includes('beagle');
+    }
+    if (catLower === 'retrievers') {
+      return searchTarget.includes('retriever') || searchTarget.includes('water race') || searchTarget.includes('swim');
+    }
+    if (catLower === 'cur & feist') {
+      return searchTarget.includes('cur') || searchTarget.includes('feist');
+    }
+    if (catLower === 'competition hunts') {
+      return searchTarget.includes('hunt') || searchTarget.includes('championship') || searchTarget.includes('competition') || searchTarget.includes('nite hunt');
+    }
+    if (catLower === 'bench shows') {
+      return searchTarget.includes('bench') || searchTarget.includes('show');
+    }
+    if (catLower === 'field trials') {
+      return searchTarget.includes('field') || searchTarget.includes('trial') || searchTarget.includes('pack trial');
+    }
+    if (catLower === 'water races') {
+      return searchTarget.includes('water') || searchTarget.includes('swim') || searchTarget.includes('water race');
+    }
+    if (catLower === 'other hound events') {
+      return searchTarget.includes('event') || searchTarget.includes('contest') || searchTarget.includes('sanctioned');
+    }
+    return searchTarget.includes(catLower);
+  };
+
   // Toast system
   const [toasts, setToasts] = useState([]);
 
@@ -1068,7 +1132,10 @@ export const AppProvider = ({ children }) => {
         updateClaimStatus,
         addResult,
         updatePermission,
-        updateUserRole
+        updateUserRole,
+        selectedCategory,
+        setSelectedCategory,
+        matchesCategory
       }}
     >
       {children}

@@ -41,13 +41,18 @@ export const PublicLayout = () => {
   }, []);
 
   const navLinks = [
-    { label: 'National Homepage', path: '/' },
-    { label: 'Events', path: '/find-hunt' },
-    { label: 'National News', path: '/news' },
-    { label: 'Marketplace', path: '/store' },
-    { label: 'State Directory', path: '/states' },
-    { label: 'Hound Sports', path: '/sports' },
-    { label: 'National Membership', path: '/join' },
+    { label: 'HOME', path: '/' },
+    { label: 'EVENTS', path: '/find-hunt' },
+    { label: 'STATES', path: '/states' },
+    { label: 'LOCAL CLUBS', path: '/clubs' },
+    { label: 'HOUND SPORTS', path: '/sports' },
+    { label: 'NEWS', path: '/news' },
+    { label: 'MARKETPLACE', path: '/store' },
+    { label: 'MEMBERSHIP', path: '/join' },
+    { label: 'RESULTS', path: '/results' },
+    { label: 'AUCTIONS', path: '/auctions' },
+    { label: 'EDUCATION / TRAINING', path: '/education' },
+    { label: 'ABOUT UHC', path: '/about' },
   ];
 
   return (
@@ -57,27 +62,27 @@ export const PublicLayout = () => {
         <header
           className={`sticky top-0 z-50 transition-all duration-300 ${
             isScrolled
-              ? 'bg-forest-950/95 backdrop-blur-md border-b border-forest-800 shadow-xl py-2.5'
-              : 'bg-forest-950 border-b border-forest-900 py-3.5'
+              ? 'bg-forest-950/95 backdrop-blur-md border-b border-forest-800 shadow-xl py-2'
+              : 'bg-forest-950 border-b border-forest-900 py-3'
           }`}
         >
           <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
             {/* Brand Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
-              <img src="/logo.png" alt="Ultimate Hound Championships Logo" className="h-10 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105" />
+            <Link to="/" className="flex items-center gap-3 group shrink-0">
+              <img src="/logo.png" alt="Ultimate Hound Championships Logo" className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105" />
             </Link>
 
             {/* Desktop Navigation Menu (xl screens 1280px+) */}
-            <nav className="hidden xl:flex items-center gap-1">
+            <nav className="hidden xl:flex items-center gap-1 flex-wrap justify-center">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   end={link.path === '/'}
                   className={({ isActive }) =>
-                    `px-2.5 py-1.5 rounded-lg text-xs font-extrabold tracking-wide transition-all ${
+                    `px-2 py-1 rounded-md text-[11px] font-extrabold tracking-tight transition-all whitespace-nowrap ${
                       isActive
-                        ? 'bg-tan-500 text-forest-950 shadow-md font-black'
+                        ? 'bg-tan-500 text-forest-950 shadow-sm font-black'
                         : 'text-tan-100/90 hover:text-white hover:bg-forest-800/60'
                     }`
                   }

@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 
 export const HomePage = () => {
-  const { events, clubs, states, news, products, sponsors, results, enterEvent, dogs, showToast } = useApp();
+  const { events, clubs, states, news, products, sponsors, results, enterEvent, dogs, showToast, selectedCategory, setSelectedCategory } = useApp();
   const [selectedSport, setSelectedSport] = useState('Coonhounds');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('');
@@ -54,38 +54,19 @@ export const HomePage = () => {
   }, []);
 
   const SPORTS_OPTIONS = [
-    {
-      key: 'Coonhounds',
-      label: 'Coonhounds',
-      icon: '🐕',
-      status: 'Active Primary',
-      badgeClass: 'bg-emerald-500 text-white font-black',
-      desc: 'Nite Hunts, Treeing Contests & Water Races'
-    },
-    {
-      key: 'Beagles',
-      label: 'Beagles',
-      icon: '🐶',
-      status: 'Pack Trials',
-      badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold',
-      desc: 'Rabbit Pack Trials & Field Contests'
-    },
-    {
-      key: 'Squirrel Dogs',
-      label: 'Squirrel Dogs',
-      icon: '🐿️',
-      status: 'Timber Trials',
-      badgeClass: 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold',
-      desc: 'Timber Squirrel Hunts & Treeing Contests'
-    },
-    {
-      key: 'Hog Dogs',
-      label: 'Hog Dogs',
-      icon: '🐗',
-      status: 'Bay Contests',
-      badgeClass: 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold',
-      desc: 'Wild Hog Bay & Catch Contests'
-    }
+    { key: 'Coonhounds',        label: 'Coonhounds',        icon: '🐕', status: 'Active Primary',  badgeClass: 'bg-emerald-500 text-white font-black',                              desc: 'Nite Hunts, Treeing Contests & Water Races' },
+    { key: 'Beagles',           label: 'Beagles',           icon: '🐶', status: 'Pack Trials',     badgeClass: 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold', desc: 'Rabbit Pack Trials & Field Contests' },
+    { key: 'Squirrel Dogs',     label: 'Squirrel Dogs',     icon: '🐿️', status: 'Timber Trials',   badgeClass: 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold',   desc: 'Timber Squirrel Hunts & Treeing Contests' },
+    { key: 'Hog Dogs',          label: 'Hog Dogs',          icon: '🐗', status: 'Bay Contests',    badgeClass: 'bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold', desc: 'Wild Hog Bay & Catch Contests' },
+    { key: 'Bear Dogs',         label: 'Bear Dogs',         icon: '🐻', status: 'Big Game',        badgeClass: 'bg-stone-500/20 text-stone-300 border border-stone-500/40 font-bold',  desc: 'Mountain Bear Tracking & Big Game Hunts' },
+    { key: 'Rabbit Dogs',       label: 'Rabbit Dogs',       icon: '🐇', status: 'Rabbit Trials',   badgeClass: 'bg-orange-500/20 text-orange-300 border border-orange-500/40 font-bold', desc: 'Rabbit Chasing, Pack & Solo Trials' },
+    { key: 'Retrievers',        label: 'Retrievers',        icon: '🦆', status: 'Water Trials',    badgeClass: 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold',    desc: 'Water Retrieves, Hunt Tests & Field Trials' },
+    { key: 'Cur & Feist',       label: 'Cur & Feist',       icon: '🌲', status: 'Squirrel/Hog',   badgeClass: 'bg-lime-500/20 text-lime-300 border border-lime-500/40 font-bold',    desc: 'Multi-purpose Cur & Feist Squirrel/Hog Trials' },
+    { key: 'Competition Hunts', label: 'Competition Hunts', icon: '🏆', status: 'Championship',   badgeClass: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-bold', desc: 'Competitive Night Hunts & Championship Events' },
+    { key: 'Bench Shows',       label: 'Bench Shows',       icon: '🎖️', status: 'Conformation',   badgeClass: 'bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold',   desc: 'Breed Conformation & Bench Show Competitions' },
+    { key: 'Field Trials',      label: 'Field Trials',      icon: '🌾', status: 'Field Events',   badgeClass: 'bg-teal-500/20 text-teal-300 border border-teal-500/40 font-bold',   desc: 'All-breed Field & Pack Trials' },
+    { key: 'Water Races',       label: 'Water Races',       icon: '💧', status: 'Water Events',   badgeClass: 'bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold',      desc: 'Coonhound Water Race Speed & Line Trials' },
+    { key: 'Other Hound Events',label: 'Other Hound Events',icon: '🎯', status: 'All Breeds',     badgeClass: 'bg-neutral-500/20 text-neutral-300 border border-neutral-500/40 font-bold', desc: 'All Other UHC Sanctioned Hound Events' }
   ];
 
   const currentSport = SPORTS_OPTIONS.find((s) => s.key === selectedSport) || SPORTS_OPTIONS[0];
@@ -147,14 +128,14 @@ export const HomePage = () => {
 
           {/* Heading & Subheading */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]">
-            Find Hunts, Clubs & <br className="hidden sm:block" />
+            Find Your State. Find Your Club. <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-tan-300 via-tan-400 to-tan-200">
-              Events Across America
+              Support the Sport.
             </span>
           </h1>
 
           <p className="text-base sm:text-lg text-tan-100/90 max-w-3xl mx-auto leading-relaxed font-medium">
-            Providing the infrastructure that makes State Associations and Local Clubs stronger. Search upcoming hunts, join local chartered clubs, support state organizations, and participate in sanctioned competitions.
+            The National UHC gateway connects hunters, state associations, and local clubs. Search upcoming hunts & events, find your state, discover local clubs, join or support a club, view national news, shop merchandise, and learn about hound sports.
           </p>
 
           {/* Search Card Centered Over Hero */}
@@ -324,21 +305,47 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* 2. Core UHC Philosophy & Growth Interdependence Model */}
+      {/* 2. Core UHC Philosophy & State / Local Gateway Model */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="bg-gradient-to-br from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-8 lg:p-12 border border-forest-800 shadow-2xl relative overflow-hidden space-y-8">
           <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-tan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="px-3.5 py-1 rounded-full bg-tan-500/20 text-tan-300 border border-tan-500/40 text-[10px] font-black uppercase tracking-widest inline-block">
-              Core UHC Purpose & Ecosystem
+              State & Local Gateway Focus
             </span>
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
-              Building Infrastructure That Makes <br className="hidden sm:block" />
-              <span className="text-tan-400">State Associations & Local Clubs Stronger</span>
+              National Gateway Supporting <br className="hidden sm:block" />
+              <span className="text-tan-400">State Associations & Local Clubs</span>
             </h2>
             <p className="text-xs sm:text-sm text-tan-100/80 font-medium leading-relaxed">
-              The purpose of UHC is not to replace or alter existing organizations. We provide technology, exposure, membership tools, event promotion, merchandise systems, and new ways to generate income while each club and association maintains its independent identity.
+              The National UHC website is the main entrance to the entire UHC system. We promote participation at the State and Local level and do NOT compete with State Associations or Local Clubs.
+            </p>
+          </div>
+
+          {/* Visual Gateway Hierarchy Diagram */}
+          <div className="bg-forest-900/60 backdrop-blur-md rounded-2xl p-6 border border-forest-800 text-center max-w-3xl mx-auto relative z-10">
+            <div className="text-[11px] font-black uppercase tracking-widest text-tan-400 mb-4">
+              System Hierarchy & Support Flow
+            </div>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-3">
+              <div className="w-full md:w-auto px-6 py-3.5 rounded-xl bg-forest-950 border border-tan-500/40 text-white font-black text-xs sm:text-sm shadow-md flex items-center justify-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-tan-400" />
+                <span>National UHC</span>
+              </div>
+              <div className="text-tan-400 text-xl font-bold font-mono rotate-90 md:rotate-0">↓</div>
+              <div className="w-full md:w-auto px-6 py-3.5 rounded-xl bg-forest-950 border border-tan-500/40 text-white font-black text-xs sm:text-sm shadow-md flex items-center justify-center gap-2">
+                <Shield className="w-4 h-4 text-tan-400" />
+                <span>State Associations</span>
+              </div>
+              <div className="text-tan-400 text-xl font-bold font-mono rotate-90 md:rotate-0">↓</div>
+              <div className="w-full md:w-auto px-6 py-3.5 rounded-xl bg-forest-950 border border-tan-500/40 text-white font-black text-xs sm:text-sm shadow-md flex items-center justify-center gap-2">
+                <Building2 className="w-4 h-4 text-tan-400" />
+                <span>Local Clubs</span>
+              </div>
+            </div>
+            <p className="text-[11px] text-tan-200/80 font-medium mt-4">
+              National UHC acts as the main entrance that helps users discover and support their State Associations and Local Clubs.
             </p>
           </div>
 
@@ -392,43 +399,68 @@ export const HomePage = () => {
         <ConnectedNetworkBanner />
       </section>
 
-      {/* 3. The 5 Primary Visitor Actions */}
-      <section className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Core Visitor Journey</span>
-          <h2 className="text-2xl lg:text-4xl font-extrabold text-forest-950 tracking-tight">5 Primary Ways to Get Involved</h2>
+      {/* 3. The 9 Visitor Actions Gateways */}
+      <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">National UHC Gateway</span>
+          <h2 className="text-2xl lg:text-4xl font-extrabold text-forest-950 tracking-tight">Explore UHC Visitor Actions</h2>
           <p className="text-xs text-charcoal-muted font-medium">
-            Explore how UHC connects hunters, local clubs, and state associations across America.
+            Immediate entrance to events, state charters, local clubs, news, store, results, and hound sports.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {/* Action 1: Find a Hunt */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* Action 1: Find Hunts & Events */}
           <Link
             to="/find-hunt"
             className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <Search className="w-5 h-5" />
+                <Calendar className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 1</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 1</span>
                 <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Find a Hunt
+                  Find Hunts & Events
                 </h3>
                 <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
-                  Discover upcoming field trials, nite hunts, and treeing contests near you.
+                  Search upcoming field trials, nite hunts, treeing contests, and state championships across America.
                 </p>
               </div>
             </div>
             <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Search hunts</span>
+              <span>Find Hunts & Events</span>
               <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Action 2: Join a Club */}
+          {/* Action 2: Find Their State */}
+          <Link
+            to="/states"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 2</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Find Your State
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Locate State Associations, chartered officers, state hunt schedules, and regional governance.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Find Your State</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Action 3: Find a Local Club */}
           <Link
             to="/clubs"
             className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
@@ -438,47 +470,72 @@ export const HomePage = () => {
                 <Building2 className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 2</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 3</span>
                 <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Join a Club
+                  Find a Local Club
                 </h3>
                 <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
-                  Locate chartered local clubs and become an active sporting club member.
+                  Discover over 635+ chartered local hound clubs active in your city or county.
                 </p>
               </div>
             </div>
             <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Find local clubs</span>
+              <span>Find Local Club</span>
               <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Action 3: Support Your State */}
+          {/* Action 4: Join or Support a Club */}
           <Link
-            to="/states"
+            to="/join"
             className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-5 h-5" />
+                <Users className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 3</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 4</span>
                 <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Support Your State
+                  Join or Support a Club
                 </h3>
                 <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
-                  Engage with State Associations overseeing chartered clubs & state trials.
+                  Become an active sporting member or financially support local club grounds and youth trials.
                 </p>
               </div>
             </div>
             <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>State associations</span>
+              <span>Join or Support</span>
               <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Action 4: Shop Through Your Club */}
+          {/* Action 5: View National Hound News */}
+          <Link
+            to="/news"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Newspaper className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 5</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  View National Hound News
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Read official hunt reports, rulebook updates, conservation efforts, and national feature stories.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>View Hound News</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Action 6: Shop Merchandise */}
           <Link
             to="/store"
             className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
@@ -488,24 +545,49 @@ export const HomePage = () => {
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 4</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 6</span>
                 <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Shop Through Club
+                  Shop Merchandise
                 </h3>
                 <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
-                  Purchase gear where sales margin directly generates income for local clubs.
+                  Shop official UHC apparel, canine field supplies, and gear that directly support local clubs.
                 </p>
               </div>
             </div>
             <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Browse gear store</span>
+              <span>Shop Merchandise</span>
               <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Action 5: Participate in the Sport */}
+          {/* Action 7: Find Organizations & Federations */}
           <Link
-            to="/join"
+            to="/sponsors"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Compass className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 7</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Find Organizations & Federations
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Discover partner registries, hunting federations, wildlife conservation bodies, and official sponsors.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Find Organizations</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Action 8: View Results */}
+          <Link
+            to="/results"
             className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
           >
             <div className="space-y-3">
@@ -513,22 +595,120 @@ export const HomePage = () => {
                 <Trophy className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Pillar 5</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 8</span>
                 <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
-                  Participate in Sport
+                  View Results
                 </h3>
                 <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
-                  Register canines, earn official credentials, and compete in sanctioned trials.
+                  Check official field competition scores, national leaderboards, winner profiles, and champion dogs.
                 </p>
               </div>
             </div>
             <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
-              <span>Register & enter</span>
+              <span>View Results</span>
               <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
+
+          {/* Action 9: Learn About Different Hound Sports */}
+          <a
+            href="#hound-sports"
+            className="group bg-surface-lowest rounded-2xl p-5 border border-surface-border shadow-ambient hover:shadow-2xl hover:border-tan-500/60 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-forest-950 text-tan-400 flex items-center justify-center border border-forest-800 group-hover:scale-110 transition-transform">
+                <Target className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-tan-700">Action 9</span>
+                <h3 className="text-base font-black text-forest-950 group-hover:text-tan-700 transition-colors">
+                  Learn About Hound Sports
+                </h3>
+                <p className="text-[11px] text-charcoal-muted leading-relaxed font-medium">
+                  Learn about Coonhounds, Beagles, Squirrel Dogs, Hog Dogs, Nite Hunts, Pack Trials, and Treeing contests.
+                </p>
+              </div>
+            </div>
+            <div className="pt-4 flex items-center text-[11px] font-black text-forest-800 group-hover:text-tan-700 gap-1">
+              <span>Learn Hound Sports</span>
+              <ChevronRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+            </div>
+          </a>
         </div>
       </section>
+
+      {/* Dedicated Hound Sports Overview Section */}
+      <section id="hound-sports" className="max-w-7xl mx-auto px-4 lg:px-8 space-y-6">
+        <div className="bg-surface-lowest border border-surface-border rounded-3xl p-8 lg:p-10 shadow-ambient space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-4">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Discipline Guides</span>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-forest-950 tracking-tight">Hound Sport Categories</h2>
+              <p className="text-sm text-charcoal-muted mt-1 font-medium">Select a category to explore hunts, clubs, and events near you.</p>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-forest-950 text-tan-300 text-[10px] font-black uppercase tracking-wider self-start sm:self-auto border border-forest-800">
+              13 UHC Sanctioned Disciplines
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {SPORTS_OPTIONS.map((sport) => {
+              const isActive = (selectedCategory || selectedSport) === sport.key;
+              return (
+                <div
+                  key={sport.key}
+                  onClick={() => { setSelectedSport(sport.key); setSelectedCategory(sport.key); }}
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer space-y-2 ${
+                    isActive
+                      ? 'bg-forest-950 text-white border-tan-500 shadow-xl scale-[1.02]'
+                      : 'bg-surface-low/80 hover:bg-surface-lowest text-forest-950 border-surface-border hover:border-tan-500/50 hover:scale-[1.01]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl">{sport.icon}</span>
+                    <span className={`px-1.5 py-0.5 rounded text-[8px] ${sport.badgeClass}`}>
+                      {sport.status}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className={`font-black text-sm leading-tight ${isActive ? 'text-tan-300' : 'text-forest-950'}`}>
+                      {sport.label}
+                    </h3>
+                    <p className={`text-[11px] mt-1 leading-relaxed font-medium ${isActive ? 'text-tan-100/80' : 'text-charcoal-muted'}`}>
+                      {sport.desc}
+                    </p>
+                  </div>
+                  <div className={`flex items-center text-[9px] font-black uppercase tracking-wider gap-1 ${isActive ? 'text-tan-400' : 'text-forest-700'}`}>
+                    <span>{isActive ? '✓ Selected' : 'Explore'}</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* CTA when a category is selected */}
+          {(selectedCategory || selectedSport) && (
+            <div className="mt-4 p-4 bg-forest-950/5 border border-forest-950/10 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-black text-forest-950">
+                  Browsing: <span className="text-tan-700">{selectedCategory || selectedSport}</span>
+                </p>
+                <p className="text-xs text-charcoal-muted font-medium">Find hunts, clubs, and events for this discipline.</p>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <a href="/find-hunt" className="px-4 py-2 rounded-xl bg-forest-950 text-tan-300 text-xs font-black hover:bg-forest-900 transition-colors">
+                  Find Events →
+                </a>
+                <a href="/clubs" className="px-4 py-2 rounded-xl border border-forest-950 text-forest-950 text-xs font-black hover:bg-forest-950 hover:text-tan-300 transition-colors">
+                  Find Clubs →
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
 
       {/* 4. Infrastructure Support Pillars & Identity Preservation Banner */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
@@ -979,11 +1159,12 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* 9. Sponsors (Gold, Silver, Bronze Tiers) */}
+      {/* 9. Organizations, Federations & Sponsors */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Official Partners</span>
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-forest-950 tracking-tight">Sponsors</h2>
+          <span className="text-[10px] font-black uppercase tracking-widest text-tan-700">Registries & Industry Partners</span>
+          <h2 className="text-2xl lg:text-3xl font-extrabold text-forest-950 tracking-tight">Organizations & Federations</h2>
+          <p className="text-xs text-charcoal-muted font-medium">Connecting with national hunting federations, registries, and official industry partners.</p>
         </div>
 
         {/* Gold Sponsors */}

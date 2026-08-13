@@ -22,6 +22,7 @@ import { PublicSponsorsPage } from '../pages/public/PublicSponsorsPage';
 import { JoinPage } from '../pages/public/JoinPage';
 import { StateMembershipSignUpPage } from '../pages/public/StateMembershipSignUpPage';
 import { LoginPage } from '../pages/public/LoginPage';
+import { HoundSportsPage } from '../pages/public/HoundSportsPage';
 
 // Member Dashboard Pages
 import { MemberDashboard } from '../pages/member/MemberDashboard';
@@ -85,9 +86,10 @@ export const AppRoutes = () => {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/national" element={<PublicNationalPage />} />
+        <Route path="/about" element={<PublicNationalPage />} />
         <Route path="/find-hunt" element={<FindHuntPage />} />
         <Route path="/events" element={<FindHuntPage />} />
-        <Route path="/sports" element={<HomePage />} />
+        <Route path="/sports" element={<HoundSportsPage />} />
         <Route path="/clubs" element={<FindClubPage />} />
         <Route path="/clubs/:clubId" element={<PublicClubPage />} />
         <Route path="/states" element={<PublicStatePage />} />
@@ -96,6 +98,8 @@ export const AppRoutes = () => {
         <Route path="/results" element={<PublicResultsPage />} />
         <Route path="/news" element={<PublicNewsPage />} />
         <Route path="/store" element={<PublicStorePage />} />
+        <Route path="/auctions" element={<PublicStorePage />} />
+        <Route path="/education" element={<HomePage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
