@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { PreSignUpModal } from '../../components/events/PreSignUpModal';
+import { EventMapView } from '../../components/events/EventMapView';
 import { Search, MapPin, Calendar, Filter, List, Grid, Map as MapIcon, Trophy, Award, CheckCircle, ChevronRight, ChevronDown, Check } from 'lucide-react';
 
 export const FindHuntPage = () => {
@@ -286,18 +287,11 @@ export const FindHuntPage = () => {
       )}
 
       {viewMode === 'map' && (
-        <div className="bg-surface-lowest rounded-2xl border border-surface-border p-10 shadow-ambient text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-forest-800 text-tan-400 mx-auto flex items-center justify-center shadow-lg">
-            <MapIcon className="w-8 h-8" />
-          </div>
-          <h3 className="text-xl font-black text-forest-800">USA Sanctioned Trial Location Map</h3>
-          <p className="text-xs text-charcoal-muted max-w-lg mx-auto">Interactive GPS mapping pins showing active events across Tennessee, Kentucky, Virginia, North Carolina, and Ohio.</p>
-          <div className="bg-forest-950 text-tan-200 p-6 rounded-2xl font-mono text-xs text-left max-w-xl mx-auto space-y-2 border border-forest-800">
-            <div>📌 Knoxville, TN: Oak Ridge Hunting Club (Nite Hunt & Fall Champ)</div>
-            <div>📌 Middlesboro, KY: Cumberland Mountain Club (Water Race)</div>
-            <div>📌 Sevierville, TN: Smokey Ridge Club (Youth Hunt)</div>
-          </div>
-        </div>
+        <EventMapView
+          events={filteredEvents}
+          selectedState={selectedState}
+          onPreSignUp={(evt) => setSelectedEventForPreSignUp(evt)}
+        />
       )}
 
       {selectedEventForPreSignUp && (
