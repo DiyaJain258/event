@@ -148,7 +148,17 @@ export const AppProvider = ({ children }) => {
   
   const [claims, setClaims] = useState(() => {
     const saved = localStorage.getItem('nh_claims');
-    return saved ? JSON.parse(saved) : INITIAL_CLAIMS;
+    const parsed = saved ? JSON.parse(saved) : INITIAL_CLAIMS;
+    return parsed.map(c => ({
+      ...c,
+      club: c.club || c.clubName || '',
+      state: c.state || 'TN',
+      applicant: c.applicant || c.applicantName || '',
+      submittedDate: c.submittedDate || c.date || '',
+      claimStatus: c.claimStatus || c.status || 'Pending',
+      verificationStatus: c.verificationStatus || c.document || 'Pending Review',
+      message: c.message || 'Verification request submitted.'
+    }));
   });
 
   const [news, setNews] = useState(() => {
@@ -857,9 +867,22 @@ export const AppProvider = ({ children }) => {
 
   const updateClaimStatus = (claimId, newStatus) => {
     setClaims((prev) =>
-      prev.map((c) => (c.id === claimId ? { ...c, status: newStatus } : c))
+      prev.map((c) => (c.id === claimId ? { ...c, claimStatus: newStatus, status: newStatus } : c))
     );
     showToast(`Claim #${claimId} status updated to: ${newStatus}`, 'success');
+  };
+
+  const submitClaimRequest = (claimData) => {
+    const newClaim = {
+      id: `CLM-${Math.floor(100 + Math.random() * 900)}`,
+      claimStatus: 'Pending',
+      status: 'Pending',
+      submittedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      verificationStatus: 'Pending Review',
+      ...claimData
+    };
+    setClaims((prev) => [newClaim, ...prev]);
+    showToast(`Claim request for "${claimData.club || claimData.state}" submitted successfully!`, 'success');
   };
 
   const addResult = (resultData) => {
@@ -1315,6 +1338,7 @@ export const AppProvider = ({ children }) => {
         saveDog,
         deleteDog,
         updateClaimStatus,
+        submitClaimRequest,
         addResult,
         updatePermission,
         updateUserRole,

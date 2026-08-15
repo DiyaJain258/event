@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { PreSignUpModal } from '../../components/events/PreSignUpModal';
+import { Modal } from '../../components/common/Modal';
 import {
   Building2,
   MapPin,
@@ -30,13 +31,32 @@ import {
 
 export const PublicClubPage = () => {
   const { clubId } = useParams();
-  const { clubs, events, products, news, results, states, addToCart, showToast } = useApp();
+  const { clubs, events, products, news, results, states, addToCart, showToast, submitClaimRequest } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStateFilter, setSelectedStateFilter] = useState('');
   const [selectedEventForPreSignUp, setSelectedEventForPreSignUp] = useState(null);
   const [activeTab, setActiveTab] = useState('HOME');
   const [selectedMerchCategory, setSelectedMerchCategory] = useState('All');
+
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
+  const [claimForm, setClaimForm] = useState({
+    applicant: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleClaimSubmit = (e) => {
+    e.preventDefault();
+    submitClaimRequest({
+      club: club.name,
+      state: club.stateCode || club.state,
+      ...claimForm
+    });
+    setClaimForm({ applicant: '', email: '', phone: '', message: '' });
+    setIsClaimModalOpen(false);
+  };
 
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -292,6 +312,13 @@ export const PublicClubPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <button
+                onClick={() => setIsClaimModalOpen(true)}
+                className="px-5 py-3 bg-forest-900 border border-forest-750 hover:bg-forest-950 text-white font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <UserCheck className="w-4 h-4 text-tan-400" />
+                <span>Claim Page</span>
+              </button>
               <Link
                 to={`/join-club/${club.id}`}
                 className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all cursor-pointer"
@@ -892,6 +919,84 @@ export const PublicClubPage = () => {
           event={selectedEventForPreSignUp}
           onClose={() => setSelectedEventForPreSignUp(null)}
         />
+      )}
+
+      {/* Claim Page Modal */}
+      {isClaimModalOpen && (
+        <Modal isOpen={true} onClose={() => setIsClaimModalOpen(false)} title={`Claim Official Profile: ${club.name}`}>
+          <form onSubmit={handleClaimSubmit} className="space-y-4 text-xs text-charcoal">
+            <div className="bg-surface-low p-3.5 rounded-xl border border-surface-border text-charcoal-muted mb-2">
+              <p className="font-semibold leading-relaxed">
+                If you are an official officer, master of hounds, or authorized representative of <strong>{club.name}</strong>, you can submit a claim to manage this page. Super Admins will review your details.
+              </p>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="block font-bold text-forest-950">Applicant Name</label>
+              <input
+                type="text"
+                required
+                value={claimForm.applicant}
+                onChange={(e) => setClaimForm({ ...claimForm, applicant: e.target.value })}
+                className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                placeholder="e.g. Robert Miller"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="block font-bold text-forest-950">Official Email</label>
+                <input
+                  type="email"
+                  required
+                  value={claimForm.email}
+                  onChange={(e) => setClaimForm({ ...claimForm, email: e.target.value })}
+                  className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  placeholder="e.g. name@oakridgehc.org"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block font-bold text-forest-950">Contact Phone</label>
+                <input
+                  type="tel"
+                  required
+                  value={claimForm.phone}
+                  onChange={(e) => setClaimForm({ ...claimForm, phone: e.target.value })}
+                  className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  placeholder="e.g. (865) 555-0199"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="block font-bold text-forest-950">Statement / Verification Message</label>
+              <textarea
+                required
+                rows={3}
+                value={claimForm.message}
+                onChange={(e) => setClaimForm({ ...claimForm, message: e.target.value })}
+                className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800 resize-none"
+                placeholder="Briefly state your role and verification details (e.g. 'I am the club president and want to claim this page to add news and update officer listings.')"
+              />
+            </div>
+            
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-surface-border">
+              <button
+                type="button"
+                onClick={() => setIsClaimModalOpen(false)}
+                className="px-4 py-2.5 border border-surface-border rounded-xl font-black text-xs hover:bg-surface-low transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2.5 bg-forest-900 text-white font-black text-xs rounded-xl shadow hover:bg-forest-950 transition-all"
+              >
+                Submit Claim Request
+              </button>
+            </div>
+          </form>
+        </Modal>
       )}
     </div>
   );

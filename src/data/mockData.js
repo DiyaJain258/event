@@ -1057,8 +1057,8 @@ export const INITIAL_PRODUCTS = [
 ];
 
 export const INITIAL_CLAIMS = [
-  { id: 'CLM-401', clubName: 'Oak Ridge Hunting Club', applicantName: 'Robert Miller', email: 'robert.miller@oakridgehc.org', phone: '(865) 555-0199', date: 'Aug 06, 2026', status: 'Under Review', document: 'Verification_Charter_Document.pdf' },
-  { id: 'CLM-402', clubName: 'Cumberland Mountain Club', applicantName: 'Thomas Shelby', email: 'thomas@cumberlandhc.org', phone: '(606) 555-0311', date: 'Aug 02, 2026', status: 'Approved', document: 'Club_Charter_KY_2026.pdf' },
+  { id: 'CLM-401', club: 'Oak Ridge Hunting Club', state: 'TN', applicant: 'Robert Miller', email: 'robert.miller@oakridgehc.org', phone: '(865) 555-0199', submittedDate: 'Aug 06, 2026', claimStatus: 'Pending', verificationStatus: 'Charter Uploaded', message: 'Requesting administrative rights to update the Oak Ridge club page with official officers list, state championship news, and direct signup links.' },
+  { id: 'CLM-402', club: 'Cumberland Mountain Club', state: 'KY', applicant: 'Thomas Shelby', email: 'thomas@cumberlandhc.org', phone: '(606) 555-0311', submittedDate: 'Aug 02, 2026', claimStatus: 'Approved', verificationStatus: 'Tax ID Verified', message: 'Claiming control over the Cumberland local chapter page to manage member directory.' },
 ];
 
 export const INITIAL_NEWS = [

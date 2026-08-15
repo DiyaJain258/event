@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { PreSignUpModal } from '../../components/events/PreSignUpModal';
+import { Modal } from '../../components/common/Modal';
 import { InteractiveUsMap } from '../../components/common/InteractiveUsMap';
 import {
   MapPin,
@@ -25,11 +26,31 @@ import {
 export const PublicStatePage = () => {
   const { stateId } = useParams();
   const location = useLocation();
-  const { states, clubs, events, products, news, results, addToCart, showToast } = useApp();
+  const { states, clubs, events, products, news, results, addToCart, showToast, submitClaimRequest } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEventForPreSignUp, setSelectedEventForPreSignUp] = useState(null);
   const [activeTab, setActiveTab] = useState('HOME');
+  
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
+  const [claimForm, setClaimForm] = useState({
+    applicant: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleClaimSubmit = (e) => {
+    e.preventDefault();
+    submitClaimRequest({
+      club: stateTitle,
+      state: stateData.code || stateData.name,
+      ...claimForm
+    });
+    setClaimForm({ applicant: '', email: '', phone: '', message: '' });
+    setIsClaimModalOpen(false);
+  };
+
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
 
   // 6 State Events Filters required by Client: Date, Organization, Dog type, Event type, Region, Local club
@@ -299,13 +320,22 @@ export const PublicStatePage = () => {
               <div className="text-[11px] text-tan-200">Board: 3 Elected State Officers</div>
             </div>
 
-            <Link
-              to={`/join-state/${stateData.id || 'texas'}`}
-              className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Join {stateData.name.includes('Texas') ? 'the Texas Hound Association' : stateTitle}</span>
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setIsClaimModalOpen(true)}
+                className="px-5 py-3 bg-forest-900 border border-forest-750 hover:bg-forest-950 text-white font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <UserCheck className="w-4 h-4 text-tan-400" />
+                <span>Claim Page</span>
+              </button>
+              <Link
+                to={`/join-state/${stateData.id || 'texas'}`}
+                className="px-5 py-3 bg-tan-500 hover:bg-tan-400 text-forest-950 font-black text-xs rounded-xl shadow-lg flex items-center gap-2 transition-all"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Join {stateData.name.includes('Texas') ? 'the Texas Hound Association' : stateTitle}</span>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -1100,6 +1130,84 @@ export const PublicStatePage = () => {
           event={selectedEventForPreSignUp}
           onClose={() => setSelectedEventForPreSignUp(null)}
         />
+      )}
+
+      {/* Claim Page Modal */}
+      {isClaimModalOpen && (
+        <Modal isOpen={true} onClose={() => setIsClaimModalOpen(false)} title={`Claim Official Profile: ${stateTitle}`}>
+          <form onSubmit={handleClaimSubmit} className="space-y-4 text-xs text-charcoal">
+            <div className="bg-surface-low p-3.5 rounded-xl border border-surface-border text-charcoal-muted mb-2">
+              <p className="font-semibold leading-relaxed">
+                If you are an official officer, state director, or authorized representative of the <strong>{stateTitle}</strong>, you can submit a claim to manage this page. Super Admins will review your details.
+              </p>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="block font-bold text-forest-950">Applicant Name</label>
+              <input
+                type="text"
+                required
+                value={claimForm.applicant}
+                onChange={(e) => setClaimForm({ ...claimForm, applicant: e.target.value })}
+                className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                placeholder="e.g. Austin Sterling"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="block font-bold text-forest-950">Official Email</label>
+                <input
+                  type="email"
+                  required
+                  value={claimForm.email}
+                  onChange={(e) => setClaimForm({ ...claimForm, email: e.target.value })}
+                  className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  placeholder="e.g. name@statehunting.org"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block font-bold text-forest-950">Contact Phone</label>
+                <input
+                  type="tel"
+                  required
+                  value={claimForm.phone}
+                  onChange={(e) => setClaimForm({ ...claimForm, phone: e.target.value })}
+                  className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800"
+                  placeholder="e.g. (800) 555-0192"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="block font-bold text-forest-950">Statement / Verification Message</label>
+              <textarea
+                required
+                rows={3}
+                value={claimForm.message}
+                onChange={(e) => setClaimForm({ ...claimForm, message: e.target.value })}
+                className="w-full p-3 bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-forest-800 resize-none"
+                placeholder="Briefly state your role and verification details (e.g. 'I am the state association director and need credentials to oversee affiliated clubs and post news.')"
+              />
+            </div>
+            
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-surface-border">
+              <button
+                type="button"
+                onClick={() => setIsClaimModalOpen(false)}
+                className="px-4 py-2.5 border border-surface-border rounded-xl font-black text-xs hover:bg-surface-low transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2.5 bg-forest-900 text-white font-black text-xs rounded-xl shadow hover:bg-forest-950 transition-all"
+              >
+                Submit Claim Request
+              </button>
+            </div>
+          </form>
+        </Modal>
       )}
     </div>
   );
