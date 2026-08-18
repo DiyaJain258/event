@@ -26,7 +26,7 @@ export const MemberEvents = () => {
               <div className="text-xs text-charcoal-muted space-y-1">
                 <div>📅 Date: {evt.date} @ {evt.startTime}</div>
                 <div>📍 Location: {evt.club} ({evt.city}, {evt.state})</div>
-                <div>🏆 Fee: <strong>${evt.fee}</strong> • Entries: {evt.entries}/{evt.maxCapacity}</div>
+                <div>🏆 Fee: <strong>${evt.fee}</strong> • Entries: {Number(evt.entries) || 0}/{evt.maxCapacity || 50}</div>
               </div>
             </div>
 

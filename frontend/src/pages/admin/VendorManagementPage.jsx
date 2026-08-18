@@ -34,12 +34,16 @@ export const VendorManagementPage = () => {
   };
 
   const columns = [
-    { header: 'Order ID', accessor: 'id', render: (r) => <span className="font-mono font-bold text-forest-800">{r.id}</span> },
+    {
+      header: 'Order ID',
+      accessor: 'id',
+      render: (r) => <span className="font-mono font-black text-forest-950 whitespace-nowrap text-xs sm:text-sm">{r.id}</span>
+    },
     {
       header: 'Assigned Vendor',
       accessor: 'vendorName',
       render: (r) => (
-        <span className="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-extrabold text-xs border border-amber-300">
+        <span className="inline-flex items-center px-3 py-1 rounded-md bg-amber-100/90 text-amber-950 font-extrabold text-xs border border-amber-300 shadow-2xs whitespace-nowrap leading-tight tracking-tight">
           {r.vendorName || 'Garmin Outdoor'}
         </span>
       )
@@ -48,9 +52,9 @@ export const VendorManagementPage = () => {
       header: 'Product Items',
       accessor: 'product',
       render: (r) => (
-        <div>
-          <div className="font-extrabold text-charcoal">{r.product || r.items}</div>
-          <div className="text-[10px] text-charcoal-muted font-bold">Qty: 1 | Customer: {r.customer}</div>
+        <div className="space-y-0.5 max-w-xs">
+          <div className="font-extrabold text-forest-950 text-xs leading-snug">{r.product || r.items}</div>
+          <div className="text-[10px] text-charcoal-muted font-bold">Qty: 1 | Customer: <span className="text-charcoal font-black">{r.customer}</span></div>
         </div>
       )
     },
@@ -58,9 +62,9 @@ export const VendorManagementPage = () => {
       header: 'Shipping Destination',
       accessor: 'shippingAddress',
       render: (r) => (
-        <div className="text-xs">
-          <div className="font-bold text-charcoal">{r.shippingAddress?.city || 'Knoxville'}, {r.shippingAddress?.state || 'TN'}</div>
-          <div className="text-[10px] text-charcoal-muted">{r.shippingAddress?.address1 || 'Field Address'}</div>
+        <div className="text-xs space-y-0.5 whitespace-nowrap">
+          <div className="font-extrabold text-forest-950">{r.shippingAddress?.city || 'Knoxville'}, {r.shippingAddress?.state || 'TN'}</div>
+          <div className="text-[10px] text-charcoal-muted font-medium">{r.shippingAddress?.address1 || 'Field Address'}</div>
         </div>
       )
     },

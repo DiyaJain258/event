@@ -55,6 +55,7 @@ import { StateAdminStorePage } from '../pages/stateAdmin/StateAdminStorePage';
 import { EventAdminDashboard } from '../pages/eventAdmin/EventAdminDashboard';
 import { EventAdminAttendance } from '../pages/eventAdmin/EventAdminAttendance';
 import { EventAdminEntries } from '../pages/eventAdmin/EventAdminEntries';
+import { EventAdminParticipants } from '../pages/eventAdmin/EventAdminParticipants';
 import { EventDetailsConfigPage } from '../pages/eventAdmin/EventDetailsConfigPage';
 import { EventPaymentsPage } from '../pages/eventAdmin/EventPaymentsPage';
 
@@ -181,7 +182,7 @@ export const AppRoutes = () => {
         <Route path="/event-admin" element={<EventAdminDashboard />} />
         <Route path="/event-admin/details" element={<EventDetailsConfigPage />} />
         <Route path="/event-admin/entries" element={<EventAdminEntries />} />
-        <Route path="/event-admin/participants" element={<EventAdminEntries />} />
+        <Route path="/event-admin/participants" element={<EventAdminParticipants />} />
         <Route path="/event-admin/attendance" element={<EventAdminAttendance />} />
         <Route path="/event-admin/results" element={<ClubAdminResults />} />
         <Route path="/event-admin/payments" element={<EventPaymentsPage />} />

@@ -149,7 +149,26 @@ export const NationalAdminStorePage = () => {
         ? `${orderForm.stateName} State Store`
         : 'National HQ Store';
 
-    // Temporary cart item override for placeOrder execution
+    const selectedProd = products.find((p) => p.id === orderForm.productId) || products[0] || {
+      id: 'prd-custom',
+      name: 'Official Merchandise Item',
+      price: 50.00,
+      vendorName: 'Garmin Outdoor'
+    };
+
+    const targetCartItems = [
+      {
+        id: selectedProd.id,
+        name: selectedProd.name,
+        category: selectedProd.category || 'Gear',
+        price: selectedProd.price || 50.00,
+        quantity: 1,
+        vendorName: selectedProd.vendorName || 'Garmin Outdoor',
+        image: selectedProd.image || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80'
+      }
+    ];
+
+    // Cart item override for admin test order placeOrder execution
     const created = placeOrder({
       firstName,
       lastName,
@@ -163,7 +182,9 @@ export const NationalAdminStorePage = () => {
       originType: orderForm.originType,
       orderSource,
       clubName: orderForm.clubName,
-      stateName: orderForm.stateName
+      stateName: orderForm.stateName,
+      vendorName: selectedProd.vendorName || 'Garmin Outdoor',
+      cartItems: targetCartItems
     });
 
     if (created) {

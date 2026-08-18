@@ -6,17 +6,29 @@ import { DollarSign, CheckCircle2, AlertCircle } from 'lucide-react';
 export const EventPaymentsPage = () => {
   const { entries = [], setEntries, showToast } = useApp();
 
-  const handleTogglePayment = (id) => {
+  const handleTogglePayment = async (id) => {
+    let nextStatus = 'Pending';
     setEntries((prev) =>
       prev.map((e) => {
         if (e.id === id) {
-          const nextStatus = e.paymentStatus === 'Paid' ? 'Pending' : 'Paid';
+          nextStatus = e.paymentStatus === 'Paid' ? 'Pending' : 'Paid';
           showToast(`Entry #${id} payment set to ${nextStatus}`, 'info');
           return { ...e, paymentStatus: nextStatus };
         }
         return e;
       })
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/events/entries/${id}/payment`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentStatus: nextStatus })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/events/entries/${id}/payment -> ${nextStatus}`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
   };
 
   const columns = [

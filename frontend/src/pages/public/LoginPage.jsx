@@ -88,7 +88,7 @@ export const LoginPage = () => {
 
             {/* Brand Logo */}
             <div className="flex items-center gap-3.5 pt-2">
-              <img src="/logo.png" alt="UHC Logo" className="h-12 w-auto object-contain" />
+              <img src="/logo.png" alt="UHC Logo" className="h-16 sm:h-20 w-auto object-contain" />
             </div>
 
             {/* Headline */}

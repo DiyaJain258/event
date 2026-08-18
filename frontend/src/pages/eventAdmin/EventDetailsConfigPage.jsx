@@ -3,8 +3,9 @@ import { useApp } from '../../context/AppContext';
 import { Calendar, MapPin, Trophy, Save, Clock, Users, ShieldAlert } from 'lucide-react';
 
 export const EventDetailsConfigPage = () => {
-  const { events = [], showToast } = useApp();
+  const { events = [], updateEvent, showToast } = useApp();
   const currentEvt = events[0] || {
+    id: 'evt-1',
     name: 'Nite Hunt & Treeing Contest',
     type: 'Nite Hunt',
     club: 'Oak Ridge Hunting Club',
@@ -23,7 +24,11 @@ export const EventDetailsConfigPage = () => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    showToast(`Updated configuration for event: "${formData.name}"`, 'success');
+    if (updateEvent) {
+      updateEvent(formData.id || 'evt-1', formData);
+    } else {
+      showToast(`Updated configuration for event: "${formData.name}"`, 'success');
+    }
   };
 
   return (

@@ -162,7 +162,7 @@ export const Sidebar = ({ mobileOpen, closeMobileSidebar }) => {
         {/* Brand Header */}
         <div className="p-3.5 border-b border-forest-700 flex items-center justify-between">
           <NavLink to="/" className="flex items-center gap-2.5 group">
-            <img src="/logo.png" alt="UHC Logo" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <img src="/logo.png" alt="UHC Logo" className="h-14 sm:h-16 w-auto object-contain transition-transform group-hover:scale-105" />
           </NavLink>
           <button
             onClick={closeMobileSidebar}

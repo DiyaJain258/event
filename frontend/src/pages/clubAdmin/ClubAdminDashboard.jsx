@@ -122,7 +122,15 @@ export const ClubAdminDashboard = () => {
       <div className="bg-gradient-to-r from-forest-950 via-forest-900 to-forest-950 text-white rounded-3xl p-6 sm:p-10 border-2 border-tan-500/40 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl bg-tan-500/20 border border-tan-400 overflow-hidden shrink-0 shadow flex items-center justify-center">
-            <img src={myClub.logo} alt={myClub.name} className="w-full h-full object-cover" />
+            <img
+              src={myClub.logo || 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=120&auto=format&fit=crop&q=80'}
+              alt={myClub.name || 'Oak Ridge Hunting Club'}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=120&auto=format&fit=crop&q=80';
+              }}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">

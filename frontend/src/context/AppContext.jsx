@@ -339,7 +339,7 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const castVote = ({ electionId, positionId, candidateId, userEmail }) => {
+  const castVote = async ({ electionId, positionId, candidateId, userEmail }) => {
     const existing = votes.find(
       (v) => v.electionId === electionId && v.positionId === positionId && v.userEmail === userEmail
     );
@@ -351,6 +351,18 @@ export const AppProvider = ({ children }) => {
     const updated = [...votes, newVote];
     setVotes(updated);
     localStorage.setItem('nh_votes', JSON.stringify(updated));
+
+    try {
+      await fetch('http://localhost:5050/api/v1/votes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newVote)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/votes');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast('Vote cast successfully!', 'success');
     return true;
   };
@@ -572,8 +584,20 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('nh_user_memberships', JSON.stringify(userMemberships));
   }, [userMemberships]);
 
-  const updateCommissionSettings = (newSettings) => {
+  const updateCommissionSettings = async (newSettings) => {
     setCommissionSettings((prev) => ({ ...prev, ...newSettings }));
+
+    try {
+      await fetch('http://localhost:5050/api/v1/settings/commissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSettings)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/settings/commissions');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast('Commission percentages updated successfully!', 'success');
   };
 
@@ -608,7 +632,7 @@ export const AppProvider = ({ children }) => {
     return { vendorAmount, clubShare, stateShare, nationalShare };
   };
 
-  const updateFulfillmentStatus = (orderId, fulfillmentStatus, trackingNumber) => {
+  const updateFulfillmentStatus = async (orderId, fulfillmentStatus, trackingNumber) => {
     setOrders((prev) =>
       prev.map((o) =>
         o.id === orderId
@@ -616,17 +640,39 @@ export const AppProvider = ({ children }) => {
           : o
       )
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/orders/${orderId}/fulfillment`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fulfillmentStatus, trackingNumber })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/orders/${orderId}/fulfillment`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Order #${orderId} set to: ${fulfillmentStatus}`, 'success');
   };
 
-  const updatePayoutStatus = (orderId, payoutStatus) => {
+  const updatePayoutStatus = async (orderId, payoutStatus) => {
     setOrders((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, payoutStatus } : o))
     );
+    try {
+      await fetch(`http://localhost:5050/api/v1/orders/${orderId}/payout`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payoutStatus })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/orders/${orderId}/payout`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
     showToast(`Order #${orderId} payout status set to: ${payoutStatus}`, 'success');
   };
 
-  const addMembership = (membershipData) => {
+  const addMembership = async (membershipData) => {
     const newRecord = {
       id: `ms-${Date.now()}`,
       userEmail: membershipData.email || currentUser.email,
@@ -639,6 +685,18 @@ export const AppProvider = ({ children }) => {
       fee: Number(membershipData.fee) || 25.00
     };
     setUserMemberships((prev) => [newRecord, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRecord)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/members');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Activated ${newRecord.tier}: ${newRecord.scopeName}`, 'success');
   };
 
@@ -724,17 +782,17 @@ export const AppProvider = ({ children }) => {
   };
 
   // 1. Membership Join Flow Action
-  const registerMembership = (formData) => {
+  const registerMembership = async (formData) => {
     const newId = `TN-ORHC-2026-${Math.floor(10000 + Math.random() * 90000)}`;
-    const fullName = `${formData.firstName} ${formData.lastName}`;
+    const fullName = formData.name || `${formData.firstName || 'Member'} ${formData.lastName || 'Customer'}`.trim();
     const cleanEmail = String(formData.email || '').trim().toLowerCase();
 
     const newMember = {
       id: `mem-${Date.now()}`,
       name: fullName,
       membershipId: newId,
-      club: formData.selectedClub || formData.clubName || 'Oak Ridge Hunting Club',
-      state: formData.selectedState || formData.stateName || 'Tennessee',
+      club: formData.selectedClub || formData.clubName || formData.club || 'Oak Ridge Hunting Club',
+      state: formData.selectedState || formData.stateName || formData.state || 'Tennessee',
       type: formData.membershipType || 'Individual Membership',
       status: 'Active',
       joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
@@ -758,14 +816,23 @@ export const AppProvider = ({ children }) => {
     setMembers((prev) => [newMember, ...prev]);
     setUsers((prev) => [newUser, ...prev]);
 
-    // Automatically set logged in user to this newly created member account
-    setCurrentUser(newUser);
+    try {
+      await fetch('http://localhost:5050/api/v1/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMember)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/members');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`Membership activated for ${fullName}! ID: ${newId}`, 'success');
     return newMember;
   };
 
   // State Membership Sign-Up Flow Action
-  const registerStateMembership = (formData) => {
+  const registerStateMembership = async (formData) => {
     const stateName = formData.state || 'Texas';
     const stateCode = stateName.substring(0, 2).toUpperCase();
     const newId = `${stateCode}-HOUND-${Math.floor(10000 + Math.random() * 90000)}`;
@@ -827,14 +894,24 @@ export const AppProvider = ({ children }) => {
     setMembers((prev) => [newMember, ...prev]);
     setUsers((prev) => [newUser, ...prev]);
     setTransactions((prev) => [newTransaction, ...prev]);
-    setCurrentUser(newUser);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMember)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/members');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
 
     showToast(`State Membership successfully activated for ${formData.name}! Recorded payment of $${amountPaid.toFixed(2)}.`, 'success');
     return newMember;
   };
 
   // Local Club Membership Sign-Up Flow Action (Recording exact 7 fields required by client)
-  const registerLocalClubMembership = (formData) => {
+  const registerLocalClubMembership = async (formData) => {
     const clubName = formData.clubAffiliation || formData.clubName || 'Houston County Coon Hunters Association';
     const cleanEmail = String(formData.email || '').trim().toLowerCase();
     const amountPaid = Number(formData.amount || 25.00);
@@ -902,7 +979,17 @@ export const AppProvider = ({ children }) => {
     setMembers((prev) => [newMember, ...prev]);
     setUsers((prev) => [newUser, ...prev]);
     setTransactions((prev) => [newTransaction, ...prev]);
-    setCurrentUser(newUser);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMember)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/members');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
 
     showToast(
       `Membership Flow complete for ${formData.name}! Recorded Local Club, State Association (${stateAssociationName}), and National UHC under 1 Single Account.`,
@@ -912,9 +999,9 @@ export const AppProvider = ({ children }) => {
   };
 
   // 2. Event Registration Flow Action
-  const enterEvent = (eventId, dogId, participantName) => {
+  const enterEvent = async (eventId, dogId, participantName) => {
     const targetEvent = events.find((e) => e.id === eventId);
-    const targetDog = dogs.find((d) => d.id === dogId) || dogs.find((d) => d.owner === currentUser.name) || dogs[0];
+    const targetDog = dogs.find((d) => d.id === dogId) || dogs.find((d) => d.owner === currentUser?.name) || dogs[0];
 
     if (!targetEvent) return;
 
@@ -924,8 +1011,8 @@ export const AppProvider = ({ children }) => {
       eventId: targetEvent.id,
       eventName: targetEvent.name,
       club: targetEvent.club,
-      participant: participantName || currentUser.name,
-      participantEmail: currentUser.email,
+      participant: participantName || currentUser?.name || 'Member Participant',
+      participantEmail: currentUser?.email || 'member@example.com',
       dog: targetDog ? targetDog.callName : 'Registered Canine',
       date: targetEvent.date,
       fee: targetEvent.fee,
@@ -937,34 +1024,58 @@ export const AppProvider = ({ children }) => {
 
     setEntries((prev) => [newEntry, ...prev]);
 
-    // Update event stats
+    // Update event stats safely
     setEvents((prev) =>
       prev.map((e) =>
         e.id === eventId
-          ? { ...e, entries: e.entries + 1, paidEntries: e.paidEntries + 1 }
+          ? { ...e, entries: (Number(e.entries) || 0) + 1, paidEntries: (Number(e.paidEntries) || 0) + 1 }
           : e
       )
     );
 
+    try {
+      await fetch(`http://localhost:5050/api/v1/events/${eventId}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newEntry)
+      });
+      console.log(`📡 API Call Success: POST http://localhost:5050/api/v1/events/${eventId}/register`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`Registered ${targetDog?.callName || 'dog'} for ${targetEvent.name}! Entry #${newEntryId}`, 'success');
   };
 
-  // 3. Mobile Event Check-in Action
-  const toggleCheckIn = (entryId) => {
+  // 3. Mobile Event Check-in Action (Connected to Backend API)
+  const toggleCheckIn = async (entryId) => {
+    let targetStatus = '';
     setEntries((prev) =>
       prev.map((item) => {
         if (item.id === entryId) {
           const newStatus = item.checkInStatus === 'Checked In' ? 'Not Arrived' : 'Checked In';
+          targetStatus = newStatus;
           showToast(`Entry #${entryId} ${item.participant} status set to: ${newStatus}`, newStatus === 'Checked In' ? 'success' : 'info');
           return { ...item, checkInStatus: newStatus };
         }
         return item;
       })
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/events/entries/${entryId}/check-in`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ checkInStatus: targetStatus })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/events/entries/${entryId}/check-in -> ${targetStatus}`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
   };
 
   // 4. Create Event Action
-  const createEvent = (newEventData) => {
+  const createEvent = async (newEventData) => {
     const created = {
       id: `evt-${Date.now()}`,
       name: newEventData.name,
@@ -989,13 +1100,71 @@ export const AppProvider = ({ children }) => {
     };
 
     setEvents((prev) => [created, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(created)
+      });
+      console.log('📡 API Call Success: POST /api/v1/events');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Event "${created.name}" published successfully!`, 'success');
   };
 
+  const deleteEvent = async (eventId) => {
+    setEvents((prev) => prev.filter((e) => e.id !== eventId));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/events/${eventId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log(`📡 API Call Success: DELETE /api/v1/events/${eventId}`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
+    showToast('Event removed successfully', 'info');
+  };
+
+  const updateEvent = async (eventId, updatedData) => {
+    const targetId = eventId || updatedData.id || 'evt-1';
+    setEvents((prev) => prev.map((e) => (e.id === targetId || e.name === updatedData.name ? { ...e, ...updatedData } : e)));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/events/${targetId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/events/${targetId}`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
+    showToast(`Updated configuration for event: "${updatedData.name}"`, 'success');
+  };
+
   // 5. Add / Edit Dog Action
-  const saveDog = (dogData) => {
+  const saveDog = async (dogData) => {
     if (dogData.id) {
       setDogs((prev) => prev.map((d) => (d.id === dogData.id ? { ...d, ...dogData } : d)));
+
+      try {
+        await fetch(`http://localhost:5050/api/v1/dogs/${dogData.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dogData)
+        });
+        console.log(`📡 API Call Success: PUT /api/v1/dogs/${dogData.id}`);
+      } catch (err) {
+        console.warn('API Call Warning:', err.message);
+      }
+
       showToast(`Updated dog ${dogData.callName} profile`, 'success');
     } else {
       const newDog = {
@@ -1014,23 +1183,58 @@ export const AppProvider = ({ children }) => {
         photo: dogData.photo || 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=300&auto=format&fit=crop&q=80'
       };
       setDogs((prev) => [newDog, ...prev]);
+
+      try {
+        await fetch('http://localhost:5050/api/v1/dogs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newDog)
+        });
+        console.log('📡 API Call Success: POST /api/v1/dogs');
+      } catch (err) {
+        console.warn('API Call Warning:', err.message);
+      }
+
       showToast(`Added new dog: ${newDog.callName} for ${currentUser.name}`, 'success');
     }
   };
 
-  const deleteDog = (id) => {
+  const deleteDog = async (id) => {
     setDogs((prev) => prev.filter((d) => d.id !== id));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/dogs/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log(`📡 API Call Success: DELETE /api/v1/dogs/${id}`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast('Dog profile removed', 'info');
   };
 
-  const updateClaimStatus = (claimId, newStatus) => {
+  const updateClaimStatus = async (claimId, newStatus) => {
     setClaims((prev) =>
       prev.map((c) => (c.id === claimId ? { ...c, claimStatus: newStatus, status: newStatus } : c))
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/club-claims/${claimId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ claimStatus: newStatus })
+      });
+      console.log(`📡 API Call Success: PUT /api/v1/club-claims/${claimId}`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Claim #${claimId} status updated to: ${newStatus}`, 'success');
   };
 
-  const submitClaimRequest = (claimData) => {
+  const submitClaimRequest = async (claimData) => {
     const newClaim = {
       id: `CLM-${Math.floor(100 + Math.random() * 900)}`,
       claimStatus: 'Pending',
@@ -1040,34 +1244,85 @@ export const AppProvider = ({ children }) => {
       ...claimData
     };
     setClaims((prev) => [newClaim, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/club-claims', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newClaim)
+      });
+      console.log('📡 API Call Success: POST /api/v1/club-claims');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Claim request for "${claimData.club || claimData.state}" submitted successfully!`, 'success');
   };
 
-  const addResult = (resultData) => {
+  const addResult = async (resultData) => {
     const newRes = {
       id: `res-${Date.now()}`,
       ...resultData,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     };
     setResults((prev) => [newRes, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/results', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRes)
+      });
+      console.log('📡 API Call Success: POST /api/v1/results');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Published competition result for ${resultData.eventName}!`, 'success');
   };
 
   const updatePermission = (role, module, action, value) => {
-    setPermissions((prev) => ({
-      ...prev,
-      [role]: {
-        ...prev[role],
-        [module]: {
-          ...prev[role][module],
-          [action]: value
+    setPermissions((prev) => {
+      const isArr = Array.isArray(prev);
+      const currentRoleObj = isArr ? {} : (prev?.[role] || {});
+      const currentMod = currentRoleObj?.[module] || { view: false, create: false, edit: false, delete: false };
+
+      return {
+        ...(isArr ? {} : prev),
+        [role]: {
+          ...currentRoleObj,
+          [module]: {
+            ...currentMod,
+            [action]: value
+          }
         }
-      }
-    }));
-    showToast(`Updated ${role} permission for ${module}:${action}`, 'info');
+      };
+    });
   };
 
-  const postLocalClubNews = (newsData) => {
+  const grantAllPermissionsForRole = (role, grant = true) => {
+    const modules = ['members', 'events', 'claims', 'dogs', 'products', 'orders', 'finance', 'news', 'reports'];
+    setPermissions((prev) => {
+      const isArr = Array.isArray(prev);
+      const currentRoleObj = isArr ? {} : (prev?.[role] || {});
+      const updatedRoleObj = { ...currentRoleObj };
+
+      modules.forEach((mod) => {
+        updatedRoleObj[mod] = {
+          view: grant,
+          create: grant,
+          edit: grant,
+          delete: grant
+        };
+      });
+
+      return isArr ? { [role]: updatedRoleObj } : { ...prev, [role]: updatedRoleObj };
+    });
+
+    showToast(`${grant ? 'Granted' : 'Revoked'} all permissions for ${role}`, grant ? 'success' : 'info');
+  };
+
+  const postLocalClubNews = async (newsData) => {
     const newItem = {
       id: `news-${Date.now()}`,
       title: newsData.title,
@@ -1085,11 +1340,23 @@ export const AppProvider = ({ children }) => {
       image: newsData.image || 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&auto=format&fit=crop&q=80'
     };
     setNews((prev) => [newItem, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem)
+      });
+      console.log('📡 API Call Success: POST /api/v1/news');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Posted Local Club News: "${newItem.title}"!`, 'success');
     return newItem;
   };
 
-  const promoteNewsToState = (newsId) => {
+  const promoteNewsToState = async (newsId) => {
     setNews((prev) =>
       prev.map((n) => {
         if (n.id === newsId) {
@@ -1109,29 +1376,20 @@ export const AppProvider = ({ children }) => {
         return n;
       })
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/news/${newsId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPromotedToState: true })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/news/${newsId}`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
   };
 
-  const addNews = (newsData) => {
-    const newItem = {
-      id: `news-${Date.now()}`,
-      title: newsData.title,
-      category: newsData.category || 'State Hunt announcements',
-      level: newsData.level || 'STATE_ASSOCIATION',
-      state: newsData.state || 'Texas',
-      stateId: newsData.stateId || 'texas',
-      stateCode: newsData.stateCode || 'TX',
-      author: newsData.author || currentUser.name,
-      summary: newsData.summary || 'Official article published to state news feed.',
-      isPromotedToState: true,
-      isPromotedToNational: Boolean(newsData.isPromotedToNational),
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-      image: newsData.image || 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=600&auto=format&fit=crop&q=80'
-    };
-    setNews((prev) => [newItem, ...prev]);
-    showToast(`Published article: "${newItem.title}"`, 'success');
-  };
-
-  const promoteNewsToNational = (newsId) => {
+  const promoteNewsToNational = async (newsId) => {
     setNews((prev) =>
       prev.map((n) => {
         if (n.id === newsId) {
@@ -1151,9 +1409,68 @@ export const AppProvider = ({ children }) => {
         return n;
       })
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/news/${newsId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isPromotedToNational: true })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/news/${newsId}`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
   };
 
-  const addAnnouncement = (annData) => {
+  const addNews = async (newsData) => {
+    const newItem = {
+      id: `news-${Date.now()}`,
+      title: newsData.title,
+      category: newsData.category || 'State Hunt announcements',
+      level: newsData.level || 'STATE_ASSOCIATION',
+      state: newsData.state || 'Texas',
+      stateId: newsData.stateId || 'texas',
+      stateCode: newsData.stateCode || 'TX',
+      author: newsData.author || currentUser.name,
+      summary: newsData.summary || 'Official article published to state news feed.',
+      isPromotedToState: true,
+      isPromotedToNational: Boolean(newsData.isPromotedToNational),
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      image: newsData.image || 'https://images.unsplash.com/photo-1511497584788-876761c11969?w=600&auto=format&fit=crop&q=80'
+    };
+    setNews((prev) => [newItem, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem)
+      });
+      console.log('📡 API Call Success: POST /api/v1/news');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
+    showToast(`Published article: "${newItem.title}"`, 'success');
+  };
+
+  const deleteNews = async (newsId) => {
+    setNews((prev) => prev.filter((n) => n.id !== newsId));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/news/${newsId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log(`📡 API Call Success: DELETE /api/v1/news/${newsId}`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
+    showToast('News article deleted', 'info');
+  };
+
+  const addAnnouncement = async (annData) => {
     const newItem = {
       id: `anc-${Date.now()}`,
       title: annData.title,
@@ -1164,10 +1481,22 @@ export const AppProvider = ({ children }) => {
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     };
     setAnnouncements((prev) => [newItem, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/announcements');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`Broadcasted announcement: "${newItem.title}"`, 'success');
   };
 
-  const addOfficer = (offData) => {
+  const addOfficer = async (offData) => {
     const newItem = {
       id: `off-${Date.now()}`,
       name: offData.name,
@@ -1179,10 +1508,22 @@ export const AppProvider = ({ children }) => {
       photo: offData.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
     };
     setOfficers((prev) => [newItem, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/officers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/officers');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`Added official officer: ${newItem.name} (${newItem.title})`, 'success');
   };
 
-  const addTransaction = (txnData) => {
+  const addTransaction = async (txnData) => {
     const newItem = {
       id: `TXN-${Math.floor(10000 + Math.random() * 90000)}`,
       description: txnData.description,
@@ -1194,14 +1535,55 @@ export const AppProvider = ({ children }) => {
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     };
     setTransactions((prev) => [newItem, ...prev]);
+
+    try {
+      await fetch('http://localhost:5050/api/v1/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/transactions');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`Recorded transaction: $${newItem.amount.toFixed(2)}`, 'success');
   };
 
-  const updateUserRole = (userId, newRole) => {
+  const updateUserRole = async (userId, newRole) => {
     setUsers((prev) =>
       prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
     );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/users/${userId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole })
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/users/${userId}/role`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
     showToast(`User role updated to ${newRole}`, 'info');
+  };
+
+  const updateUserProfile = async (userId, profileData) => {
+    setCurrentUser((prev) => ({ ...prev, ...profileData }));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/users/${userId}/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileData)
+      });
+      console.log(`📡 API Call Success: PUT http://localhost:5050/api/v1/users/${userId}/profile`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
+    showToast('Profile updated successfully!', 'success');
   };
 
   // Cart Actions & Calculated Values
@@ -1294,24 +1676,57 @@ export const AppProvider = ({ children }) => {
     showToast('Cart cleared.', 'info');
   };
 
+  const renewMembership = async (memberId, memberData) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id === memberId || m.membershipId === memberData?.membershipId) {
+          return { ...m, expires: 'Sep 18, 2028', status: 'Active' };
+        }
+        return m;
+      })
+    );
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/members/${memberId}/renew`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(memberData || {})
+      });
+      console.log(`📡 API Call Success: POST http://localhost:5050/api/v1/members/${memberId}/renew`);
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+    }
+
+    showToast(`Membership ${memberData?.membershipId || memberId} renewed for 1 year!`, 'success');
+  };
+
   const placeOrder = (checkoutData) => {
-    if (cart.length === 0) {
+    const targetCart = checkoutData.cartItems && checkoutData.cartItems.length > 0 ? checkoutData.cartItems : cart;
+
+    if (targetCart.length === 0) {
       showToast('Your cart is empty!', 'error');
       return null;
     }
 
-    const orderId = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
-    const fullName = `${checkoutData.firstName} ${checkoutData.lastName}`;
+    const orderId = checkoutData.id || `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
+    const fullName = checkoutData.firstName && checkoutData.lastName
+      ? `${checkoutData.firstName} ${checkoutData.lastName}`
+      : checkoutData.customer || `${checkoutData.firstName || 'Customer'}`;
     const cleanEmail = String(checkoutData.email || '').trim().toLowerCase();
 
-    const firstCartOrigin = cart[0]?.originDetails;
+    const firstCartOrigin = targetCart[0]?.originDetails;
     const originType = checkoutData.originType || firstCartOrigin?.originType || 'CLUB'; // CLUB | STATE | NATIONAL
     const orderSource = checkoutData.orderSource || firstCartOrigin?.orderSource || checkoutData.clubName || 'Oak Ridge Hunting Club';
     const stateName = checkoutData.stateName || firstCartOrigin?.stateName || checkoutData.state || 'Tennessee';
     const clubName = checkoutData.clubName || firstCartOrigin?.clubName || 'Oak Ridge Hunting Club';
-    const firstVendor = cart[0]?.vendorName || 'Garmin Outdoor';
+    const firstVendor = targetCart[0]?.vendorName || checkoutData.vendorName || 'Garmin Outdoor';
 
-    const splits = calculateOrderSplit(cartSubtotal, originType);
+    const orderSubtotal = checkoutData.subtotal || targetCart.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
+    const orderShipping = checkoutData.shipping || (orderSubtotal > 100 || orderSubtotal === 0 ? 0 : 15.00);
+    const orderTax = checkoutData.tax || (orderSubtotal * 0.08);
+    const orderTotal = checkoutData.total || (orderSubtotal + orderShipping + orderTax);
+
+    const splits = calculateOrderSplit(orderSubtotal, originType);
 
     const createdOrder = {
       id: orderId,
@@ -1319,20 +1734,20 @@ export const AppProvider = ({ children }) => {
       email: cleanEmail,
       phone: checkoutData.phone || '(865) 555-0199',
       shippingAddress: {
-        address1: checkoutData.address1,
+        address1: checkoutData.address1 || '1420 Hunting Ridge Rd',
         address2: checkoutData.address2 || '',
-        city: checkoutData.city,
-        state: checkoutData.state,
-        zip: checkoutData.zip,
+        city: checkoutData.city || 'Knoxville',
+        state: checkoutData.state || 'TN',
+        zip: checkoutData.zip || '37901',
         country: checkoutData.country || 'United States'
       },
-      product: cart.map((i) => i.name).join(', '),
-      items: cart.map((i) => `${i.name} (Qty: ${i.quantity})`).join(', '),
-      item: cart.map((i) => `${i.name} (Qty: ${i.quantity})`).join(', '),
+      product: targetCart.map((i) => i.name).join(', '),
+      items: targetCart.map((i) => `${i.name} (Qty: ${i.quantity || 1})`).join(', '),
+      item: targetCart.map((i) => `${i.name} (Qty: ${i.quantity || 1})`).join(', '),
       vendorName: firstVendor,
-      sellingPrice: cartSubtotal,
+      sellingPrice: orderSubtotal,
       wholesaleCost: splits.vendorAmount,
-      profitMargin: Number((cartSubtotal - splits.vendorAmount).toFixed(2)),
+      profitMargin: Number((orderSubtotal - splits.vendorAmount).toFixed(2)),
       profitMarginPct: 30,
       vendorAmount: splits.vendorAmount,
       nationalShare: splits.nationalShare,
@@ -1342,20 +1757,20 @@ export const AppProvider = ({ children }) => {
       originType,
       state: stateName,
       club: clubName,
-      orderItems: cart.map((i) => ({
+      orderItems: targetCart.map((i) => ({
         id: i.id,
         name: i.name,
         category: i.category,
         price: i.price,
-        quantity: i.quantity,
-        subtotal: i.price * i.quantity,
+        quantity: i.quantity || 1,
+        subtotal: i.price * (i.quantity || 1),
         image: i.image
       })),
-      subtotal: cartSubtotal,
-      shipping: cartShipping,
-      tax: cartTax,
-      total: cartTotal,
-      amount: cartTotal,
+      subtotal: orderSubtotal,
+      shipping: orderShipping,
+      tax: orderTax,
+      total: orderTotal,
+      amount: orderTotal,
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
       paymentStatus: 'Paid',
       payoutStatus: 'Pending',
@@ -1369,7 +1784,19 @@ export const AppProvider = ({ children }) => {
     // 1. Save new order
     setOrders((prev) => [createdOrder, ...prev]);
 
-    // 2. Reduce product stock ONLY after successful order placement
+    // 2. Fire API call to backend POST /api/v1/orders
+    try {
+      fetch('http://localhost:5050/api/v1/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createdOrder)
+      }).then(() => console.log('📡 API Call Success: POST http://localhost:5050/api/v1/orders'))
+        .catch((e) => console.warn('API Call Warning:', e.message));
+    } catch (err) {
+      console.warn('API Call Error:', err);
+    }
+
+    // 3. Reduce product stock ONLY after successful order placement
     setProducts((prevProducts) =>
       prevProducts.map((p) => {
         const itemInCart = cart.find((ci) => ci.id === p.id);
@@ -1381,14 +1808,14 @@ export const AppProvider = ({ children }) => {
       })
     );
 
-    // 3. Clear Shopping Cart
+    // 4. Clear Shopping Cart
     setCart([]);
 
     showToast(`Order placed successfully! Order ID: ${orderId}`, 'success');
     return createdOrder;
   };
 
-  const addProduct = (newProd) => {
+  const addProduct = async (newProd) => {
     const productWithId = {
       id: newProd.id || `prod-${Date.now()}`,
       inStock: Number(newProd.inStock) || 50,
@@ -1401,8 +1828,38 @@ export const AppProvider = ({ children }) => {
     const updated = [productWithId, ...products];
     setProducts(updated);
     localStorage.setItem('nh_products_v2', JSON.stringify(updated));
+
+    try {
+      await fetch('http://localhost:5050/api/v1/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productWithId)
+      });
+      console.log('📡 API Call Success: POST http://localhost:5050/api/v1/products');
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
     showToast(`Product "${productWithId.name}" added successfully!`, 'success');
     return productWithId;
+  };
+
+  const deleteProduct = async (prodId) => {
+    const updated = products.filter((p) => p.id !== prodId);
+    setProducts(updated);
+    localStorage.setItem('nh_products_v2', JSON.stringify(updated));
+
+    try {
+      await fetch(`http://localhost:5050/api/v1/products/${prodId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log(`📡 API Call Success: DELETE http://localhost:5050/api/v1/products/${prodId}`);
+    } catch (err) {
+      console.warn('API Call Warning:', err.message);
+    }
+
+    showToast('Product deleted successfully', 'info');
   };
 
   return (
@@ -1430,6 +1887,7 @@ export const AppProvider = ({ children }) => {
         products,
         setProducts,
         addProduct,
+        deleteProduct,
         cart,
         setCart,
         cartCount,
@@ -1486,19 +1944,25 @@ export const AppProvider = ({ children }) => {
         toasts,
         showToast,
         switchRole,
+        updateUserProfile,
         loginUser,
         registerMembership,
+        renewMembership,
         registerStateMembership,
         registerLocalClubMembership,
         enterEvent,
         toggleCheckIn,
         createEvent,
+        updateEvent,
+        deleteEvent,
         saveDog,
         deleteDog,
+        deleteNews,
         updateClaimStatus,
         submitClaimRequest,
         addResult,
         updatePermission,
+        grantAllPermissionsForRole,
         updateUserRole,
         selectedCategory,
         setSelectedCategory,

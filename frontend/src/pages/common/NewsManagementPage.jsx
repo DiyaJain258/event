@@ -35,16 +35,24 @@ export const NewsManagementPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title.trim()) return;
+    if (!formData.title.trim()) {
+      if (showToast) showToast('Please enter an Article Title.', 'error');
+      return;
+    }
 
-    addNews({
-      ...formData,
-      state: myState.name,
-      stateId: myState.id || 'texas',
-      stateCode: myState.code || 'TX'
-    });
+    if (addNews) {
+      addNews({
+        ...formData,
+        state: myState.name,
+        stateId: myState.id || 'texas',
+        stateCode: myState.code || 'TX'
+      });
+    }
 
+    setSelectedFilterCategory('ALL'); // Reset filter tab so newly added article is immediately visible!
     setModalOpen(false);
+    if (showToast) showToast(`State News Article "${formData.title}" published successfully!`, 'success');
+
     setFormData({
       title: '',
       category: stateNewsCategories[0],

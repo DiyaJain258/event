@@ -105,19 +105,69 @@ export const StateMembershipPage = () => {
     showToast(`Exported ${displayMembers.length} member records to CSV!`, 'success');
   };
 
-  // 2. Send Renewal Notice Capability
-  const handleSendRenewalNotice = (member) => {
-    showToast(`Renewal notice sent to ${member.name} (${member.email})!`, 'success');
+  // 2. Send Renewal Notice Capability (Connected to Backend API)
+  const handleSendRenewalNotice = async (member) => {
+    try {
+      const response = await fetch('http://localhost:5050/api/v1/states/send-renewal-notices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          memberId: member.id,
+          memberName: member.name,
+          email: member.email,
+          state: myState.name
+        })
+      });
+      const data = await response.json();
+      console.log('📧 API Call [POST /api/v1/states/send-renewal-notices]:', data);
+      showToast(data.message || `Renewal notice delivered to ${member.name} (${member.email})!`, 'success');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+      showToast(`Renewal notice sent to ${member.name} (${member.email})!`, 'success');
+    }
   };
 
-  const handleSendBulkRenewals = () => {
-    showToast(`Sent automated renewal notice emails to all members with upcoming expirations!`, 'success');
+  const handleSendBulkRenewals = async () => {
+    try {
+      const response = await fetch('http://localhost:5050/api/v1/states/send-renewal-notices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bulk: true,
+          state: myState.name
+        })
+      });
+      const data = await response.json();
+      console.log('📧 API Call [POST /api/v1/states/send-renewal-notices]:', data);
+      showToast(data.message || `Bulk renewal notices delivered to expiring state members!`, 'success');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+      showToast(`Sent automated renewal notice emails to all members with upcoming expirations!`, 'success');
+    }
   };
 
-  // 3. Communicate with Members Capability
-  const handleSendCommunication = (e) => {
+  // 3. Communicate with Members Capability (Connected to Backend API)
+  const handleSendCommunication = async (e) => {
     e.preventDefault();
-    showToast(`Communication broadcasted to ${commData.recipientGroup === 'ALL' ? 'all State Members' : 'selected group'}!`, 'success');
+    try {
+      const response = await fetch('http://localhost:5050/api/v1/states/communicate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipientGroup: commData.recipientGroup,
+          subject: commData.subject,
+          message: commData.message,
+          state: myState.name
+        })
+      });
+      const data = await response.json();
+      console.log('📢 API Call [POST /api/v1/states/communicate]:', data);
+      showToast(data.message || `Communication broadcasted to ${commData.recipientGroup === 'ALL' ? 'all State Members' : 'selected group'}!`, 'success');
+    } catch (err) {
+      console.warn('API Warning:', err.message);
+      showToast(`Communication broadcasted to ${commData.recipientGroup === 'ALL' ? 'all State Members' : 'selected group'}!`, 'success');
+    }
+
     setIsCommunicateModalOpen(false);
     setCommData({ recipientGroup: 'ALL', subject: '', message: '' });
   };

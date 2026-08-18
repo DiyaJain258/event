@@ -3,7 +3,15 @@ import { useApp } from '../../context/AppContext';
 import { Award, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export const MemberMemberships = () => {
-  const { members, showToast } = useApp();
+  const { members = [], renewMembership, showToast } = useApp();
+
+  const handleRenew = (mem) => {
+    if (renewMembership) {
+      renewMembership(mem.id, mem);
+    } else {
+      showToast(`Membership ${mem.membershipId} renewed for 1 year!`, 'success');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -33,7 +41,7 @@ export const MemberMemberships = () => {
 
             <div className="pt-3 border-t flex justify-end">
               <button
-                onClick={() => showToast(`Membership ${mem.membershipId} renewed for 1 year!`, 'success')}
+                onClick={() => handleRenew(mem)}
                 className="px-3.5 py-2 bg-tan-500 hover:bg-tan-600 text-forest-900 font-extrabold text-xs rounded shadow flex items-center gap-1.5"
               >
                 <RefreshCw className="w-3.5 h-3.5" /> Renew Membership ($45)

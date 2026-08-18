@@ -21,12 +21,33 @@ import {
 } from 'lucide-react';
 
 export const ClubAdminStorePage = () => {
-  const { clubs, orders = [], updatePayoutStatus, addProduct, products = [] } = useApp();
+  const { clubs, orders = [], updatePayoutStatus, addProduct, products = [], showToast } = useApp();
   const myClub = clubs[0] || { name: 'Oak Ridge Hunting Club' };
 
   const [dateFilter, setDateFilter] = useState('All Time');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+
+  // Helper to return high quality category-specific images when user leaves Image URL blank
+  const getCategoryImage = (category, userImage) => {
+    if (userImage && userImage.trim().startsWith('http')) {
+      return userImage.trim();
+    }
+    const catUpper = (category || '').toUpperCase();
+    if (catUpper.includes('CAP') || catUpper.includes('HAT') || catUpper.includes('HEADWEAR')) {
+      return 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80';
+    }
+    if (catUpper.includes('GEAR') || catUpper.includes('HARDWARE') || catUpper.includes('EQUIPMENT') || catUpper.includes('GPS') || catUpper.includes('TRACKING')) {
+      return 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&auto=format&fit=crop&q=80';
+    }
+    if (catUpper.includes('DOG') || catUpper.includes('COLLAR') || catUpper.includes('LEASH') || catUpper.includes('CANINE')) {
+      return 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&auto=format&fit=crop&q=80';
+    }
+    if (catUpper.includes('APPAREL') || catUpper.includes('SHIRT') || catUpper.includes('HOODIE') || catUpper.includes('CLOTHING')) {
+      return 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop&q=80';
+    }
+    return 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&auto=format&fit=crop&q=80';
+  };
 
   // Form State for Adding a new Local Club product
   const [prodForm, setProdForm] = useState({
@@ -41,27 +62,36 @@ export const ClubAdminStorePage = () => {
 
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
-    if (!prodForm.name || !prodForm.price) return;
+    if (!prodForm.name || !prodForm.price) {
+      if (showToast) showToast('Please enter both Product Name and Price.', 'error');
+      return;
+    }
 
     const priceNum = Number(prodForm.price);
     const wholesale = Number((priceNum * 0.7).toFixed(2));
     const margin = Number((priceNum * 0.3).toFixed(2));
 
-    addProduct({
-      name: prodForm.name,
-      category: prodForm.category,
-      price: priceNum,
-      wholesaleCost: wholesale,
-      margin: margin,
-      vendorName: prodForm.vendorName,
-      inStock: Number(prodForm.inStock) || 50,
-      scopeChannel: 'LOCAL_CLUB',
-      organizationType: 'CLUB',
-      scopeEntity: myClub.name,
-      organizationId: myClub.id || 'club-1',
-      image: prodForm.image || 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80',
-      description: prodForm.description || `Official ${myClub.name} product. 15% margin directly funds local club field trials and events.`
-    });
+    const finalProductImage = getCategoryImage(prodForm.category, prodForm.image);
+
+    if (addProduct) {
+      addProduct({
+        name: prodForm.name,
+        category: prodForm.category,
+        price: priceNum,
+        wholesaleCost: wholesale,
+        margin: margin,
+        vendorName: prodForm.vendorName,
+        inStock: Number(prodForm.inStock) || 50,
+        scopeChannel: 'LOCAL_CLUB',
+        organizationType: 'CLUB',
+        scopeEntity: myClub.name,
+        organizationId: myClub.id || 'club-1',
+        image: finalProductImage,
+        description: prodForm.description || `Official ${myClub.name} product. 15% margin directly funds local club field trials and events.`
+      });
+    }
+
+    if (showToast) showToast(`Product "${prodForm.name}" added successfully to ${myClub.name} store!`, 'success');
 
     setProdForm({
       name: '',
@@ -99,8 +129,34 @@ export const ClubAdminStorePage = () => {
 
   // Products belonging to this Local Club
   const clubProducts = products.filter(
-    (p) => p.scopeChannel === 'LOCAL_CLUB' || p.scopeEntity === myClub.name
+    (p) => p.scopeChannel === 'LOCAL_CLUB' || p.scopeEntity === myClub.name || p.organizationType === 'CLUB'
   );
+  const displayProducts = clubProducts.length > 0 ? clubProducts : [
+    {
+      id: 'prd-101',
+      name: `${myClub.name || 'Oak Ridge Hunting Club'} Official Cap`,
+      category: 'Caps',
+      price: 25.00,
+      wholesaleCost: 17.50,
+      margin: 7.50,
+      vendorName: 'Browning Outdoors',
+      inStock: 45,
+      image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&auto=format&fit=crop&q=80',
+      description: `Official chapter cap. 15% margin directly supports local hunt grounds.`
+    },
+    {
+      id: 'prd-102',
+      name: `${myClub.name || 'Oak Ridge Hunting Club'} Member T-Shirt`,
+      category: 'Apparel',
+      price: 30.00,
+      wholesaleCost: 21.00,
+      margin: 9.00,
+      vendorName: 'Browning Outdoors',
+      inStock: 60,
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop&q=80',
+      description: `Premium cotton chapter t-shirt featuring official insignia.`
+    }
+  ];
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-12 px-2 sm:px-4 lg:px-6">
@@ -206,6 +262,66 @@ export const ClubAdminStorePage = () => {
             placeholder="Search customer, order ID..."
             className="w-full pl-8 pr-3 py-2 sm:py-1.5 text-xs bg-surface-lowest border border-surface-border rounded-xl font-medium focus:outline-none focus:border-emerald-700"
           />
+        </div>
+      </div>
+
+      {/* 🛍️ ACTIVE CLUB PRODUCTS CATALOG GRID */}
+      <div className="bg-surface-lowest rounded-2xl border border-surface-border shadow-ambient p-4 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-surface-border pb-4">
+          <div>
+            <h3 className="font-black text-base sm:text-lg text-emerald-950 flex items-center gap-2">
+              <Package className="w-5 h-5 text-emerald-700 shrink-0" />
+              <span>Active {myClub.name} Products Catalog ({displayProducts.length})</span>
+            </h3>
+            <p className="text-xs text-charcoal-muted mt-0.5 font-medium">
+              Live merchandise catalog available for purchase on your local club store landing page.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Add Product</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {displayProducts.map((prod) => (
+            <div key={prod.id} className="p-4 rounded-xl border border-surface-border bg-surface-low space-y-3 flex flex-col justify-between shadow-xs">
+              <div className="flex gap-3 items-start">
+                <img
+                  src={getCategoryImage(prod.category, prod.image)}
+                  alt={prod.name}
+                  className="w-16 h-16 rounded-lg object-cover border border-surface-border shrink-0 shadow-xs"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = getCategoryImage(prod.category, null);
+                  }}
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-100 text-emerald-950 border border-emerald-300">
+                    {prod.category || 'Merchandise'}
+                  </span>
+                  <h4 className="font-extrabold text-xs text-forest-950 mt-1 line-clamp-1">{prod.name}</h4>
+                  <p className="text-[10px] text-charcoal-muted line-clamp-2 mt-0.5">{prod.description}</p>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-surface-border flex items-center justify-between text-xs font-bold">
+                <div>
+                  <span className="text-charcoal-muted text-[10px] block">Price</span>
+                  <strong className="text-emerald-800 text-sm font-black">${Number(prod.price).toFixed(2)}</strong>
+                </div>
+                <div className="text-right">
+                  <span className="text-emerald-700 text-[10px] font-bold block">15% Treasury Share</span>
+                  <span className="text-emerald-900 font-extrabold text-xs bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    +${(Number(prod.price) * 0.15).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

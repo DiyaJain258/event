@@ -122,7 +122,7 @@ export const HomePage = () => {
         <div className="relative max-w-6xl mx-auto text-center space-y-8">
           {/* Badge */}
           <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-forest-900/90 text-tan-300 border border-tan-500/40 text-xs font-black uppercase tracking-widest backdrop-blur-md shadow-lg">
-            <img src="/logo.png" alt="UHC Logo" className="h-7 w-auto object-contain" />
+            <img src="/logo.png" alt="UHC Logo" className="h-10 sm:h-12 w-auto object-contain" />
             <span>Ultimate Hound Club (UHC)</span>
           </div>
 

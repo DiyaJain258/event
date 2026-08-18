@@ -16,12 +16,13 @@ import {
   Plus,
   X,
   Package,
-  Upload
+  Upload,
+  Trash2
 } from 'lucide-react';
 
 export const StateAdminStorePage = () => {
-  const { states, orders = [], updatePayoutStatus, addProduct, products = [] } = useApp();
-  const myState = states[0] || { name: 'Tennessee', code: 'TN', id: 'state-1' };
+  const { states, orders = [], updatePayoutStatus, addProduct, deleteProduct, products = [], showToast, currentUser } = useApp();
+  const myState = states.find((s) => s.name === currentUser?.state || s.code === currentUser?.stateCode) || states[0] || { name: 'Tennessee', code: 'TN', id: 'state-1' };
 
   const [dateFilter, setDateFilter] = useState('All Time');
   const [channelFilter, setChannelFilter] = useState('ALL'); // 'ALL' | 'CLUB' | 'STATE'
@@ -41,27 +42,40 @@ export const StateAdminStorePage = () => {
 
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
-    if (!prodForm.name || !prodForm.price) return;
+    if (!prodForm.name || !prodForm.price) {
+      if (showToast) showToast('Please fill in both Product Name and Price.', 'error');
+      return;
+    }
 
     const priceNum = Number(prodForm.price);
+    if (isNaN(priceNum) || priceNum <= 0) {
+      if (showToast) showToast('Please enter a valid retail price greater than $0.', 'error');
+      return;
+    }
+
     const wholesale = Number((priceNum * 0.7).toFixed(2));
     const margin = Number((priceNum * 0.3).toFixed(2));
 
-    addProduct({
-      name: prodForm.name,
-      category: prodForm.category,
-      price: priceNum,
-      wholesaleCost: wholesale,
-      margin: margin,
-      vendorName: prodForm.vendorName,
-      inStock: Number(prodForm.inStock) || 40,
-      scopeChannel: 'STATE',
-      organizationType: 'STATE',
-      scopeEntity: `${myState.name} State Association`,
-      organizationId: myState.id || myState.code || 'tn',
-      image: prodForm.image || 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80',
-      description: prodForm.description || `Official ${myState.name} State Association merchandise. 7% margin directly funds state championship trials and events.`
-    });
+    if (addProduct) {
+      addProduct({
+        id: `prod-${Date.now()}`,
+        name: prodForm.name,
+        category: prodForm.category,
+        price: priceNum,
+        wholesaleCost: wholesale,
+        margin: margin,
+        vendorName: prodForm.vendorName,
+        inStock: Number(prodForm.inStock) || 40,
+        scopeChannel: 'STATE',
+        organizationType: 'STATE',
+        scopeEntity: `${myState.name} State Association`,
+        organizationId: myState.id || myState.code || 'tn',
+        image: prodForm.image || 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80',
+        description: prodForm.description || `Official ${myState.name} State Association merchandise. 7% margin directly funds state championship trials and events.`
+      });
+    }
+
+    if (showToast) showToast(`Product "${prodForm.name}" added successfully to ${myState.name} store!`, 'success');
 
     setProdForm({
       name: '',
@@ -102,9 +116,15 @@ export const StateAdminStorePage = () => {
   const totalStateShare7 = stateOrders.reduce((a, b) => a + (Number(b.stateShare) || 0), 0);
   const pendingStatePayout = stateOrders.filter((o) => o.payoutStatus === 'Pending').reduce((a, b) => a + (Number(b.stateShare) || 0), 0);
   const settledStatePayout = stateOrders.filter((o) => o.payoutStatus === 'Paid' || o.payoutStatus === 'Approved').reduce((a, b) => a + (Number(b.stateShare) || 0), 0);
-  const stateProductsCount = products.filter(
-    (p) => p.scopeChannel === 'STATE' || p.scopeEntity?.includes(myState.name)
-  ).length;
+  const displayProducts = products.filter(
+    (p) =>
+      p.scopeChannel === 'STATE' ||
+      p.organizationType === 'STATE' ||
+      (p.scopeEntity && p.scopeEntity.toLowerCase().includes((myState.name || '').toLowerCase())) ||
+      (p.description && p.description.toLowerCase().includes((myState.name || '').toLowerCase()))
+  );
+
+  const stateProductsCount = displayProducts.length;
 
   return (
     <div className="space-y-6 sm:space-y-8 pb-12 px-2 sm:px-4 lg:px-6">
@@ -150,6 +170,91 @@ export const StateAdminStorePage = () => {
         <StatCard title="Pending Payout" value={`$${pendingStatePayout.toFixed(2)}`} subtext="Pending Disbursement" icon={Clock} />
         <StatCard title="Settled Commission" value={`$${settledStatePayout.toFixed(2)}`} subtext="Paid to State Treasury" icon={CheckCircle2} />
         <StatCard title="Active State Products" value={stateProductsCount.toString()} subtext="Live on State Page" icon={Package} />
+      </div>
+
+      {/* Active State Products Catalog Section */}
+      <div className="bg-surface-lowest p-4 sm:p-6 rounded-2xl border border-surface-border shadow-ambient space-y-4">
+        <div className="flex items-center justify-between border-b border-surface-border pb-4">
+          <div>
+            <h3 className="font-black text-base sm:text-lg text-amber-950 flex items-center gap-2">
+              <Package className="w-5 h-5 text-amber-700 shrink-0" />
+              <span>Active {myState.name} State Products Catalog ({displayProducts.length})</span>
+            </h3>
+            <p className="text-xs text-charcoal-muted mt-0.5 font-medium">
+              Live merchandise catalog available for purchase on your state store landing page.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-3.5 py-1.5 bg-amber-700 hover:bg-amber-800 text-white font-extrabold text-xs rounded-xl shadow transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Add Product</span>
+          </button>
+        </div>
+
+        {displayProducts.length === 0 ? (
+          <div className="p-8 text-center bg-surface-low rounded-xl border border-dashed border-surface-border space-y-2">
+            <Package className="w-8 h-8 text-amber-700 mx-auto opacity-50" />
+            <div className="font-black text-charcoal text-sm">No Active State Products Yet</div>
+            <p className="text-xs text-charcoal-muted max-w-sm mx-auto">
+              Click the "+ Add Product" button to add merchandise for {myState.name} State Association.
+            </p>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="mt-2 px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white text-xs font-black rounded-xl inline-flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            >
+              <Plus className="w-4 h-4" /> Add First Product
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayProducts.map((prod) => (
+              <div key={prod.id} className="p-4 rounded-xl border border-surface-border bg-surface-low space-y-3 flex flex-col justify-between shadow-xs relative group">
+                <div className="flex gap-3 items-start">
+                  <img
+                    src={prod.image || 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80'}
+                    alt={prod.name}
+                    className="w-16 h-16 rounded-lg object-cover border border-surface-border shrink-0 shadow-xs"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1548883354-7622d03aca27?w=400&auto=format&fit=crop&q=80';
+                    }}
+                  />
+                  <div className="min-w-0 flex-1 pr-6">
+                    <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-100 text-amber-950 border border-amber-300">
+                      {prod.category || 'Merchandise'}
+                    </span>
+                    <h4 className="font-extrabold text-xs text-forest-950 mt-1 line-clamp-1">{prod.name}</h4>
+                    <p className="text-[10px] text-charcoal-muted line-clamp-2 mt-0.5">{prod.description}</p>
+                  </div>
+                  {deleteProduct && (
+                    <button
+                      onClick={() => deleteProduct(prod.id)}
+                      className="absolute top-3 right-3 p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete Product"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="pt-2 border-t border-surface-border flex items-center justify-between text-xs font-bold">
+                  <div>
+                    <span className="text-charcoal-muted text-[10px] block">Retail Price</span>
+                    <strong className="text-amber-950 text-sm font-black">${Number(prod.price).toFixed(2)}</strong>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-amber-800 text-[10px] font-bold block">7% State Share</span>
+                    <span className="text-amber-950 font-extrabold text-xs bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
+                      +${(Number(prod.price) * 0.07).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Toolbar & Filters */}

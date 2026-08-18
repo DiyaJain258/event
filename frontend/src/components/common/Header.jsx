@@ -114,9 +114,13 @@ export const Header = ({ toggleMobileSidebar }) => {
             className="flex items-center gap-2 p-1 rounded-lg hover:bg-surface-low transition-all text-left focus:outline-none group"
           >
             <img
-              src={currentUser.avatar}
+              src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
               alt={currentUser.name}
               className="w-8 h-8 rounded-full object-cover border-2 border-forest-800 shadow-xs group-hover:border-tan-500 transition-colors"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+              }}
             />
             <div className="hidden lg:flex flex-col">
               <span className="text-xs font-extrabold text-charcoal leading-tight flex items-center gap-1">
@@ -133,9 +137,13 @@ export const Header = ({ toggleMobileSidebar }) => {
               {/* User Header Info Card */}
               <div className="px-3 pb-3 flex items-center gap-3">
                 <img
-                  src={currentUser.avatar}
+                  src={currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
                   alt={currentUser.name}
                   className="w-10 h-10 rounded-full object-cover border-2 border-forest-800"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+                  }}
                 />
                 <div className="flex flex-col min-w-0">
                   <span className="font-black text-sm text-forest-800 truncate">{currentUser.name}</span>

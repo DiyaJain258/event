@@ -69,7 +69,7 @@ export const PublicLayout = () => {
           <div className="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between">
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-3 group shrink-0">
-              <img src="/logo.png" alt="Ultimate Hound Championships Logo" className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+              <img src="/logo.png" alt="Ultimate Hound Championships Logo" className="h-12 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105" />
             </Link>
 
             {/* Desktop Navigation Menu (xl screens 1280px+) */}
@@ -193,7 +193,7 @@ export const PublicLayout = () => {
               {/* Brand Column */}
               <div className="lg:col-span-1 space-y-4">
                 <div className="flex items-center gap-3">
-                  <img src="/logo.png" alt="UHC Logo" className="h-9 w-auto object-contain" />
+                  <img src="/logo.png" alt="UHC Logo" className="h-14 w-auto object-contain" />
                 </div>
                 <p className="text-xs text-tan-100/70 leading-relaxed font-normal">
                   Providing the infrastructure that makes State Associations and Local Clubs stronger while preserving every organization's unique identity.

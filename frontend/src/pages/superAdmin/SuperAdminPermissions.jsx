@@ -40,7 +40,7 @@ const ROLES = [
 ];
 
 export const SuperAdminPermissions = () => {
-  const { permissions, updatePermission, showToast } = useApp();
+  const { permissions, updatePermission, grantAllPermissionsForRole, showToast } = useApp();
   const [activeRole, setActiveRole] = useState('SUPER_ADMIN');
 
   // Safeguard: handle if permissions is an array or object
@@ -78,12 +78,15 @@ export const SuperAdminPermissions = () => {
   });
 
   const toggleAllForRole = (grant) => {
-    moduleKeys.forEach((mod) => {
-      ['view', 'create', 'edit', 'delete'].forEach((action) => {
-        updatePermission(activeRole, mod, action, grant);
+    if (grantAllPermissionsForRole) {
+      grantAllPermissionsForRole(activeRole, grant);
+    } else {
+      moduleKeys.forEach((mod) => {
+        ['view', 'create', 'edit', 'delete'].forEach((action) => {
+          if (updatePermission) updatePermission(activeRole, mod, action, grant);
+        });
       });
-    });
-    showToast(`${grant ? 'Granted' : 'Revoked'} all permissions for ${activeRoleConfig.label}`, grant ? 'success' : 'info');
+    }
   };
 
   return (
